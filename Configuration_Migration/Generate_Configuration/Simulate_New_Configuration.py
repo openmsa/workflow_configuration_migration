@@ -5,12 +5,12 @@ from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 
 dev_var = Variables()
-dev_var.add('source_device_id', var_type='Device')
-dev_var.add('source_interfaces_name', var_type='String')
-dev_var.add('destination_device_id', var_type='Device')
-dev_var.add('destination_interfaces_name', var_type='String')
-dev_var.add('customer_id', var_type='String')
-dev_var.add('MS_list', var_type='String')
+#dev_var.add('source_device_id' )
+dev_var.add('source_interfaces_name' )
+#dev_var.add('destination_device_id')
+dev_var.add('destination_interfaces_name')
+dev_var.add('customer_id')
+dev_var.add('MS_list')
  
 context = Variables.task_call(dev_var)
 
@@ -32,7 +32,6 @@ command = 'READ'
 if MS_list:
   for MS in  MS_list.split(';'):
     #mservice = ["CommandDefinition/LINUX/CISCO_IOS_emulation/interface.xml"]
-    context.update(destination_device_id = device_id)
     
     config = context.get( MS + '_values')
     ''' config = {

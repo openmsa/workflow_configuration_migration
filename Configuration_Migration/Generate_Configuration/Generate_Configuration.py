@@ -4,12 +4,12 @@ from msa_sdk.order import Order
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 dev_var = Variables()
-dev_var.add('source_device_id', var_type='Device')
-dev_var.add('source_interfaces_name', var_type='String')
-dev_var.add('destination_device_id', var_type='Device')
-dev_var.add('destination_interfaces_name', var_type='String')
-dev_var.add('customer_id', var_type='String')
-dev_var.add('MS_list', var_type='String')
+#dev_var.add('source_device_id' )
+dev_var.add('source_interfaces_name' )
+#dev_var.add('destination_device_id')
+dev_var.add('destination_interfaces_name')
+dev_var.add('customer_id')
+dev_var.add('MS_list')
 #dev_var.add('params.link.0.MicroService', var_type='String')
 #dev_var.add('params.link.0.file_link', var_type='Link')
  
@@ -34,7 +34,6 @@ links =[]
 if MS_list:
   for MS in  MS_list.split(';'):
     #mservice = ["CommandDefinition/LINUX/CISCO_IOS_emulation/interface.xml"]
-    context.update(destination_device_id = device_id)
     
     config = context.get( MS + '_values')
     #config['object_id']= MS   #add mandatory field object_id, put only one default value
