@@ -10,8 +10,8 @@ dev_var.add('source_interfaces_name' )
 dev_var.add('destination_interfaces_name')
 dev_var.add('customer_id')
 dev_var.add('MS_list')
-#dev_var.add('params.link.0.MicroService', var_type='String')
-#dev_var.add('params.link.0.file_link', var_type='Link')
+#dev_var.add('link.0.MicroService', var_type='String')
+#dev_var.add('link.0.file_link', var_type='Link')
  
 context = Variables.task_call(dev_var)
 

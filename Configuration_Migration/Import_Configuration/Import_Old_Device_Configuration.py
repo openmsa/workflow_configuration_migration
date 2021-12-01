@@ -10,7 +10,9 @@ dev_var.add('destination_device_id', var_type='Device')
 dev_var.add('destination_interfaces_name', var_type='String')
 dev_var.add('customer_id', var_type='String')
 dev_var.add('MS_list', var_type='String')
- 
+dev_var.add('link.0.MicroService', var_type='String')
+dev_var.add('link.0.file_link', var_type='Link')
+
 context = Variables.task_call(dev_var)
 
 timeout = 600
