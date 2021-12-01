@@ -1,0 +1,106 @@
+import json
+from msa_sdk import constants
+from msa_sdk.order import Order
+from msa_sdk.variables import Variables
+from msa_sdk.msa_api import MSA_API
+from datetime import datetime
+
+dev_var = Variables()
+dev_var.add('source_device_id', var_type='Device')
+dev_var.add('source_interfaces_name', var_type='String')
+dev_var.add('destination_device_id', var_type='Device')
+dev_var.add('destination_interfaces_name', var_type='String')
+dev_var.add('customer_id', var_type='String')
+dev_var.add('MS_list', var_type='String')
+ 
+context = Variables.task_call(dev_var)
+
+timeout = 600
+
+#get device_id from context
+device_id = context['destination_device_id'][3:]
+# instantiate device object
+obmf  = Order(device_id=device_id)
+
+
+MS_destination_path = context['MS_destination_path']
+MS_list        = context['MS_list']  
+MS_list        = MS_list.replace(' ;',';')     
+MS_list        = MS_list.replace('; ',';')     
+#command = 'CREATE'
+command = 'READ'
+ 
+if MS_list:
+  for MS in  MS_list.split(';'):
+    #mservice = ["CommandDefinition/LINUX/CISCO_IOS_emulation/interface.xml"]
+    context.update(destination_device_id = device_id)
+    
+    config = context.get( MS + '_values')
+    ''' config = {
+        "V4815:Sabesp_Intragov": {
+            "description": "Description V4815:Sabesp_Intragov ",
+            "object_id": "V4815:Sabesp_Intragov",
+            "rd": "10429:4765",
+            "route_map": "grey_mgmt_vpn_Telefonica_Empresas_V4815:Sabesp_Intragov",
+            "route_target": {
+                "0": {
+                    "rt": "export 10429:11048"
+                },
+                "1": {
+                    "rt": "import 10429:102"
+                },
+                "2": {
+                    "rt": "import 10429:11048"
+                }
+            }
+        }
+    },
+    '''
+    # Add the download file link for each values
+    now = datetime.now() # current date and time
+    day = now.strftime("%d_%m_%Y")
+    filelinks={}
+    for key in config:
+      #link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_' + key +'_' + day + '.html'
+      link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '.html'
+      #config[key]['link'] = link
+      filelinks[key]      = link
+    context[MS + '_values'] = config
+
+    params = dict()
+    params[MS] = config
+    context[MS + '_simulate_params'] = params
+    
+    obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
+    
+    #object_name = MS
+    #params = dict()
+    #params[object_name] = "0"
+    #Import the given device microservice from the device, the MS values in the UI will be not updated
+    #obmf.command_call(command, 0, params)
+ 
+    response = json.loads(obmf.content)
+    context[ MS + '_simulate_response'] = response
+    if response.get("status") == "OK":
+      if response.get("message"):
+         # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
+         message =  response.get("message") 
+         context[ MS + '_simulate_response_message'] = message
+         f = open(link, "a")
+         f.write(message)
+         f.close()
+
+    else: 
+      if 'wo_newparams' in response:
+        MSA_API.task_error('Failure details: ' + response.get('wo_newparams'), context, True)
+      else:
+        MSA_API.task_error('Failure details: ' + str(response) , context, True)
+    
+
+    
+    
+    
+MSA_API.task_success('Good, all MS ('+MS_list+') imported for DeviceId:'+context['destination_device_id'], context, True)
+
+
+
