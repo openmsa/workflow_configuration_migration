@@ -25,6 +25,10 @@ destination_interfaces_name = context['destination_interfaces_name']
 context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
 interfaces_newvalues = context['interface_values']
 
+source_interfaces_name      = source_interfaces_name.replace('.','_')  # replace '.' with '_'
+destination_interfaces_name = destination_interfaces_name.replace('.','_')  # replace '.' with '_'
+context['source_interfaces_name_corrected'] = source_interfaces_name 
+
 if source_interfaces_name and destination_interfaces_name:
   source_interfaces_name_list = source_interfaces_name.split(';')
   destination_interfaces_name_list = destination_interfaces_name.split(';')
