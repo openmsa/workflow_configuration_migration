@@ -10,6 +10,8 @@ dev_var.add('destination_device_id', var_type='Device')
 dev_var.add('destination_interfaces_name', var_type='String')
 dev_var.add('customer_id', var_type='String')
 dev_var.add('MS_list', var_type='String')
+#dev_var.add('params.link.0.MicroService', var_type='String')
+#dev_var.add('params.link.0.file_link', var_type='Link')
  
 context = Variables.task_call(dev_var)
 
@@ -26,6 +28,8 @@ MS_list        = context['MS_list']
 MS_list        = MS_list.replace(' ;',';')     
 MS_list        = MS_list.replace('; ',';')     
 command = 'CREATE'
+ 
+links =[]
  
 if MS_list:
   for MS in  MS_list.split(';'):
@@ -47,14 +51,30 @@ if MS_list:
     #obmf.command_call(command, 0, params)
  
     response = json.loads(obmf.content)
-    context[ MS + '_export_response'] = response
-    
-    if response.get('wo_status') == constants.FAILED:
+    context[ MS + '_simulate_response'] = response
+    if response.get("status") == "OK":
+      if response.get("message"):
+         # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
+         message =  response.get("message") 
+         context[ MS + '_simulate_response_message'] = message
+         file_link = context[MS + '_link']
+         message = '<pre> \n' + message + '\n </pre>'
+         f = open(file_link, "w")
+         f.write(message)
+         f.close()
+         link={}
+         link['MicroService'] = MS
+         link['file_link']    = file_link
+         links.append(link)
+         
+    else: 
       if 'wo_newparams' in response:
-        MSA_API.task_error('Failure details: ' + response.get('wo_newparams'), context, True)
+        MSA_API.task_error('Failure details sync: ' + response.get('wo_newparams'), context, True)
       else:
         MSA_API.task_error('Failure details: ' + str(response) , context, True)
-    
+
+context['link'] = links 
+  
 MSA_API.task_success('Good, all MS ('+MS_list+') imported for DeviceId:'+context['destination_device_id'], context, True)
 
 

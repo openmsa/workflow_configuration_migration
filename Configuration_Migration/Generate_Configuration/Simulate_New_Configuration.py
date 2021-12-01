@@ -3,7 +3,6 @@ from msa_sdk import constants
 from msa_sdk.order import Order
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
-from datetime import datetime
 
 dev_var = Variables()
 dev_var.add('source_device_id', var_type='Device')
@@ -56,16 +55,6 @@ if MS_list:
         }
     },
     '''
-    # Add the download file link for each values
-    now = datetime.now() # current date and time
-    day = now.strftime("%d_%m_%Y")
-    filelinks={}
-    for key in config:
-      #link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_' + key +'_' + day + '.html'
-      link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '.html'
-      #config[key]['link'] = link
-      filelinks[key]      = link
-    context[MS + '_values'] = config
 
     params = dict()
     params[MS] = config
@@ -86,7 +75,9 @@ if MS_list:
          # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
          message =  response.get("message") 
          context[ MS + '_simulate_response_message'] = message
-         f = open(link, "a")
+         link = context[MS + '_link']
+         message = '<pre> \n' + message + '\n </pre>'
+         f = open(link, "w")
          f.write(message)
          f.close()
 
