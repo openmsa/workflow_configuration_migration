@@ -25,9 +25,9 @@ destination_interfaces_name = context['destination_interfaces_name']
 context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
 interfaces_newvalues = context['interface_values']
 
-source_interfaces_name      = source_interfaces_name.replace('.','_')  # replace '.' with '_'
-destination_interfaces_name = destination_interfaces_name.replace('.','_')  # replace '.' with '_'
-context['source_interfaces_name_corrected'] = source_interfaces_name 
+#source_interfaces_name      = source_interfaces_name.replace('.','_')  # replace '.' with '_'
+#destination_interfaces_name = destination_interfaces_name.replace('.','_')  # replace '.' with '_'
+#context['source_interfaces_name_corrected'] = source_interfaces_name 
 
 if source_interfaces_name and destination_interfaces_name:
   source_interfaces_name_list = source_interfaces_name.split(';')
@@ -37,6 +37,9 @@ if source_interfaces_name and destination_interfaces_name:
   for i in range(len(source_interfaces_name_list)):
     old_interface_name = source_interfaces_name_list[i]
     new_interface_name = destination_interfaces_name_list[i]
+    old_interface_name_ob      = old_interface_name.replace('.','_')  # replace '.' with '_'
+    new_interface_name_ob      = new_interface_name.replace('.','_')  # replace '.' with '_'
+
     '''    "interface_values": {
         "Multilink45": {
             "addresses": {
@@ -49,13 +52,13 @@ if source_interfaces_name and destination_interfaces_name:
             "object_id": "Multilink45",
             "ppp": {
     '''
-    if interfaces_newvalues.get(old_interface_name):
-      if interfaces_newvalues.get(new_interface_name):
-        MSA_API.task_error('Error, interface name "'+new_interface_name+'" already exist on the device', context, True)
-      interfaces_newvalues[new_interface_name] = interfaces_newvalues[old_interface_name]
-      if (interfaces_newvalues[new_interface_name].get("object_id")):
-        interfaces_newvalues[new_interface_name]["object_id"] = new_interface_name
-      del interfaces_newvalues[old_interface_name]  
+    if interfaces_newvalues.get(old_interface_name_ob):
+      if interfaces_newvalues.get(new_interface_name_ob):
+        MSA_API.task_error('Error, interface name "'+new_interface_name_ob+'" already exist on the device', context, True)
+      interfaces_newvalues[new_interface_name_ob] = interfaces_newvalues[old_interface_name_ob]
+      if (interfaces_newvalues[new_interface_name_ob].get("object_id")):
+        interfaces_newvalues[new_interface_name_ob]["object_id"] = new_interface_name
+      del interfaces_newvalues[old_interface_name_ob]  
 
 
 context['interface_values'] = interfaces_newvalues 
