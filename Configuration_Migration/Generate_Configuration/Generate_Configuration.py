@@ -1,4 +1,5 @@
 import json
+import re
 from msa_sdk import constants
 from msa_sdk.order import Order
 from msa_sdk.variables import Variables
@@ -33,44 +34,46 @@ links =[]
  
 if MS_list:
   for MS in  MS_list.split(';'):
-    #mservice = ["CommandDefinition/LINUX/CISCO_IOS_emulation/interface.xml"]
+    if MS:
+      #MS = ["CommandDefinition/LINUX/CISCO_IOS_emulation/interface.xml"]
     
-    config = context.get( MS + '_values')
-    #config['object_id']= MS   #add mandatory field object_id, put only one default value
-    params = dict()
-    params[MS] = config
-    context[MS + '_export_params'] = params
+      config = context.get( MS + '_values')
+      #config['object_id']= MS   #add mandatory field object_id, put only one default value
+      params = dict()
+      params[MS] = config
+      context[MS + '_export_params'] = params
     
-    obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
+      obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
     
-    #object_name = MS
-    #params = dict()
-    #params[object_name] = "0"
-    #Import the given device microservice from the device, the MS values in the UI will be not updated
-    #obmf.command_call(command, 0, params)
+      #object_name = MS
+      #params = dict()
+      #params[object_name] = "0"
+      #Import the given device microservice from the device, the MS values in the UI will be not updated
+      #obmf.command_call(command, 0, params)
  
-    response = json.loads(obmf.content)
-    context[ MS + '_simulate_response'] = response
-    if response.get("status") == "OK":
-      if response.get("message"):
-         # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
-         message =  response.get("message") 
-         context[ MS + '_simulate_response_message'] = message
-         file_link = context[MS + '_link']
-         message = '<pre> \n' + message + '\n </pre>'
-         f = open(file_link, "w")
-         f.write(message)
-         f.close()
-         link={}
-         link['MicroService'] = MS
-         link['file_link']    = file_link
-         links.append(link)
+      response = json.loads(obmf.content)
+      context[ MS + '_generate_response'] = response
+      if response.get("status") == "OK":
+        if response.get("message"):
+           # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
+           message =  response.get("message") 
+           context[ MS + '_generate_response_message'] = message
+           file_link = context[MS + '_link']
+           message = re.sub(r'^\s*$', '', message)  #remove blank lines
+           message = '<pre> \n' + message + '\n </pre>'
+           f = open(file_link, "w")
+           f.write(message)
+           f.close()
+           link={}
+           link['MicroService'] = MS
+           link['file_link']    = file_link
+           links.append(link)
          
-    else: 
-      if 'wo_newparams' in response:
-        MSA_API.task_error('Failure details sync: ' + response.get('wo_newparams'), context, True)
-      else:
-        MSA_API.task_error('Failure details: ' + str(response) , context, True)
+      else: 
+        if 'wo_newparams' in response:
+          MSA_API.task_error('Failure details sync: ' + response.get('wo_newparams'), context, True)
+        else:
+          MSA_API.task_error('Failure details: ' + str(response) , context, True)
 
 context['link'] = links 
   

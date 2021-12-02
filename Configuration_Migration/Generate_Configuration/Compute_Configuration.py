@@ -73,16 +73,18 @@ day = now.strftime("%d_%m_%Y")
     
 if MS_list:
   for MS in  MS_list.split(';'):
-    # Add the download file link for each values
-    filelinks={}
-    config = context.get( MS + '_values')
-    for key in config:
-      #link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_' + key +'_' + day + '.html'
-      link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '.html'
-      config[key]['link'] = link
-      filelinks[key]      = link
-      context[MS + '_link'] = link
-    context[MS + '_values'] = config
+    if MS:
+
+      # Add the download file link for each values
+      filelinks={}
+      config = context.get( MS + '_values')
+      for key in config:
+        #link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_' + key +'_' + day + '.html'
+        link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '.html'
+        config[key]['link'] = link
+        filelinks[key]      = link
+        context[MS + '_link'] = link
+      context[MS + '_values'] = config
     
 
 
