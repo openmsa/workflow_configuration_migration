@@ -19,7 +19,6 @@ timeout = 600
 
 #get device_id from context
 device_id = context['source_device_id'][3:]
-context.update(source_device_id = device_id)
 
 # instantiate device object
 obmf  = Order(device_id=device_id)

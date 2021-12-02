@@ -48,7 +48,7 @@ if MS_list:
       object_name = MS
       params = dict()
       params[MS] = config
-      obmf.command_call(command, 1, params, timeout)  #mode=1 :  Apply to base
+      obmf.command_call(command, 1, params, timeout)  #mode=1 :  Apply to base only (create new element in the MSA DB, it will not run any commands on device)
  
       response = json.loads(obmf.content)
       context[ MS + '_generate_response'] = response
