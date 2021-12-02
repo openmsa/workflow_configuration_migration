@@ -43,20 +43,25 @@ if MS_list:
       params[MS] = config
       context[MS + '_export_params'] = params
     
-      obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
+      #obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
     
-      #object_name = MS
-      #params = dict()
-      #params[object_name] = "0"
-      #Import the given device microservice from the device, the MS values in the UI will be not updated
-      #obmf.command_call(command, 0, params)
+      object_name = MS
+      params = dict()
+      params[MS] = config
+      obmf.command_call(command, 1, params, timeout)  #mode=1 :  Apply to base
  
       response = json.loads(obmf.content)
       context[ MS + '_generate_response'] = response
-      if response.get("status") == "OK":
-        if response.get("message"):
+      # bgp_vrf_generate_response": {
+        # "entity": {
+            # "commandId": 0,
+            # "status": "OK",
+            # "message": "\n!\nip vrf  TRIBUNAL-JUSTICA\n\n#exit\n!\n!\nip vrf  V1038:Bco_Bradesco\n\n#exit\n!\n!\nip vrf  V4815:Sabesp_Intragov\n  rd  \n\n  export map  \n#exit\n!"
+        # },
+      if response.get("entity").get("status") == "OK":
+        if response.get("entity").get("message"):
            # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
-           message =  response.get("message") 
+           message =  response.get("entity").get("message") 
            context[ MS + '_generate_response_message'] = message
            file_link = context[MS + '_link']
            message = re.sub(r'^\s*$', '', message)  #remove blank lines
@@ -71,9 +76,9 @@ if MS_list:
          
       else: 
         if 'wo_newparams' in response:
-          MSA_API.task_error('Failure details sync: ' + response.get('wo_newparams'), context, True)
+          MSA_API.task_error('Create in DB Failure details sync: ' + response.get('wo_newparams'), context, True)
         else:
-          MSA_API.task_error('Failure details: ' + str(response) , context, True)
+          MSA_API.task_error('Create in DB Failure details: ' + str(response) , context, True)
 
 context['link'] = links 
   

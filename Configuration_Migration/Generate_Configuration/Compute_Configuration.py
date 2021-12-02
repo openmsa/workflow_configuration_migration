@@ -22,25 +22,26 @@ device_id = context['destination_device_id'][3:]
 #Change the interface_name
 source_interfaces_name      = context['source_interfaces_name']
 destination_interfaces_name = context['destination_interfaces_name']
-context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
-interfaces_newvalues = context['interface_values']
+if context.get('interface_values'):
+  context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
+  interfaces_newvalues = context['interface_values']
 
-#source_interfaces_name      = source_interfaces_name.replace('.','_')  # replace '.' with '_'
-#destination_interfaces_name = destination_interfaces_name.replace('.','_')  # replace '.' with '_'
-#context['source_interfaces_name_corrected'] = source_interfaces_name 
+  #source_interfaces_name      = source_interfaces_name.replace('.','_')  # replace '.' with '_'
+  #destination_interfaces_name = destination_interfaces_name.replace('.','_')  # replace '.' with '_'
+  #context['source_interfaces_name_corrected'] = source_interfaces_name 
 
-if source_interfaces_name and destination_interfaces_name:
-  source_interfaces_name_list = source_interfaces_name.split(';')
-  destination_interfaces_name_list = destination_interfaces_name.split(';')
-  if len(source_interfaces_name_list) != len(destination_interfaces_name_list):
-    MSA_API.task_error('Error, the length of old interfaces names and nex interfaces name are differentes (old=('+source_interfaces_name+'), new=('+destination_interfaces_name+')', context, True)
-  for i in range(len(source_interfaces_name_list)):
-    old_interface_name = source_interfaces_name_list[i]
-    new_interface_name = destination_interfaces_name_list[i]
-    old_interface_name_ob      = old_interface_name.replace('.','_')  # replace '.' with '_'
-    new_interface_name_ob      = new_interface_name.replace('.','_')  # replace '.' with '_'
+  if source_interfaces_name and destination_interfaces_name:
+    source_interfaces_name_list = source_interfaces_name.split(';')
+    destination_interfaces_name_list = destination_interfaces_name.split(';')
+    if len(source_interfaces_name_list) != len(destination_interfaces_name_list):
+      MSA_API.task_error('Error, the length of old interfaces names and nex interfaces name are differentes (old=('+source_interfaces_name+'), new=('+destination_interfaces_name+')', context, True)
+    for i in range(len(source_interfaces_name_list)):
+      old_interface_name = source_interfaces_name_list[i]
+      new_interface_name = destination_interfaces_name_list[i]
+      old_interface_name_ob      = old_interface_name.replace('.','_')  # replace '.' with '_'
+      new_interface_name_ob      = new_interface_name.replace('.','_')  # replace '.' with '_'
 
-    '''    "interface_values": {
+      '''    "interface_values": {
         "Multilink45": {
             "addresses": {
                 "0": {
@@ -51,17 +52,17 @@ if source_interfaces_name and destination_interfaces_name:
             "int_description": "By VPNSC: Job Id# = 178482 (Sabesp_SAO_PAULO_SP_582841)",
             "object_id": "Multilink45",
             "ppp": {
-    '''
-    if interfaces_newvalues.get(old_interface_name_ob):
-      if interfaces_newvalues.get(new_interface_name_ob):
-        MSA_API.task_error('Error, interface name "'+new_interface_name_ob+'" already exist on the device', context, True)
-      interfaces_newvalues[new_interface_name_ob] = interfaces_newvalues[old_interface_name_ob]
-      if (interfaces_newvalues[new_interface_name_ob].get("object_id")):
-        interfaces_newvalues[new_interface_name_ob]["object_id"] = new_interface_name
-      del interfaces_newvalues[old_interface_name_ob]  
+      '''
+      if interfaces_newvalues.get(old_interface_name_ob):
+        if interfaces_newvalues.get(new_interface_name_ob):
+          MSA_API.task_error('Error, interface name "'+new_interface_name_ob+'" already exist on the device', context, True)
+        interfaces_newvalues[new_interface_name_ob] = interfaces_newvalues[old_interface_name_ob]
+        if (interfaces_newvalues[new_interface_name_ob].get("object_id")):
+          interfaces_newvalues[new_interface_name_ob]["object_id"] = new_interface_name
+        del interfaces_newvalues[old_interface_name_ob]  
+  
+  context['interface_values'] = interfaces_newvalues 
 
-
-context['interface_values'] = interfaces_newvalues 
 
 ########### ADD LINK #############
 MS_list        = context['MS_list']  
