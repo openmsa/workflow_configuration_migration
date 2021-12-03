@@ -1,5 +1,6 @@
 import json
 import re
+import os.path
 from msa_sdk import constants
 from msa_sdk.order import Order
 from msa_sdk.variables import Variables
@@ -74,28 +75,31 @@ if MS_list:
           source_MS_file = ''
           if MS_source_path:
             MS_file = '/opt/fmc_repository/'+ MS_source_path +'/' + MS + '.xml'
-            file1 = open(MS_file, "r")
-            # read file content
-            readfile = file1.read()
-            file1.close()
-            #find <operation><![CDATA[cat /config/cisco_ios/sample-config.ios.V4815.txt]]></operation>
-            match = re.search('cat (.+)]]', readfile)
-            context['ZZZ_filed2'] = str(match)
-
-            if match:
-              source_MS_file = match.group(1)
-              context['source_MS_file'] = source_MS_file
-              file1 = open(source_MS_file, "r")
+            if os.path.isfile(MS_file):
+              file1 = open(MS_file, "r")
               # read file content
               readfile = file1.read()
               file1.close()
-              f = open(context[MS + '_link_orig'], "w")
-              f.write( '<pre> \n' + readfile + '\n </pre>')
-              f.close()
-              link={}
-              link['MicroService'] = MS + '_original'
-              link['file_link']    = context[MS + '_link_orig']
-              links.append(link)
+              #find <operation><![CDATA[cat /config/cisco_ios/sample-config.ios.V4815.txt]]></operation>
+              match = re.search('cat (.+)]]', readfile)
+              context['ZZZ_filed2'] = str(match)
+
+              if match:
+                source_MS_file = match.group(1)
+                context['source_MS_file'] = source_MS_file
+                if os.path.isfile(source_MS_file):
+                  file1 = open(source_MS_file, "r")
+                  # read file content
+                  readfile = file1.read()
+                  file1.close()
+                  f = open(context[MS + '_link_orig'], "w")
+                  f.write( '<pre> \n' + readfile + '\n </pre>')
+                  f.close()
+                  link={}
+                  link['MicroService'] = MS + '_original'
+                  link['file_link']    = context[MS + '_link_orig']
+                  links.append(link)
+                 
               
           #Add MS import Skip result link:
           MS_file = '/opt/fmc_repository/Datafiles/Import_MS_Result/' + MS + '.log'
