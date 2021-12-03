@@ -70,7 +70,7 @@ MS_list        = MS_list.replace(' ;',';')
 MS_list        = MS_list.replace('; ',';')     
 
 now = datetime.now() # current date and time
-day = now.strftime("%d_%m_%Y")
+day = now.strftime("%m-%d-%Y-%H:%m")
     
 if MS_list:
   for MS in  MS_list.split(';'):
@@ -82,9 +82,11 @@ if MS_list:
       for key in config:
         #link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_' + key +'_' + day + '.html'
         link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '.html'
+        link_orig = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '_orig.html'
         config[key]['link'] = link
         filelinks[key]      = link
         context[MS + '_link'] = link
+        context[MS + '_link_orig'] = link_orig
       context[MS + '_values'] = config
     
 

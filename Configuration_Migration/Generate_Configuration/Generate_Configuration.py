@@ -5,14 +5,10 @@ from msa_sdk.order import Order
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 dev_var = Variables()
-#dev_var.add('source_device_id' )
 dev_var.add('source_interfaces_name' )
-#dev_var.add('destination_device_id')
 dev_var.add('destination_interfaces_name')
 dev_var.add('customer_id')
 dev_var.add('MS_list')
-#dev_var.add('link.0.MicroService', var_type='String')
-#dev_var.add('link.0.file_link', var_type='Link')
  
 context = Variables.task_call(dev_var)
 
@@ -24,14 +20,14 @@ device_id = context['destination_device_id'][3:]
 obmf  = Order(device_id=device_id)
 
 
-MS_destination_path = context['MS_destination_path']
 MS_list        = context['MS_list']  
 MS_list        = MS_list.replace(' ;',';')     
 MS_list        = MS_list.replace('; ',';')     
 command = 'CREATE'
  
 links =[]
- 
+MS_source_path = context['MS_source_path']
+
 if MS_list:
   for MS in  MS_list.split(';'):
     if MS:
@@ -60,20 +56,55 @@ if MS_list:
         # },
       if response.get("entity").get("status") == "OK":
         if response.get("entity").get("message"):
-           # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
-           message =  response.get("entity").get("message") 
-           context[ MS + '_generate_response_message'] = message
-           file_link = context[MS + '_link']
-           message = re.sub(r'^\s*$', '', message)  #remove blank lines
-           message = '<pre> \n' + message + '\n </pre>'
-           f = open(file_link, "w")
-           f.write(message)
-           f.close()
-           link={}
-           link['MicroService'] = MS
-           link['file_link']    = file_link
-           links.append(link)
-         
+          # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
+          message =  response.get("entity").get("message") 
+          context[ MS + '_generate_response_message'] = message
+          file_link = context[MS + '_link']
+          message = re.sub(r'^\s*$', '', message)  #remove blank lines
+          message = '<pre> \n' + message + '\n </pre>'
+          f = open(file_link, "w")
+          f.write(message)
+          f.close()
+          link={}
+          link['MicroService'] = MS
+          link['file_link']    = file_link
+          links.append(link)
+           
+          #Add original file link:
+          source_MS_file = ''
+          if MS_source_path:
+            MS_file = '/opt/fmc_repository/'+ MS_source_path +'/' + MS + '.xml'
+            file1 = open(MS_file, "r")
+            # read file content
+            readfile = file1.read()
+            file1.close()
+            #find <operation><![CDATA[cat /config/cisco_ios/sample-config.ios.V4815.txt]]></operation>
+            match = re.search('cat (.+)]]', readfile)
+            context['ZZZ_filed2'] = str(match)
+
+            if match:
+              source_MS_file = match.group(1)
+              context['source_MS_file'] = source_MS_file
+              file1 = open(source_MS_file, "r")
+              # read file content
+              readfile = file1.read()
+              file1.close()
+              f = open(context[MS + '_link_orig'], "w")
+              f.write( '<pre> \n' + readfile + '\n </pre>')
+              f.close()
+              link={}
+              link['MicroService'] = MS + '_original'
+              link['file_link']    = context[MS + '_link_orig']
+              links.append(link)
+              
+          #Add MS import Skip result link:
+          MS_file = '/opt/fmc_repository/Datafiles/Import_MS_Result/' + MS + '.log'
+          link={}
+          link['MicroService'] = MS + '_Import_parse'
+          link['file_link']    = MS_file       
+          links.append(link)
+
+
       else: 
         if 'wo_newparams' in response:
           MSA_API.task_error('Create in DB Failure details sync: ' + response.get('wo_newparams'), context, True)
