@@ -55,8 +55,9 @@ if MS_list:
             # "status": "OK",
             # "message": "\n!\nip vrf  TRIBUNAL-JUSTICA\n\n#exit\n!\n!\nip vrf  V1038:Bco_Bradesco\n\n#exit\n!\n!\nip vrf  V4815:Sabesp_Intragov\n  rd  \n\n  export map  \n#exit\n!"
         # },
-      if response.get("entity").get("status") == "OK":
-        if response.get("entity").get("message"):
+      if response.get("entity"):
+        if response.get("entity").get("status") == "OK":
+         if response.get("entity").get("message"):
           # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
           message =  response.get("entity").get("message") 
           context[ MS + '_generate_response_message'] = message
@@ -82,11 +83,13 @@ if MS_list:
               file1.close()
               #find <operation><![CDATA[cat /config/cisco_ios/sample-config.ios.V4815.txt]]></operation>
               match = re.search('cat (.+)]]', readfile)
-              context['ZZZ_filed2'] = str(match)
 
               if match:
                 source_MS_file = match.group(1)
                 context['source_MS_file'] = source_MS_file
+                if '/opt/fmc_repository/Datafiles/' not in source_MS_file:
+                  source_MS_file = '/opt/fmc_repository/Datafiles/' + source_MS_file
+                
                 if os.path.isfile(source_MS_file):
                   file1 = open(source_MS_file, "r")
                   # read file content
@@ -108,12 +111,13 @@ if MS_list:
           link['file_link']    = MS_file       
           links.append(link)
 
-
+        else:
+          MSA_API.task_error('Can not run create on MS: '+ MS + ', response='+ str(response) , context, True)
       else: 
         if 'wo_newparams' in response:
-          MSA_API.task_error('Create in DB Failure details sync: ' + response.get('wo_newparams'), context, True)
+          MSA_API.task_error('Can not run create on MS: '+ MS + ', response='+ str(response.get('wo_newparams')), context, True)
         else:
-          MSA_API.task_error('Create in DB Failure details: ' + str(response) , context, True)
+           MSA_API.task_error('Can not run create on MS: '+ MS + ', response='+ str(response) , context, True)
 
 context['link'] = links 
   
