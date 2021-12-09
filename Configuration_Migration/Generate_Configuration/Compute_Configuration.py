@@ -12,6 +12,7 @@ dev_var.add('customer_id', var_type='String')
 dev_var.add('MS_list', var_type='String')
 dev_var.add('source_interfaces_name', var_type='String')
 dev_var.add('destination_interfaces_name', var_type='String')
+dev_var.add('data_conversion', var_type='String')
 
 context = Variables.task_call(dev_var)
 
@@ -64,6 +65,7 @@ if context.get('interface_values'):
   context['interface_values'] = interfaces_newvalues 
 
 
+
 ########### ADD LINK #############
 MS_list        = context['MS_list']  
 MS_list        = MS_list.replace(' ;',';')     
@@ -76,13 +78,40 @@ if MS_list:
   for MS in  MS_list.split(';'):
     if MS:
 
+      #CONVERT SOME DATA
+      if context.get('data_conversion') and context['data_conversion']:
+        data_conversion = context['data_conversion']
+        data_conversion_list = data_conversion.splitlines() # returns a list having splitted elements  
+        for line in data_conversion_list:
+          list = line.split('|')  # MS|Field|Replace Pattern|comment
+          convert_MS      = list[0]
+          convert_field   = list[1]
+          convert_pattern = list[2]
+          convert_comment = list[3]
+          if context.get(MS+'_values'):
+            context[MS+'_values_orig'] = copy.deepcopy(context[MS+'_values'])
+            interfaces_newvalues = context[MS+'_values']
+            #convert_field = pmap_class.0.random.0.random_detect
+            fields = convert_field.split('.0.')
+            lenght = len(fields)
+            if lenght:
+              if lenght>0 and interfaces_newvalues.get(fields[0]):
+                for val0 in interfaces_newvalues[fields[0]]:
+                  if lenght>1 and val0.get(fields[1]):
+                   for val1 in val0[fields[1]]:
+                     if lenght>2 and val1.get(fields[2]):
+                       for val2 in val1[fields[2]]:
+                         if lenght>3 and val2.get(fields[3]):
+                           for val3 in val2[fields[3]]:         
+                             test='111'
+      
       # Add the download file link for each values
       filelinks={}
       config = context.get( MS + '_values')
       for key in config:
         #link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_' + key +'_' + day + '.html'
-        link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '.html'
-        link_orig = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '_orig.html'
+        link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '.txt'
+        link_orig = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '_orig.txt'
         config[key]['link'] = link
         filelinks[key]      = link
         context[MS + '_link'] = link

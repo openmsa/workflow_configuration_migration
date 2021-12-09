@@ -62,8 +62,9 @@ if MS_list:
           message =  response.get("entity").get("message") 
           context[ MS + '_generate_response_message'] = message
           file_link = context[MS + '_link']
-          message = re.sub(r'^\s*$', '', message)  #remove blank lines
-          message = '<pre> \n' + message + '\n </pre>'
+          #message = re.sub(r'^\s*$', '', message)  #remove blank lines
+          #message = re.sub(r'\n\n', '\n', message)  #remove blank lines
+          #message = '<pre> \n' + message + '\n </pre>'
           f = open(file_link, "w")
           f.write(message)
           f.close()
