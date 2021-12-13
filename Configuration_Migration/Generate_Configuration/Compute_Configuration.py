@@ -17,35 +17,24 @@ dev_var.add('data_conversion', var_type='String')
 
 context = Variables.task_call(dev_var)
  
-def  data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination, level):
-   level =level+1
+def  data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination):
    if isinstance(fields, typing.List) and fields:
      field = fields[0]
      fields.pop(0)
    else:
      field = fields  #string
    if field:
-     #context['zzz_'+field]= str(fields)+' res='+str(ms_newvalues)
-     context['level'+str(level)+'_00']= str(fields)+' res='+str(ms_newvalues)
      if isinstance(ms_newvalues, dict):
        for  key, value1 in ms_newvalues.items():
        #for key in ms_newvalues:
-         #"level3_random_detect_00": "[] res={'0': {'random_detect': '22dscp-based'}, '1': {'random_detect': 'dscp 10 53 160 1'}, '2': {'random_detect': 'dscp 17 596 600 1'}, '3': {'random_detect': 'dscp 18 596 600 1'}}",
-         context['level'+str(level)+'_'+field+'_'+key+'_11']= str(fields)+' res='+str(value1)
          if isinstance(value1, dict):
-           context['level'+str(level)+'_'+field+'_'+key+' 22']= str(fields)+' reskey='+str(value1)
            if value1.get(field):
-             context['level'+str(level)+'_'+field+'_'+key+' 33']= str(fields)+' reskey='+str(value1[field])
              value = value1[field]
              if isinstance(value, dict):
-               data_conversion_recursif(value1[field], copy.deepcopy(fields), convert_condition, convert_pattern_source, convert_pattern_destination, level) 
+               data_conversion_recursif(value1[field], copy.deepcopy(fields), convert_condition, convert_pattern_source, convert_pattern_destination) 
              else:
-               context['level'+str(level)+'_'+field+'_'+key+' 44']= str(fields)+' reskey='+str(value)
                if value :
-                 context['convert_pattern_source']      = convert_pattern_source            # "value.split()[2]" 
-                 context['convert_pattern_destination'] =  convert_pattern_destination # "value.split()[2]+' packets '"
                  source=''
-
                  # CAN NOT used try.... because it will not parse all values in ms_newvalues (try will used only first value), so we used one convert_condition
                  if eval(convert_condition):
                    source      = eval(convert_pattern_source)
@@ -54,7 +43,6 @@ def  data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_p
                    if source:
                      context['result_source_'+value]      = source
                      context['result_destination_'+value] = destination
-                     context['level'+str(level)+'_'+field+'_'+key+' 55']= str(fields)+' reskey='+str(ms_newvalues[key][field]+ ', source='+source+ ',dest='+destination)
                      ms_newvalues[key][field] = value.replace(source,destination)
                
    return 'ok'
@@ -132,13 +120,11 @@ if MS_list:
           convert_pattern_destination = list[4]
           convert_comment = list[5]
 
-
           if convert_MS == MS and context.get(MS+'_values'):
-          
             context[MS+'_values_orig'] = copy.deepcopy(context[MS+'_values'])
             ms_newvalues = context[MS+'_values']
             fields = convert_field.split('.0.')
-            data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination,0)
+            data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination)
             
             '''lenght = len(fields)
             for ms1 in ms_newvalues:
@@ -155,8 +141,8 @@ if MS_list:
                         "1": {
                             "random_detect": "dscp 10 53 160 1"
             '''               
-
-      
+            
+            
       # Add the download file link for each values
       filelinks={}
       config = context.get( MS + '_values')
