@@ -1,5 +1,6 @@
 import json
 import copy
+import typing
 from msa_sdk import constants
 from msa_sdk.order import Order
 from msa_sdk.variables import Variables
@@ -15,8 +16,51 @@ dev_var.add('destination_interfaces_name', var_type='String')
 dev_var.add('data_conversion', var_type='String')
 
 context = Variables.task_call(dev_var)
+ 
+def  data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination, level):
+   level =level+1
+   if isinstance(fields, typing.List) and fields:
+     field = fields[0]
+     fields.pop(0)
+   else:
+     field = fields  #string
+   if field:
+     #context['zzz_'+field]= str(fields)+' res='+str(ms_newvalues)
+     context['level'+str(level)+'_00']= str(fields)+' res='+str(ms_newvalues)
+     if isinstance(ms_newvalues, dict):
+       for  key, value1 in ms_newvalues.items():
+       #for key in ms_newvalues:
+         #"level3_random_detect_00": "[] res={'0': {'random_detect': '22dscp-based'}, '1': {'random_detect': 'dscp 10 53 160 1'}, '2': {'random_detect': 'dscp 17 596 600 1'}, '3': {'random_detect': 'dscp 18 596 600 1'}}",
+         context['level'+str(level)+'_'+field+'_'+key+'_11']= str(fields)+' res='+str(value1)
+         if isinstance(value1, dict):
+           context['level'+str(level)+'_'+field+'_'+key+' 22']= str(fields)+' reskey='+str(value1)
+           if value1.get(field):
+             context['level'+str(level)+'_'+field+'_'+key+' 33']= str(fields)+' reskey='+str(value1[field])
+             value = value1[field]
+             if isinstance(value, dict):
+               data_conversion_recursif(value1[field], copy.deepcopy(fields), convert_condition, convert_pattern_source, convert_pattern_destination, level) 
+             else:
+               context['level'+str(level)+'_'+field+'_'+key+' 44']= str(fields)+' reskey='+str(value)
+               if value :
+                 context['convert_pattern_source']      = convert_pattern_source            # "value.split()[2]" 
+                 context['convert_pattern_destination'] =  convert_pattern_destination # "value.split()[2]+' packets '"
+                 source=''
 
-
+                 # CAN NOT used try.... because it will not parse all values in ms_newvalues (try will used only first value), so we used one convert_condition
+                 if eval(convert_condition):
+                   source      = eval(convert_pattern_source)
+                   destination = eval(convert_pattern_destination)
+       
+                   if source:
+                     context['result_source_'+value]      = source
+                     context['result_destination_'+value] = destination
+                     context['level'+str(level)+'_'+field+'_'+key+' 55']= str(fields)+' reskey='+str(ms_newvalues[key][field]+ ', source='+source+ ',dest='+destination)
+                     ms_newvalues[key][field] = value.replace(source,destination)
+               
+   return 'ok'
+   
+   
+   
 #get device_id from context
 device_id = context['destination_device_id'][3:]
 
@@ -27,9 +71,6 @@ if context.get('interface_values'):
   context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
   interfaces_newvalues = context['interface_values']
 
-  #source_interfaces_name      = source_interfaces_name.replace('.','_')  # replace '.' with '_'
-  #destination_interfaces_name = destination_interfaces_name.replace('.','_')  # replace '.' with '_'
-  #context['source_interfaces_name_corrected'] = source_interfaces_name 
 
   if source_interfaces_name and destination_interfaces_name:
     source_interfaces_name_list = source_interfaces_name.split(';')
@@ -84,26 +125,37 @@ if MS_list:
         data_conversion_list = data_conversion.splitlines() # returns a list having splitted elements  
         for line in data_conversion_list:
           list = line.split('|')  # MS|Field|Replace Pattern|comment
-          convert_MS      = list[0]
-          convert_field   = list[1]
-          convert_pattern = list[2]
-          convert_comment = list[3]
-          if context.get(MS+'_values'):
+          convert_MS             = list[0]
+          convert_field          = list[1]
+          convert_condition      = list[2]
+          convert_pattern_source = list[3]
+          convert_pattern_destination = list[4]
+          convert_comment = list[5]
+
+
+          if convert_MS == MS and context.get(MS+'_values'):
+          
             context[MS+'_values_orig'] = copy.deepcopy(context[MS+'_values'])
-            interfaces_newvalues = context[MS+'_values']
-            #convert_field = pmap_class.0.random.0.random_detect
+            ms_newvalues = context[MS+'_values']
             fields = convert_field.split('.0.')
-            lenght = len(fields)
-            if lenght:
-              if lenght>0 and interfaces_newvalues.get(fields[0]):
-                for val0 in interfaces_newvalues[fields[0]]:
-                  if lenght>1 and val0.get(fields[1]):
-                   for val1 in val0[fields[1]]:
-                     if lenght>2 and val1.get(fields[2]):
-                       for val2 in val1[fields[2]]:
-                         if lenght>3 and val2.get(fields[3]):
-                           for val3 in val2[fields[3]]:         
-                             test='111'
+            data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination,0)
+            
+            '''lenght = len(fields)
+            for ms1 in ms_newvalues:
+              #context[MS+'_values'] = "policy_map_values_orig": {
+                "toCE-240-0-640-10-20": {
+                "link": "/opt/fmc_repository/Datafiles/TEST/policy_map_12-09-2021-17:12.txt",
+                "object_id": "toCE-240-0-640-10-20",
+                "pmap_class": {
+                  "2": {
+                    "random": {
+                        "0": {
+                            "random_detect": "dscp-based"
+                        },
+                        "1": {
+                            "random_detect": "dscp 10 53 160 1"
+            '''               
+
       
       # Add the download file link for each values
       filelinks={}
