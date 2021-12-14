@@ -39,7 +39,7 @@
     <variable displayName="Generated file" name="params.link.0.file_link" startIncrement="0" type="Link" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="false" arrayCanRemove="false" arrayCanMove="false" arrayCanEdit="false" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
     </variable>
-    <variable displayName="data_conversion (MS|Field|Replace Pattern Source|Replace Pattern Destination|comment)" name="params.data_conversion" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="policy_map|pmap_class.0.random.0.random_detect|len(value.split())>4|'dscp ' + ' '.join(value.split()[1:5])|'dscp '+value.split()[1] + ' ' +value.split()[2]+' packets '+value.split()[3]+' packets '|for policy map, var pmap_class.0.random.0.random_detect replace 'random-detect dscp 10 53 160 1' with 'random-detect dscp 10 53 packets 160 packets'" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+    <variable displayName="data_conversion_pattern_file" name="params.data_conversion_pattern_file" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="/config/cisco_ios/convertion_cisco_IOS_to_XR.txt" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
     </variable>
   </variables>
@@ -53,6 +53,10 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Import Old Device Configuration</displayName>
     </task>
+    <task name="Filter_Old_Device_Configuration.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Filter_Old_Device_Configuration.py</displayName>
+    </task> 
     <task name="Compute_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
       <displayName>Compute Configuration</displayName>
@@ -85,6 +89,10 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Import Old Device Configuration</displayName>
     </task>
+    <task name="Filter_Old_Device_Configuration.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Filter_Old_Device_Configuration.py</displayName>
+    </task> 
   </process>
   <process name="Delete_Service">
     <displayName>Delete Service</displayName>

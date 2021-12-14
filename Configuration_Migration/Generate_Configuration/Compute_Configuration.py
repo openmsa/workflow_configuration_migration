@@ -1,6 +1,7 @@
 import json
 import copy
 import typing
+import os.path
 from msa_sdk import constants
 from msa_sdk.order import Order
 from msa_sdk.variables import Variables
@@ -103,45 +104,59 @@ MS_list        = MS_list.replace('; ',';')
 now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%H:%m")
     
+    
+#read convertion patter file
+file='/opt/fmc_repository/Datafiles/' + context['data_conversion_pattern_file']
+if os.path.isfile(file):
+  file1 = open(file, "r")
+  # read file content
+  data_conversion = file1.read()
+  file1.close()
+  data_conversion_list = data_conversion.split('\n')
+else:
+  data_conversion_list = ''    
+context['data_conversion'] = data_conversion_list
+
 if MS_list:
   for MS in  MS_list.split(';'):
     if MS:
 
       #CONVERT SOME DATA
-      if context.get('data_conversion') and context['data_conversion']:
-        data_conversion = context['data_conversion']
-        data_conversion_list = data_conversion.splitlines() # returns a list having splitted elements  
+      if data_conversion_list:
         for line in data_conversion_list:
-          list = line.split('|')  # MS|Field|Replace Pattern|comment
-          convert_MS             = list[0]
-          convert_field          = list[1]
-          convert_condition      = list[2]
-          convert_pattern_source = list[3]
-          convert_pattern_destination = list[4]
-          convert_comment = list[5]
+          if (not line.startswith('#')) and line.strip():
+            context['data_conversion_line'] = line+';'
+            list = line.split('|')  # MS|Field|Replace Pattern|comment
+            if len(list) > 4:
+              convert_MS             = list[0]
+              convert_field          = list[1]
+              convert_condition      = list[2]
+              convert_pattern_source = list[3]
+              convert_pattern_destination = list[4]
+              convert_comment = list[5]
 
-          if convert_MS == MS and context.get(MS+'_values'):
-            context[MS+'_values_orig'] = copy.deepcopy(context[MS+'_values'])
-            ms_newvalues = context[MS+'_values']
-            fields = convert_field.split('.0.')
-            data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination)
-            
-            '''lenght = len(fields)
-            for ms1 in ms_newvalues:
-              #context[MS+'_values'] = "policy_map_values_orig": {
-                "toCE-240-0-640-10-20": {
-                "link": "/opt/fmc_repository/Datafiles/TEST/policy_map_12-09-2021-17:12.txt",
-                "object_id": "toCE-240-0-640-10-20",
-                "pmap_class": {
-                  "2": {
-                    "random": {
-                        "0": {
-                            "random_detect": "dscp-based"
-                        },
-                        "1": {
-                            "random_detect": "dscp 10 53 160 1"
-            '''               
-            
+              if convert_MS == MS and context.get(MS+'_values'):
+                context[MS+'_values_orig'] = copy.deepcopy(context[MS+'_values'])
+                ms_newvalues = context[MS+'_values']
+                fields = convert_field.split('.0.')
+                data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination)
+                
+                '''lenght = len(fields)
+                for ms1 in ms_newvalues:
+                  #context[MS+'_values'] = "policy_map_values_orig": {
+                    "toCE-240-0-640-10-20": {
+                    "link": "/opt/fmc_repository/Datafiles/TEST/policy_map_12-09-2021-17:12.txt",
+                    "object_id": "toCE-240-0-640-10-20",
+                    "pmap_class": {
+                      "2": {
+                        "random": {
+                            "0": {
+                                "random_detect": "dscp-based"
+                            },
+                            "1": {
+                                "random_detect": "dscp 10 53 160 1"
+                '''               
+              
             
       # Add the download file link for each values
       filelinks={}
