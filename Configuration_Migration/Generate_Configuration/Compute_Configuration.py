@@ -144,34 +144,14 @@ if MS_list:
                 ms_newvalues = context[MS+'_values']
                 fields = convert_field.split('.0.')
                 data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination)
-                
-                '''lenght = len(fields)
-                for ms1 in ms_newvalues:
-                  #context[MS+'_values'] = "policy_map_values_orig": {
-                    "toCE-240-0-640-10-20": {
-                    "link": "/opt/fmc_repository/Datafiles/TEST/policy_map_12-09-2021-17:12.txt",
-                    "object_id": "toCE-240-0-640-10-20",
-                    "pmap_class": {
-                      "2": {
-                        "random": {
-                            "0": {
-                                "random_detect": "dscp-based"
-                            },
-                            "1": {
-                                "random_detect": "dscp 10 53 160 1"
-                '''               
+                     
               
             
       #########################################################
       # ADD THE DOWNLOAD FILE LINK FOR EACH VALUES
-      filelinks={}
       config = context.get( MS + '_values')
       link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '.txt'
       link_orig = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '_orig.txt'
-      if config and isinstance(config, dict):
-        for key in config:
-          config[key]['link'] = link
-          filelinks[key]      = link
       
       context[MS + '_link'] = link
       context[MS + '_link_orig'] = link_orig

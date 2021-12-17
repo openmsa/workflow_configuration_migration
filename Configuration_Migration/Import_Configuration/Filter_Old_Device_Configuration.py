@@ -122,10 +122,10 @@ if MS_list_string:
       if context.get(MS+'_values') and context[MS+'_values']:
         ms_newvalues = copy.deepcopy(context[MS+'_values'])
         for  object_id, value in ms_newvalues.items():
-          if value.get('migrate') and value['migrate']==1:
+          if value.get('migrate') and value['migrate']==0:
             context[MS+'_values'].pop(object_id)
+            
    
-
 MSA_API.task_success('Good, filter all MS values', context, True)
 
 
