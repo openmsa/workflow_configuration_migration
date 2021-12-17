@@ -1,4 +1,5 @@
 import json
+import typing
 from msa_sdk import constants
 from msa_sdk.order import Order
 from msa_sdk.variables import Variables
@@ -25,10 +26,9 @@ obmf  = Order(device_id=device_id)
  
 MS_source_path = context['MS_source_path']
 MS_list        = context['MS_list']  
-MS_list        = MS_list.replace(' ;',';')     
-MS_list        = MS_list.replace('; ',';')     
-     
+
 if MS_list:
+  MS_list = MS_list.replace('\s*;\s*',';')     
   for MS in  MS_list.split(';'):
     if MS:
       #mservice = ["CommandDefinition/LINUX/CISCO_IOS_emulation/interface.xml"]
@@ -37,9 +37,12 @@ if MS_list:
       #Synchronize (read from Device + update MSA-DB) only 1 MS each time:
       obmf.command_synchronizeOneOrMoreObjectsFromDevice(mservice, timeout)
       response = json.loads(obmf.content)
-      response = response[0]  # synchronyse only 1 ms, so get only first output
-      context[ MS + '_values'] = response
-    
+      if response and type(response) is list:
+        response = response[0]  # synchronyse only 1 ms, so get only first output
+        context[ MS + '_values'] = response
+      else:
+        MSA_API.task_error('Can not import MS "' + MS + '", response=' + str(response), context, True)
+
       if response.get('wo_status') == constants.FAILED or response.get('status') != 'OK':
 
         if 'wo_newparams' in response:
@@ -55,9 +58,54 @@ if MS_list:
           context[ MS + '_values'] = response_message.get(MS)
         else:
           context[ MS + '_values'] = response_message
-    
-    
-MSA_API.task_success('Good, all MS ('+MS_list+') imported for DeviceId:'+context['source_device_id'], context, True)
+  MSA_API.task_success('Good, all MS ('+MS_list+') imported for DeviceId:'+context['source_device_id'], context, True)
+
+
+else:
+  #we synchronise all MS attached to the source device
+  obmf.command_synchronize(timeout)
+  responses = json.loads(obmf.content)
+  if isinstance(responses, typing.List): 
+    context[ 'ALL MS_synch_values'] = responses
+    MS_list = []
+    #responses contains only MS which contains some datas, we don't get attached MS without datas
+    for response in responses:
+      # "commandId": 0, "status": "OK","message": "{\"class_map\":{\"RT\":{\"object_id\":\"RT\",\"matches\":{\"0\":{\"not\":\"\",\"match_cmd\":\"ip \"}}}},\"ip_route\"
+      if response.get('message') and response.get('status'):
+        if response['status'] != 'OK':
+          MSA_API.task_error('Error during synchronise DeviceId:'+context['source_device_id'] + ' : ' + str(response), context, True)
+        #else:
+          #response_message = json.loads(response.get('message'))  #convert into json array
+          #for ms in response_message:
+          #  MS_list.append(ms)
+
+  #Get all microservices attached to a device.
+  obmf.command_objects_all()
+  response = json.loads(obmf.content)
+  context[ 'ALL MS_attached device_id'+device_id] = response
+  ''' "ALL MS_attached": [
+        "bgp_vrf",
+        "class_map",
+        "interface",
+        "ip_access_list",
+        "ip_community_list",
+        "ip_route",
+        "ip_vrf",
+        "policy_map",
+        "route_map",
+        "router_bgp"
+   ], 
+  ''' 
+  if response:
+    for ms in response:
+      MS_list.append(ms)
+   
+  if MS_list:
+    MS_list             = ';'.join(MS_list)  
+    context['MS_list']  = MS_list
+  else:
+    MS_list = ''
+MSA_API.task_success('Good, all MS attached to the device DeviceId:'+context['source_device_id'] + ' imported ('+MS_list+')', context, True)
 
 
 

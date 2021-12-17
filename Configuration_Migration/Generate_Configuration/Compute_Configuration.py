@@ -17,7 +17,9 @@ dev_var.add('destination_interfaces_name', var_type='String')
 dev_var.add('data_conversion', var_type='String')
 
 context = Variables.task_call(dev_var)
- 
+
+#########################################################
+# Function: Parse all MS values recursivly and change the value (by reference) if needed 
 def  data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination):
    if isinstance(fields, typing.List) and fields:
      field = fields[0]
@@ -53,14 +55,16 @@ def  data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_p
 #get device_id from context
 device_id = context['destination_device_id'][3:]
 
-#Change the interface_name
+#########################################################
+#CHANGE THE INTERFACE_NAME
 source_interfaces_name      = context['source_interfaces_name']
 destination_interfaces_name = context['destination_interfaces_name']
+if context.get('interface_values') and not context.get('interface_values_orig'):
+  context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
+
 if context.get('interface_values'):
   context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
   interfaces_newvalues = context['interface_values']
-
-
   if source_interfaces_name and destination_interfaces_name:
     source_interfaces_name_list = source_interfaces_name.split(';')
     destination_interfaces_name_list = destination_interfaces_name.split(';')
@@ -71,7 +75,6 @@ if context.get('interface_values'):
       new_interface_name = destination_interfaces_name_list[i]
       old_interface_name_ob      = old_interface_name.replace('.','_')  # replace '.' with '_'
       new_interface_name_ob      = new_interface_name.replace('.','_')  # replace '.' with '_'
-
       '''    "interface_values": {
         "Multilink45": {
             "addresses": {
@@ -96,7 +99,7 @@ if context.get('interface_values'):
 
 
 
-########### ADD LINK #############
+########### LOOP ON ALL GIVEN MS #############
 MS_list        = context['MS_list']  
 MS_list        = MS_list.replace(' ;',';')     
 MS_list        = MS_list.replace('; ',';')     
@@ -105,7 +108,6 @@ now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%H:%m")
     
     
-#read convertion patter file
 file='/opt/fmc_repository/Datafiles/' + context['data_conversion_pattern_file']
 if os.path.isfile(file):
   file1 = open(file, "r")
@@ -121,7 +123,8 @@ if MS_list:
   for MS in  MS_list.split(';'):
     if MS:
 
-      #CONVERT SOME DATA
+      #########################################################
+      # CONVERT SOME MS VALUES FROM THE CONVERTION PATTERN FILE
       if data_conversion_list:
         for line in data_conversion_list:
           if (not line.startswith('#')) and line.strip():
@@ -136,7 +139,8 @@ if MS_list:
               convert_comment = list[5]
 
               if convert_MS == MS and context.get(MS+'_values'):
-                context[MS+'_values_orig'] = copy.deepcopy(context[MS+'_values'])
+                if  not context.get(MS+'_values_orig'):
+                  context[MS+'_values_orig'] = copy.deepcopy(context[MS+'_values'])
                 ms_newvalues = context[MS+'_values']
                 fields = convert_field.split('.0.')
                 data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination)
@@ -158,17 +162,19 @@ if MS_list:
                 '''               
               
             
-      # Add the download file link for each values
+      #########################################################
+      # ADD THE DOWNLOAD FILE LINK FOR EACH VALUES
       filelinks={}
       config = context.get( MS + '_values')
-      for key in config:
-        #link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_' + key +'_' + day + '.html'
-        link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '.txt'
-        link_orig = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '_orig.txt'
-        config[key]['link'] = link
-        filelinks[key]      = link
-        context[MS + '_link'] = link
-        context[MS + '_link_orig'] = link_orig
+      link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '.txt'
+      link_orig = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '_orig.txt'
+      if config and isinstance(config, dict):
+        for key in config:
+          config[key]['link'] = link
+          filelinks[key]      = link
+      
+      context[MS + '_link'] = link
+      context[MS + '_link_orig'] = link_orig
       context[MS + '_values'] = config
     
 
