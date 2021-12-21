@@ -1,7 +1,9 @@
 import json
 import typing
+import os
 from msa_sdk import constants
 from msa_sdk.order import Order
+from msa_sdk.conf_profile import ConfProfile
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 dev_var = Variables()
@@ -23,7 +25,8 @@ device_id = context['source_device_id'][3:]
 
 # instantiate device object
 obmf  = Order(device_id=device_id)
- 
+
+
 MS_source_path = context['MS_source_path']
 MS_list        = context['MS_list']  
 
@@ -65,9 +68,9 @@ else:
   #we synchronise all MS attached to the source device
   obmf.command_synchronize(timeout)
   responses = json.loads(obmf.content)
+  MS_list = []
   if isinstance(responses, typing.List): 
     context[ 'ALL MS_synch_values'] = responses
-    MS_list = []
     #responses contains only MS which contains some datas, we don't get attached MS without datas
     for response in responses:
       # "commandId": 0, "status": "OK","message": "{\"class_map\":{\"RT\":{\"object_id\":\"RT\",\"matches\":{\"0\":{\"not\":\"\",\"match_cmd\":\"ip \"}}}},\"ip_route\"
@@ -79,26 +82,24 @@ else:
           #for ms in response_message:
           #  MS_list.append(ms)
 
-  #Get all microservices attached to a device.
-  obmf.command_objects_all()
-  response = json.loads(obmf.content)
-  context[ 'ALL MS_attached device_id'+device_id] = response
-  ''' "ALL MS_attached": [
-        "bgp_vrf",
-        "class_map",
-        "interface",
-        "ip_access_list",
-        "ip_community_list",
-        "ip_route",
-        "ip_vrf",
-        "policy_map",
-        "route_map",
-        "router_bgp"
-   ], 
-  ''' 
-  if response:
-    for ms in response:
-      MS_list.append(ms)
+  # Get deployment settings ID for the device.
+  deployment_settings_id = obmf.command_get_deployment_settings_id()
+  context['deployment_settings_id'] = deployment_settings_id
+  
+  #Get all microservices attached to this deployment setting.
+  confprofile  = ConfProfile(deployment_settings_id)
+  all_ms_attached = confprofile.read()
+  all_ms_attached = json.loads(all_ms_attached)
+  if all_ms_attached.get("microserviceUris"):
+    all_ms_attached = all_ms_attached["microserviceUris"] 
+  context[ 'ALL MS_attached device_id'+device_id] = all_ms_attached
+  
+  #all_ms_attached = {"id" : 44, ..."microserviceUris" : { "CommandDefinition/LINUX/CISCO_IOS_emu  },  "CommandDefinition/LINUX/CISCO_IOS_emulation/bgp_vrf.xml" : {  "name" : "bgp_vrf",   "groups" : [ "EMULATION", "CISCO", "IOS" ].....
+     
+  if all_ms_attached:
+    for full_ms, MS in all_ms_attached.items():
+      if MS.get('name'):
+        MS_list.append(MS['name'])
    
   if MS_list:
     MS_list             = ';'.join(MS_list)  

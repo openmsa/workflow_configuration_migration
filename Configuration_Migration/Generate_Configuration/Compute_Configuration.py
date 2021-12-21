@@ -101,8 +101,7 @@ if context.get('interface_values'):
 
 ########### LOOP ON ALL GIVEN MS #############
 MS_list        = context['MS_list']  
-MS_list        = MS_list.replace(' ;',';')     
-MS_list        = MS_list.replace('; ',';')     
+MS_list        = MS_list.replace('\s*;\s*',';')     
 
 now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%H:%m")
@@ -118,6 +117,17 @@ if os.path.isfile(file):
 else:
   data_conversion_list = ''    
 context['data_conversion'] = data_conversion_list
+
+MS_source_name = context['MS_source_name']
+MS_destination_name = context['MS_destination_name']
+if  MS_source_name and MS_destination_name:
+  MS_source_list      = MS_source_name.replace('\s*;\s*',';')
+  MS_source_list      = MS_source_list.split(';')
+  MS_destination_list = MS_destination_name.replace('\s*;\s*',';')
+  MS_destination_list = MS_destination_list.split(';')
+else:
+  MS_source_list      =''
+  MS_destination_list =''
 
 if MS_list:
   for MS in  MS_list.split(';'):
@@ -145,6 +155,14 @@ if MS_list:
                 fields = convert_field.split('.0.')
                 data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination)
                      
+              
+      #########################################################
+      # Change some MS name between source Device and destination devie
+
+        # for idx, MS_source in enumerate(MS_source_list):
+          # if MS_source == MS_source_name:
+            # context[MS_source + '_values'] = context[MS + '_values']
+              
               
             
       #########################################################
