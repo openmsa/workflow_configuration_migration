@@ -11,7 +11,6 @@ from datetime import datetime
 dev_var = Variables()
 
 dev_var.add('customer_id', var_type='String')
-dev_var.add('MS_list', var_type='String')
 dev_var.add('source_interfaces_name', var_type='String')
 dev_var.add('destination_interfaces_name', var_type='String')
 dev_var.add('data_conversion', var_type='String')
@@ -56,20 +55,20 @@ def  data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_p
 device_id = context['destination_device_id'][3:]
 
 #########################################################
-#CHANGE THE INTERFACE_NAME
 source_interfaces_name      = context['source_interfaces_name']
 destination_interfaces_name = context['destination_interfaces_name']
+
+#CHANGE THE INTERFACE NAME in INTERFACE MS
 if context.get('interface_values') and not context.get('interface_values_orig'):
   context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
 
 if context.get('interface_values'):
-  context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
   interfaces_newvalues = context['interface_values']
   if source_interfaces_name and destination_interfaces_name:
     source_interfaces_name_list = source_interfaces_name.split(';')
     destination_interfaces_name_list = destination_interfaces_name.split(';')
     if len(source_interfaces_name_list) != len(destination_interfaces_name_list):
-      MSA_API.task_error('Error, the length of old interfaces names and nex interfaces name are differentes (old=('+source_interfaces_name+'), new=('+destination_interfaces_name+')', context, True)
+      MSA_API.task_error('Error, the length of old interfaces names and new interfaces name are differentes (old=('+source_interfaces_name+'), new=('+destination_interfaces_name+')', context, True)
     for i in range(len(source_interfaces_name_list)):
       old_interface_name = source_interfaces_name_list[i]
       new_interface_name = destination_interfaces_name_list[i]
@@ -97,7 +96,27 @@ if context.get('interface_values'):
   
   context['interface_values'] = interfaces_newvalues 
 
-
+#CHANGE THE INTERFACE NAME in IP_ROUTE MS
+if context.get('ip_route_values') and not context.get('ip_route_values_orig'):
+  context['ip_route_values_orig'] = copy.deepcopy(context['ip_route_values'])
+if context.get('ip_route_values'):
+  ip_routes_newvalues = context['ip_route_values']
+  if source_interfaces_name and destination_interfaces_name:
+    source_interfaces_name_list = source_interfaces_name.split(';')
+    destination_interfaces_name_list = destination_interfaces_name.split(';')
+    if len(source_interfaces_name_list) != len(destination_interfaces_name_list):
+      MSA_API.task_error('Error, the length of old interfaces names and new interfaces name are differentes (old=('+source_interfaces_name+'), new=('+destination_interfaces_name+')', context, True)
+    for i in range(len(source_interfaces_name_list)):
+      old_interfaces_name = source_interfaces_name_list[i]
+      new_interfaces_name = destination_interfaces_name_list[i]
+      ''' ip_route_values": {  "866d05ae2f8822cce90b0d1cf5855c70": {  "vrf_name": "", "ipv4_address": "186.200.4.50",  "interface": "Serial1/1/0.1/3/2/3:0",
+      '''
+      for key, value in ip_routes_newvalues.items():
+        if value.get("interface") and value["interface"] == old_interfaces_name:
+          ip_routes_newvalues[key]["interface"] = new_interfaces_name
+  
+  context['ip_route_values'] = ip_routes_newvalues 
+  
 
 ########### LOOP ON ALL GIVEN MS #############
 MS_list        = context['MS_list']  
@@ -118,16 +137,6 @@ else:
   data_conversion_list = ''    
 context['data_conversion'] = data_conversion_list
 
-MS_source_name = context['MS_source_name']
-MS_destination_name = context['MS_destination_name']
-if  MS_source_name and MS_destination_name:
-  MS_source_list      = MS_source_name.replace('\s*;\s*',';')
-  MS_source_list      = MS_source_list.split(';')
-  MS_destination_list = MS_destination_name.replace('\s*;\s*',';')
-  MS_destination_list = MS_destination_list.split(';')
-else:
-  MS_source_list      =''
-  MS_destination_list =''
 
 if MS_list:
   for MS in  MS_list.split(';'):
@@ -155,15 +164,6 @@ if MS_list:
                 fields = convert_field.split('.0.')
                 data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination)
                      
-              
-      #########################################################
-      # Change some MS name between source Device and destination devie
-
-        # for idx, MS_source in enumerate(MS_source_list):
-          # if MS_source == MS_source_name:
-            # context[MS_source + '_values'] = context[MS + '_values']
-              
-              
             
       #########################################################
       # ADD THE DOWNLOAD FILE LINK FOR EACH VALUES

@@ -11,7 +11,6 @@ from datetime import datetime
 dev_var = Variables()
 
 dev_var.add('customer_id', var_type='String')
-dev_var.add('MS_list', var_type='String')
 dev_var.add('source_interfaces_name', var_type='String')
 dev_var.add('destination_interfaces_name', var_type='String')
 dev_var.add('data_filter', var_type='String')
@@ -123,10 +122,10 @@ if MS_list_string:
         ms_newvalues = copy.deepcopy(context[MS+'_values'])
         for  object_id, value in ms_newvalues.items():
           if value.get('migrate') and value['migrate']==0:
-            context[MS+'_values'].pop(object_id)
+            context[MS+'_values'].pop(object_id)  #remove value
             
    
-MSA_API.task_success('Good, filter all MS values', context, True)
+MSA_API.task_success('Good, filter all MS (' + ';'.join(context['MS_to_filter']) + ') values', context, True)
 
 
 
