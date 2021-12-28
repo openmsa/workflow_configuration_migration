@@ -69,11 +69,11 @@ if isinstance(responses, typing.List):
       if MS.get('name'):
         MS_list.append(MS['name'])
    
-  if MS_list:
-    MS_list             = ';'.join(MS_list)  
-    context['MS_list']  = MS_list
-  else:
-    MS_list = ''
+if MS_list:
+  MS_list             = ';'.join(MS_list)  
+  context['MS_list']  = MS_list
+else:
+  MS_list = ''
     
     
     

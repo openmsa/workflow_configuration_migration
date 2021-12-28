@@ -59,8 +59,8 @@ source_interfaces_name      = context['source_interfaces_name']
 destination_interfaces_name = context['destination_interfaces_name']
 
 #CHANGE THE INTERFACE NAME in INTERFACE MS
-if context.get('interface_values') and not context.get('interface_values_orig'):
-  context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
+#if context.get('interface_values') and not context.get('interface_values_orig'):
+#  context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
 
 if context.get('interface_values'):
   interfaces_newvalues = context['interface_values']
@@ -97,8 +97,8 @@ if context.get('interface_values'):
   context['interface_values'] = interfaces_newvalues 
 
 #CHANGE THE INTERFACE NAME in IP_ROUTE MS
-if context.get('ip_route_values') and not context.get('ip_route_values_orig'):
-  context['ip_route_values_orig'] = copy.deepcopy(context['ip_route_values'])
+#if context.get('ip_route_values') and not context.get('ip_route_values_orig'):
+#  context['ip_route_values_orig'] = copy.deepcopy(context['ip_route_values'])
 if context.get('ip_route_values'):
   ip_routes_newvalues = context['ip_route_values']
   if source_interfaces_name and destination_interfaces_name:
@@ -125,14 +125,16 @@ MS_list        = MS_list.replace('\s*;\s*',';')
 now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%H:%m")
     
-    
-file='/opt/fmc_repository/Datafiles/' + context['data_conversion_pattern_file']
+wf_path = os.path.dirname(__file__)
+file =  wf_path+'/../' + context['data_conversion_pattern_file']
 if os.path.isfile(file):
   file1 = open(file, "r")
   # read file content
   data_conversion = file1.read()
   file1.close()
   data_conversion_list = data_conversion.split('\n')
+  data_conversion_list = [i for i in data_conversion_list if i] #remove empty element
+
 else:
   data_conversion_list = ''    
 context['data_conversion'] = data_conversion_list
@@ -158,8 +160,8 @@ if MS_list:
               convert_comment = list[5]
 
               if convert_MS == MS and context.get(MS+'_values'):
-                if  not context.get(MS+'_values_orig'):
-                  context[MS+'_values_orig'] = copy.deepcopy(context[MS+'_values'])
+                #if  not context.get(MS+'_values_orig'):
+                #  context[MS+'_values_orig'] = copy.deepcopy(context[MS+'_values'])
                 ms_newvalues = context[MS+'_values']
                 fields = convert_field.split('.0.')
                 data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination)

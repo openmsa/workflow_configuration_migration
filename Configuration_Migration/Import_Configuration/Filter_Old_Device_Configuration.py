@@ -2,6 +2,7 @@ import json
 import copy
 import typing
 import os.path
+import sys
 from msa_sdk import constants
 from msa_sdk.order import Order
 from msa_sdk.variables import Variables
@@ -15,9 +16,14 @@ dev_var.add('source_interfaces_name', var_type='String')
 dev_var.add('destination_interfaces_name', var_type='String')
 dev_var.add('data_filter', var_type='String')
 
+INTERFACE = 'interface'
+
 context = Variables.task_call(dev_var)
  
- 
+# This Script will filter interfaces names : it remove all interfaces values in INTERFACE MS which are not present in the given field 'source_interfaces_name'
+# This Script will also remove all given MS values which are not present in the given field 'source_interfaces_name'
+#    example in 'data_filter_file' file (filter_cisco_IOS_to_XR.txt) we have the line "interface|vrf_name|ip_vrf|object_id", the script  will remove all MS values for the field object_id in the 'ip_vrf' MS where the object_id is not in find in field 'vrf_name' in the 'interface' MS values 
+
 
 #########################################################
 # Function: Parse all MS values recursivly for the given field
@@ -53,43 +59,54 @@ day = now.strftime("%m-%d-%Y-%H:%m")
     
     
 #read filter file
-file='/opt/fmc_repository/Datafiles/' + context['data_filter_file']   # filter_cisco_IOS_to_XR.txt
+wf_path = os.path.dirname(__file__)
+file =  wf_path+'/../'+context['data_filter_file']   # filter_cisco_IOS_to_XR.txt
 if os.path.isfile(file):
   file1 = open(file, "r")
   # read file content
   data_filter = file1.read()
   file1.close()
   data_filter_list = data_filter.split('\n')
+  data_filter_list = [i for i in data_filter_list if i] #remove empty element
 else:
   data_filter_list = ''    
   
 context['data_filter'] = data_filter_list
+context['data_filter_file_full'] = file 
 
 # Start with THE INTERFACE MS
-# We wan keeep only interface names whic are given in context['source_interfaces_name']
+# We wan keep only interface names which are given in context['source_interfaces_name']
+context['source_interfaces_name'] = context['source_interfaces_name'].replace('\+','') #reove lanc space
 source_interfaces_name      = context['source_interfaces_name']
-source_interfaces_name_list = source_interfaces_name.split('\s*;\s*')
+source_interfaces_name_list = source_interfaces_name.split(';')
 
-if context.get('interface_values') and not context.get('interface_values_orig'):
-  context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
+#if context.get(INTERFACE+'_values') and not context.get(INTERFACE+'_values_orig'):
+#  context[INTERFACE+'_values_orig'] = copy.deepcopy(context[INTERFACE+'_values'])
 
-if context.get('interface_values'):
-  interfaces_newvalues = context['interface_values']
+context['source_interfaces_name_list'] = source_interfaces_name_list
+
+if context.get(INTERFACE+'_values'):
+  interfaces_newvalues = context[INTERFACE+'_values']
   #interfaces_newvalues: { "Multilink45": { "object_id": "Multilink45", "migrate": "0",....
-  for interface in interfaces_newvalues:
+  for interface, val in interfaces_newvalues.items():
     if interface in source_interfaces_name_list:
       #We used this interface
       interfaces_newvalues[interface]['migrate'] = 1 
-
+      
 context['MS_to_filter'] = {}
+context['MS_to_filter'][INTERFACE] = 1
+
+######### IT WILL pt migrate to 1 to all destination fields values 
+# example for "interface|vrf_name|ip_vrf|object_id"  we keep all MS values for ip_vrf where the object_id is equal to vrf_name in interface MS  and we remove all other MS values
+
 
 if MS_list_string:
   MS_list = MS_list_string.split('\s*;\s*')
-  #CONVERT SOME DATA
+  #Find ALL identicals values
   if data_filter_list:
     for line in data_filter_list:
       if (not line.startswith('#')) and line.strip():
-        context['data_filter_line'] = line
+        #context['data_filter_line'] = line
         list = line.split('|')  # #orig_MS_Name|orig_field_name|destination_MS_Name|destination_field_name
         if len(list) > 3:
           orig_MS_Name            = list[0]
@@ -98,8 +115,8 @@ if MS_list_string:
           destination_field_name  = list[3]
           context['MS_to_filter'][destination_MS_Name] = 1
           if  context.get(orig_MS_Name+'_values') and context.get(destination_MS_Name+'_values'):
-            if not context.get(destination_MS_Name+'_values_orig'):
-              context[destination_MS_Name+'_values_orig'] = copy.deepcopy(context[destination_MS_Name+'_values'])
+            #if not context.get(destination_MS_Name+'_values_orig'):
+            #  context[destination_MS_Name+'_values_orig'] = copy.deepcopy(context[destination_MS_Name+'_values'])
              
             context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
@@ -109,21 +126,20 @@ if MS_list_string:
                 if destination_field_name == 'object_id':
                   context[destination_MS_Name+'_values'][field_value]['migrate'] = 1
                 else:
-                  #loop on all object_id to get the good value
+                  # Loop on all object_id to get the good value
                   for  value2 in context[destination_MS_Name+'_values']:
-                    #context['zzz_filter'] = context[destination_MS_Name+'_values'][value2] + ' filedval='+field_value
                     if context[destination_MS_Name+'_values'][value2][destination_field_name] == field_value:
                       context[destination_MS_Name+'_values'][value2]['migrate'] = 1 
-                    #MSA_API.task_error('LED destination_field_name='+destination_field_name+' val2='+value2 + ' filedval='+field_value, context, True)
  
-                  
-    for MS in context['MS_to_filter']:
-      if context.get(MS+'_values') and context[MS+'_values']:
-        ms_newvalues = copy.deepcopy(context[MS+'_values'])
-        for  object_id, value in ms_newvalues.items():
-          if value.get('migrate') and value['migrate']==0:
-            context[MS+'_values'].pop(object_id)  #remove value
-            
+ 
+for MS in context['MS_to_filter']:
+  context[MS+'_removed_values']=[]
+  if context.get(MS+'_values') and context[MS+'_values']:
+    ms_newvalues = copy.deepcopy(context[MS+'_values']) # We can not remove one element while iterating over it, so itirating on one ms_newvalues
+    for  object_id, value in ms_newvalues.items():
+      if not value.get('migrate') or value['migrate'] == 0:
+        context[MS+'_values'].pop(object_id)  #remove value
+        #context[MS+'_removed_values'].append(object_id)  
    
 MSA_API.task_success('Good, filter all MS (' + ';'.join(context['MS_to_filter']) + ') values', context, True)
 

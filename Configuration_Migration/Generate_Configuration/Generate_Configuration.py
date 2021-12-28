@@ -31,7 +31,7 @@ links =[]
 MS_source_path = context['MS_source_path']
 MS_imported =[]
 
-####### GEt the lis tof MS attached to destination device:
+####### GEt the list of MS attached to the destination device:
 # Get deployment settings ID for the device.
 deployment_settings_id = obmf.command_get_deployment_settings_id()
 context['destination_deployment_settings_id'] = deployment_settings_id
@@ -79,7 +79,6 @@ if MS_list:
             message =  response.get("entity").get("message") 
             context[ MS + '_generate_response_message'] = message
             file_link = context[MS + '_link']
-            #message = re.sub(r'^\s*$', '888', message)  #remove blank lines
             message = re.sub(r'\n\s*\n', '\n', message)  #remove blank lines
             #message = '<pre> \n' + message + '\n </pre>'
             f = open(file_link, "w")
