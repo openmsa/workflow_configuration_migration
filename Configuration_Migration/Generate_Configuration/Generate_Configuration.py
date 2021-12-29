@@ -46,9 +46,9 @@ if all_ms_attached.get("microserviceUris"):
   context[ 'MS_attached destination device_id' + device_id + ' : '] = all_ms_attached
   if all_ms_attached:
     for full_ms, MS in all_ms_attached.items():
-      if MS.get('name'):
-        MS_list_destination.append(MS['name'])
-   
+      if Path(full_ms).stem:
+        MS_list_destination.append(Path(full_ms).stem)   #MS filename without extension
+        
 context['MS_list_destination']  = MS_list_destination
 
 ms_not_attached_destination_device = []

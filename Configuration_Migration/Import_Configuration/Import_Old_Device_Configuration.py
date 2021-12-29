@@ -1,6 +1,7 @@
 import json
 import typing
 import os
+from pathlib import Path
 from msa_sdk import constants
 from msa_sdk.order import Order
 from msa_sdk.conf_profile import ConfProfile
@@ -66,8 +67,8 @@ if isinstance(responses, typing.List):
      
   if all_ms_attached:
     for full_ms, MS in all_ms_attached.items():
-      if MS.get('name'):
-        MS_list.append(MS['name'])
+      if Path(full_ms).stem:
+        MS_list.append(Path(full_ms).stem)   #MS filename without extension
    
 if MS_list:
   MS_list             = ';'.join(MS_list)  
