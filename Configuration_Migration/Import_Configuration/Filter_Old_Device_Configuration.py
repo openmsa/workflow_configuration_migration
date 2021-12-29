@@ -113,10 +113,10 @@ if MS_list_string:
           orig_field_name         = list[1]
           destination_MS_Name     = list[2]
           destination_field_name  = list[3]
-          context['MS_to_filter'][destination_MS_Name] = 1
           if  context.get(orig_MS_Name+'_values') and context.get(destination_MS_Name+'_values'):
             #if not context.get(destination_MS_Name+'_values_orig'):
             #  context[destination_MS_Name+'_values_orig'] = copy.deepcopy(context[destination_MS_Name+'_values'])
+            context['MS_to_filter'][destination_MS_Name] = 1
              
             context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
