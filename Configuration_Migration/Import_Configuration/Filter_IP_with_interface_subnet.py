@@ -15,7 +15,7 @@ dev_var = Variables()
 dev_var.add('customer_id', var_type='String')
 dev_var.add('source_interfaces_name', var_type='String')
 dev_var.add('original_interfaces_name', var_type='String')
-dev_var.add('data_filter', var_type='String')
+dev_var.add('data_filter_ip_file', var_type='String')
 
 context = Variables.task_call(dev_var)
  
@@ -136,7 +136,7 @@ if MS_list_string:
 
             
    
-MSA_API.task_success('Good, filter IP on all MS (' + ';'.join(context['MS_IP_filter']) + ') values', context, True)
+MSA_API.task_success('Good, filter IP on all MS (' + ';'.join(context['MS_IP_filter']) + ') values from '+ context['data_filter_ip_file'], context, True)
 
 
 

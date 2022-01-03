@@ -141,7 +141,7 @@ for MS in context['MS_to_filter']:
         context[MS+'_values'].pop(object_id)  #remove value
         #context[MS+'_removed_values'].append(object_id)  
    
-MSA_API.task_success('Good, filter all MS (' + ';'.join(context['MS_to_filter']) + ') values', context, True)
+MSA_API.task_success('Good, filter all MS (' + ';'.join(context['MS_to_filter']) + ') values from ' + context['data_filter_file'], context, True)
 
 
 

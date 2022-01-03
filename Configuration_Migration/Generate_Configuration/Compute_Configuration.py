@@ -179,7 +179,7 @@ if MS_list:
     
 
 
-MSA_API.task_success('Good, update the interfaces names', context, True)
+MSA_API.task_success('Good, update the interfaces names and compute data from '+ context['data_conversion_pattern_file'], context, True)
 
 
 
