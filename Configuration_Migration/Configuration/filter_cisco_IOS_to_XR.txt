@@ -1,0 +1,8 @@
+#This file contains the dependency between MS
+#orig_MS_Name|orig_field_name|destination_MS_Name|destination_field_name
+interface|vrf_name|ip_vrf|object_id
+interface|vrf_name|bgp_vrf|object_id
+interface|service_policy_out|policy_name|object_id
+interface|addresses.0.ipv4_address|ip_route|ipv4_address
+interface|object_id|ip_route|interface
+
