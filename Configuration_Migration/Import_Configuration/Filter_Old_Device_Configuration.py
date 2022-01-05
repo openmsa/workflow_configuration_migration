@@ -85,6 +85,7 @@ source_interfaces_name_list = source_interfaces_name.split(';')
 
 context['source_interfaces_name_list'] = source_interfaces_name_list
 
+nb_interfaces_found=0
 if context.get(INTERFACE+'_values'):
   interfaces_newvalues = context[INTERFACE+'_values']
   #interfaces_newvalues: { "Multilink45": { "object_id": "Multilink45", "migrate": "0",....
@@ -92,6 +93,7 @@ if context.get(INTERFACE+'_values'):
     if interface in source_interfaces_name_list:
       #We used this interface
       interfaces_newvalues[interface]['migrate'] = 1 
+      nb_interfaces_found=nb_interfaces_found+1
       
 context['MS_to_filter'] = {}
 context['MS_to_filter'][INTERFACE] = 1
@@ -130,11 +132,12 @@ if MS_list_string:
                     context[destination_MS_Name+'_values'][field_value]  = {}
                     context[destination_MS_Name+'_values'][field_value]['migrate'] = 1
                 else:
-                 # Loop on all object_id to get the good value
-                 for  value2 in context[destination_MS_Name+'_values']:
+                  # Loop on all object_id to get the good value
+                  for  value2 in context[destination_MS_Name+'_values']:
                     if context[destination_MS_Name+'_values'][value2].get(destination_field_name):
                       if context[destination_MS_Name+'_values'][value2][destination_field_name] == field_value:
-                        context[destination_MS_Name+'_values'][value2]['migrate'] = 1
+                        context[destination_MS_Name+'_values'][value2]['migrate'] = 1 
+ 
  
 for MS in context['MS_to_filter']:
   context[MS+'_removed_values']=[]
@@ -145,7 +148,9 @@ for MS in context['MS_to_filter']:
         context[MS+'_values'].pop(object_id)  #remove value
         #context[MS+'_removed_values'].append(object_id)  
    
-MSA_API.task_success('Good, filter all MS (' + ';'.join(context['MS_to_filter']) + ') values from ' + context['data_filter_file'], context, True)
-
+if nb_interfaces_found:   
+  MSA_API.task_success('Good, Found '+str(nb_interfaces_found)+' interfaces, filter all MS (' + ';'.join(context['MS_to_filter']) + ') values from ' + context['data_filter_file'], context, True)
+else:
+  MSA_API.task_error('Can not find any interfaces in ('+source_interfaces_name+'), check the given interface list', context, True)
 
 

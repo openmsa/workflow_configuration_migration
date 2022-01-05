@@ -31,8 +31,15 @@ def find_all_ip_in_subnet(interface_name, ipv4_address, ipv4_mask, interfaces_IP
     #context['cidr_'+ipaddress ]=  cidr 
     context['cidr_'+ipv4_address+'/'+ipv4_mask ] =  cidr    # "cidr_": "200.207.251.229/30"
     net = ipaddress.ip_network(cidr, strict=False)
+   
+    context['cidr_RR'+ipv4_address+'/'+ipv4_mask ] = str(net.hosts())   
+
     for ip in net.hosts():
+      context['cidr_RRAA'+ipv4_address+'/'+ipv4_mask ] = str(ip)   
       interfaces_IP_available[str(ip)] = interface_name
+      
+    context['cidr_RRRFF'+ipv4_address+'/'+ipv4_mask ] = str(interfaces_IP_available)
+
   return interfaces_IP_available
  
 #########################################################
@@ -65,7 +72,6 @@ def remove_bad_ip_values_recursif(orig_field_name, fields, ms_newvalues, interfa
                  
   return 'not found'
     
- 
  
 MS_list_string        = context['MS_list']  
     
@@ -134,9 +140,13 @@ if MS_list_string:
             remove_bad_ip_values_recursif(original_field_name, fields, context[original_MS_Name+'_values'], interfaces_IP_available);
             
 
-            
+#MSA_API.task_error('TETS33T22  '+ context['data_filter_ip_file'], context, True)
+         
    
-MSA_API.task_success('Good, filter IP on all MS (' + ';'.join(context['MS_IP_filter']) + ') values from '+ context['data_filter_ip_file'], context, True)
+if context['MS_IP_filter']:
+  MSA_API.task_success('Good, filter IP on all MS (' + ';'.join(context['MS_IP_filter'].keys()) + ') values from '+ context['data_filter_ip_file']+ ', find '+ str(len(interfaces_IP_available)) +' IP availables for given interfaces', context, True)
+else:
+  MSA_API.task_success('Good, no MS filter available from '+ context['data_filter_ip_file'], context, True)
 
 
 

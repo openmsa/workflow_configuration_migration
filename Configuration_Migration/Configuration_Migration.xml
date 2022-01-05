@@ -12,10 +12,10 @@
         <sdTypes manId="14020601" modId="28112021"/>
       </sdTypes>
     </variable>
-    <variable displayName="source_interfaces_name  (int1;int2..)" name="params.source_interfaces_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="Multilink45;Multilink66;Serial1/0/0.1/1/7/3:0;Serial1/0/0.1/3/1/1:0;Serial1/1/0.1/2/2/2:0;Serial2/3/0.1/3/6/2:0;Serial2/3/0.1/3/7/3:0" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+    <variable displayName="source_interfaces_name  (int1;int2..)" name="params.source_interfaces_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="Loopback0;Loopback101;Multilink1;Multilink2" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
     </variable>
-    <variable displayName="destination_interfaces_name (int1;int2..)" name="params.destination_interfaces_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="AAMultilink45;AAMultilink66;AASerial1/0/0.1/1/7/3:0;AASerial1/0/0.1/3/1/1:0;AASerial1/1/0.1/2/2/2:0;AASerial2/3/0.1/3/6/2:0;AASerial2/3/0.1/3/7/3:0" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+    <variable displayName="destination_interfaces_name (int1;int2..)" name="params.destination_interfaces_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="AALoopback0;AALoopback101;AAMultilink1;AAMultilink2" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
     </variable>
     <variable displayName="customer_id" name="params.customer_id" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
@@ -48,7 +48,22 @@
     <variable displayName="data_filter_ip_file" name="params.data_filter_ip_file" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="Configuration/filter_interface_ip.txt" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
     </variable>
-    <variable displayName="data_filter" name="params.data_filter" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+    <variable displayName="SourceName" name="params.interfaces.0.source" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <repositories/>
+    </variable>
+    <variable displayName="DestinationName" name="params.interfaces.0.destination" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <repositories/>
+    </variable>
+    <variable displayName="Xconnect Group" name="params.interfaces.0.xconnect_group" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <repositories/>
+    </variable>
+    <variable displayName="Pseudowire ID" name="params.interfaces.0.pseudowire_id" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <repositories/>
+    </variable>
+    <variable displayName="Pseudowire Class" name="params.interfaces.0.pseudowire_class" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <repositories/>
+    </variable>
+    <variable displayName="Gen.Inter.List" name="params.interfaces.0.gil" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
     </variable>
   </variables>
@@ -69,6 +84,10 @@
     <task name="Filter_IP_with_interface_subnet.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Filter IP with interfaces subnet range.py</displayName>
+    </task>
+    <task name="Fill_Xconnect.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Fill Xconnect MS with given parameter</displayName>
     </task>
     <task name="Compute_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
@@ -110,12 +129,26 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Filter IP with interfaces subnet range.py</displayName>
     </task>
+    <task name="Fill_Xconnect.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Fill Xconnect MS with given parameter</displayName>
+    </task>
   </process>
   <process name="Delete_Service">
     <displayName>Delete Service</displayName>
     <type>DELETE</type>
     <visibility>5</visibility>
     <allowSchedule/>
+  </process>
+  <process name="Process/workflow_configuration_migration/Configuration_Migration/Process_purge_all_instances">
+    <displayName>Purge all old WF instances</displayName>
+    <type>CREATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Task_purge_all_instances.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Process_purge_all_instances/Tasks</processPath>
+      <displayName>Purge all old WF instances</displayName>
+    </task>
   </process>
   <information>
     <icon/>
