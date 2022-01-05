@@ -126,11 +126,11 @@ if MS_list_string:
                 if destination_field_name == 'object_id':
                   context[destination_MS_Name+'_values'][field_value]['migrate'] = 1
                 else:
-                  # Loop on all object_id to get the good value
-                  for  value2 in context[destination_MS_Name+'_values']:
-                    if context[destination_MS_Name+'_values'][value2][destination_field_name] == field_value:
-                      context[destination_MS_Name+'_values'][value2]['migrate'] = 1 
- 
+                 # Loop on all object_id to get the good value
+                 for  value2 in context[destination_MS_Name+'_values']:
+                    if context[destination_MS_Name+'_values'][value2].get(destination_field_name):
+                      if context[destination_MS_Name+'_values'][value2][destination_field_name] == field_value:
+                        context[destination_MS_Name+'_values'][value2]['migrate'] = 1
  
 for MS in context['MS_to_filter']:
   context[MS+'_removed_values']=[]
