@@ -124,7 +124,11 @@ if MS_list_string:
             if context[orig_field_name+'_field_values']:
               for field_value in context[orig_field_name+'_field_values']:
                 if destination_field_name == 'object_id':
-                  context[destination_MS_Name+'_values'][field_value]['migrate'] = 1
+                  if context[destination_MS_Name+'_values'].get(field_value):
+                    context[destination_MS_Name+'_values'][field_value]['migrate'] = 1
+                  else:
+                    context[destination_MS_Name+'_values'][field_value]  = {}
+                    context[destination_MS_Name+'_values'][field_value]['migrate'] = 1
                 else:
                  # Loop on all object_id to get the good value
                  for  value2 in context[destination_MS_Name+'_values']:
