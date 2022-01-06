@@ -28,18 +28,12 @@ def find_all_ip_in_subnet(interface_name, ipv4_address, ipv4_mask, interfaces_IP
     # convert ipv4 subnet mask to cidr notation 
     len = ipaddress.IPv4Network('0.0.0.0/'+ipv4_mask).prefixlen  #24 
     cidr = ipv4_address+'/'+str(len)
-    #context['cidr_'+ipaddress ]=  cidr 
     context['cidr_'+ipv4_address+'/'+ipv4_mask ] =  cidr    # "cidr_": "200.207.251.229/30"
-    net = ipaddress.ip_network(cidr, strict=False)
-   
-    context['cidr_RR'+ipv4_address+'/'+ipv4_mask ] = str(net.hosts())   
-
-    for ip in net.hosts():
-      context['cidr_RRAA'+ipv4_address+'/'+ipv4_mask ] = str(ip)   
+    ips = ipaddress.ip_network(cidr, strict=False)
+    ip_list = [str(ip) for ip in ips]    
+    for ip in ip_list:
       interfaces_IP_available[str(ip)] = interface_name
-      
-    context['cidr_RRRFF'+ipv4_address+'/'+ipv4_mask ] = str(interfaces_IP_available)
-
+    
   return interfaces_IP_available
  
 #########################################################
