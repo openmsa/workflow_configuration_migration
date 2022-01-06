@@ -16,11 +16,9 @@ dev_var.add('source_interfaces_name', var_type='String')
 dev_var.add('destination_interfaces_name', var_type='String')
 dev_var.add('data_filter', var_type='String')
 
-INTERFACE = 'interface'
 
 context = Variables.task_call(dev_var)
  
-# This Script will filter interfaces names : it remove all interfaces values in INTERFACE MS which are not present in the given field 'source_interfaces_name'
 # This Script will also remove all given MS values which are not present in the given field 'source_interfaces_name'
 #    example in 'data_filter_file' file (filter_cisco_IOS_to_XR.txt) we have the line "interface|vrf_name|ip_vrf|object_id", the script  will remove all MS values for the field object_id in the 'ip_vrf' MS where the object_id is not in find in field 'vrf_name' in the 'interface' MS values 
 
@@ -54,9 +52,6 @@ device_id = context['destination_device_id'][3:]
 ########### ADD LINK #############
 MS_list_string        = context['MS_list']  
 
-now = datetime.now() # current date and time
-day = now.strftime("%m-%d-%Y-%H:%m")
-    
     
 #read filter file
 wf_path = os.path.dirname(__file__)
@@ -74,31 +69,10 @@ else:
 context['data_filter'] = data_filter_list
 context['data_filter_file_full'] = file 
 
-# Start with THE INTERFACE MS
-# We wan keep only interface names which are given in context['source_interfaces_name']
-context['source_interfaces_name'] = context['source_interfaces_name'].replace('\+','') #reove lanc space
-source_interfaces_name      = context['source_interfaces_name']
-source_interfaces_name_list = source_interfaces_name.split(';')
-
-#if context.get(INTERFACE+'_values') and not context.get(INTERFACE+'_values_orig'):
-#  context[INTERFACE+'_values_orig'] = copy.deepcopy(context[INTERFACE+'_values'])
-
-context['source_interfaces_name_list'] = source_interfaces_name_list
-
-nb_interfaces_found=0
-if context.get(INTERFACE+'_values'):
-  interfaces_newvalues = context[INTERFACE+'_values']
-  #interfaces_newvalues: { "Multilink45": { "object_id": "Multilink45", "migrate": "0",....
-  for interface, val in interfaces_newvalues.items():
-    if interface in source_interfaces_name_list:
-      #We used this interface
-      interfaces_newvalues[interface]['migrate'] = 1 
-      nb_interfaces_found=nb_interfaces_found+1
       
 context['MS_to_filter'] = {}
-context['MS_to_filter'][INTERFACE] = 1
 
-######### IT WILL pt migrate to 1 to all destination fields values 
+######### IT WILL put migrate to 1 to all destination fields values 
 # example for "interface|vrf_name|ip_vrf|object_id"  we keep all MS values for ip_vrf where the object_id is equal to vrf_name in interface MS  and we remove all other MS values
 
 
@@ -148,9 +122,6 @@ for MS in context['MS_to_filter']:
         context[MS+'_values'].pop(object_id)  #remove value
         #context[MS+'_removed_values'].append(object_id)  
    
-if nb_interfaces_found:   
-  MSA_API.task_success('Good, Found '+str(nb_interfaces_found)+' interfaces, filter all MS (' + ';'.join(context['MS_to_filter']) + ') values from ' + context['data_filter_file'], context, True)
-else:
-  MSA_API.task_error('Can not find any interfaces in ('+source_interfaces_name+'), check the given interface list', context, True)
+MSA_API.task_success('Good, Filter all MS (' + ';'.join(context['MS_to_filter']) + ') values from ' + context['data_filter_file'], context, True)
 
 
