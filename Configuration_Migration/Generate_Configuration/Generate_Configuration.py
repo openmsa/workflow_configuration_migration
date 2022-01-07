@@ -12,6 +12,7 @@ dev_var = Variables()
 dev_var.add('source_interfaces_name' )
 dev_var.add('destination_interfaces_name')
 dev_var.add('customer_id')
+dev_var.add('generate_file')
  
 context = Variables.task_call(dev_var)
 
@@ -53,6 +54,7 @@ if all_ms_attached.get("microserviceUris"):
 context['MS_list_destination']  = MS_list_destination
 
 ms_not_attached_destination_device = []
+full_message = ''
 
 if MS_list:
   for MS in  MS_list.split(';'):
@@ -73,18 +75,20 @@ if MS_list:
               # "status": "OK",
               # "message": "\n!\nip vrf  TRIBUNAL-JUSTICA\n\n#exit\n!\n!\nip vrf  V1038:Bco_Bradesco\n\n#exit\n!\n!\nip vrf  V4815:Sabesp_Intragov\n  rd  \n\n  export map  \n#exit\n!"
           # },
+          
         if response.get("entity"):
           if response.get("entity").get("status") == "OK":
            if response.get("entity").get("message"):
             # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
             message =  response.get("entity").get("message") 
-            context[ MS + '_generate_response_message'] = message
             file_link = context[MS + '_link']
             message = re.sub(r'\n\s*\n', '\n', message)  #remove blank lines
+            message = re.sub(r' \s+', ' ', message)  #remove more than 1 blank space
             #message = '<pre> \n' + message + '\n </pre>'
             f = open(file_link, "w")
             f.write(message)
             f.close()
+            full_message = full_message + ' \n ' + message
             link={}
             link['MicroService'] = MS
             link['file_link']    = file_link
@@ -141,6 +145,12 @@ if MS_list:
       ms_not_attached_destination_device.append(MS)
     
 context['link'] = links 
+
+#Create the global config file :
+
+f = open(context['generate_file'], "w")
+f.write(full_message)
+f.close()
 
 if ms_not_attached_destination_device:
   MSA_API.task_success('Warning , some MS ('+';'.join(ms_not_attached_destination_device)+') was not found for destination device :'+context['destination_device_id']+', other MS imported successfully ('+';'.join(MS_imported)+')', context, True)

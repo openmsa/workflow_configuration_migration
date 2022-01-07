@@ -176,8 +176,9 @@ if MS_list:
       
       context[MS + '_link'] = link
       context[MS + '_link_orig'] = link_orig
-      context[MS + '_values'] = config
-    
+
+context['generate_file'] = "/opt/fmc_repository/Datafiles/TEST/ALL_MS_"  + day + '.txt'
+
 
 
 MSA_API.task_success('Good, update the interfaces names and compute data from '+ context['data_conversion_pattern_file'], context, True)
