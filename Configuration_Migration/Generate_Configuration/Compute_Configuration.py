@@ -87,12 +87,13 @@ if context.get('interface_values'):
             "ppp": {
       '''
       if interfaces_newvalues.get(old_interface_name_ob):
-        if interfaces_newvalues.get(new_interface_name_ob):
-          MSA_API.task_error('Error, interface name "'+new_interface_name_ob+'" already exist on the device', context, True)
-        interfaces_newvalues[new_interface_name_ob] = interfaces_newvalues[old_interface_name_ob]
-        if (interfaces_newvalues[new_interface_name_ob].get("object_id")):
-          interfaces_newvalues[new_interface_name_ob]["object_id"] = new_interface_name
-        del interfaces_newvalues[old_interface_name_ob]  
+        if new_interface_name_ob != old_interface_name_ob:
+          if interfaces_newvalues.get(new_interface_name_ob):
+            MSA_API.task_error('Error, interface name "'+new_interface_name_ob+'" already exist on the device', context, True)
+          interfaces_newvalues[new_interface_name_ob] = interfaces_newvalues[old_interface_name_ob]
+          if (interfaces_newvalues[new_interface_name_ob].get("object_id")):
+            interfaces_newvalues[new_interface_name_ob]["object_id"] = new_interface_name
+          del interfaces_newvalues[old_interface_name_ob]  
   
   context['interface_values'] = interfaces_newvalues 
 

@@ -41,7 +41,7 @@ def data_find_migrate_recursif(orig_field_name, fields, ms_newvalues):
                data_find_migrate_recursif(orig_field_name, copy.deepcopy(fields), value1[field]) 
              else:
                if value :
-                 context[orig_field_name+'_field_values'][value] = ''
+                 context['Filter_'+orig_field_name+'_field_values'][value] = ''
   return 'not found'
    
    
@@ -97,8 +97,8 @@ if MS_list_string:
             context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
             data_find_migrate_recursif(orig_field_name, fields,context[orig_MS_Name+'_values']);
-            if context[orig_field_name+'_field_values']:
-              for field_value in context[orig_field_name+'_field_values']:
+            if context['Filter_'+orig_field_name+'_field_values']:
+              for field_value in context['Filter_'+orig_field_name+'_field_values']:
                 if destination_field_name == 'object_id':
                   if context[destination_MS_Name+'_values'].get(field_value):
                     context[destination_MS_Name+'_values'][field_value]['migrate'] = 1
