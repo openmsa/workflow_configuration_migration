@@ -44,7 +44,35 @@ def data_find_migrate_recursif(orig_field_name, fields, ms_newvalues):
                  context['Filter_'+orig_field_name+'_field_values'][value] = ''
   return 'not found'
    
-   
+#########################################################
+# Function: Parse all MS values recursivly for the given field
+def remove_bad_values_recursif(destination_field_name, fields, ms_newvalues, available_values):
+  if isinstance(fields, typing.List) and fields:
+    field = fields[0]
+    fields.pop(0)
+  else:
+    field = fields  #string
+  if field:
+    if isinstance(ms_newvalues, dict):
+      ms_newvalues2 = copy.deepcopy(ms_newvalues) 
+      # We can not remove one element while iterating over it, so itirating on one copy ms_newvalues2
+      for  key, value1 in ms_newvalues2.items():
+      
+        if isinstance(value1, dict):
+          if value1.get(field):
+             value = value1[field]
+             if isinstance(value, dict):
+               remove_bad_values_recursif(destination_field_name, copy.deepcopy(fields), ms_newvalues[key][field], available_values) 
+             else:
+               if value:
+                 if  value not in available_values:
+                   #ms_newvalues[key][field]  = 'IP_TO_REMOVE_value='+value
+                   ms_newvalues.pop(key)  #remove parent value
+                 #else: 
+                   #ms_newvalues[key][field]  = 'OK TO KEEP_value='+value
+                 
+  return 'not found'
+       
  
 #get device_id from context
 device_id = context['destination_device_id'][3:]
@@ -96,31 +124,13 @@ if MS_list_string:
              
             context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
-            data_find_migrate_recursif(orig_field_name, fields,context[orig_MS_Name+'_values']);
-            if context['Filter_'+orig_field_name+'_field_values']:
-              for field_value in context['Filter_'+orig_field_name+'_field_values']:
-                if destination_field_name == 'object_id':
-                  if context[destination_MS_Name+'_values'].get(field_value):
-                    context[destination_MS_Name+'_values'][field_value]['migrate'] = 1
-                  else:
-                    context[destination_MS_Name+'_values'][field_value]  = {}
-                    context[destination_MS_Name+'_values'][field_value]['migrate'] = 1
-                else:
-                  # Loop on all object_id to get the good value
-                  for  value2 in context[destination_MS_Name+'_values']:
-                    if context[destination_MS_Name+'_values'][value2].get(destination_field_name):
-                      if context[destination_MS_Name+'_values'][value2][destination_field_name] == field_value:
-                        context[destination_MS_Name+'_values'][value2]['migrate'] = 1 
- 
- 
-for MS in context['MS_to_filter']:
-  context[MS+'_removed_values']=[]
-  if context.get(MS+'_values') and context[MS+'_values']:
-    ms_newvalues = copy.deepcopy(context[MS+'_values']) # We can not remove one element while iterating over it, so itirating on one ms_newvalues
-    for  object_id, value in ms_newvalues.items():
-      if not value.get('migrate') or value['migrate'] == 0:
-        context[MS+'_values'].pop(object_id)  #remove value
-        #context[MS+'_removed_values'].append(object_id)  
+            context['Filter_'+orig_field_name+'_field_values'] = {}
+            ## Find all source values
+            data_find_migrate_recursif(orig_field_name, fields,context[orig_MS_Name+'_values'])
+            
+            fields = destination_field_name.split('.0.')
+            remove_bad_values_recursif(destination_field_name, fields, context[destination_MS_Name+'_values'], context['Filter_'+orig_field_name+'_field_values']);
+            
    
 MSA_API.task_success('Good, Filter all MS (' + ';'.join(context['MS_to_filter']) + ') values from ' + context['data_filter_file'], context, True)
 
