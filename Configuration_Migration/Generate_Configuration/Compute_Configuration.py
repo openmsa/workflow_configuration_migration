@@ -124,7 +124,7 @@ MS_list        = context['MS_list']
 MS_list        = MS_list.replace('\s*;\s*',';')     
 
 now = datetime.now() # current date and time
-day = now.strftime("%m-%d-%Y-%H:%m")
+day = now.strftime("%m-%d-%Y-%Hh%m")
     
 wf_path = os.path.dirname(__file__)
 file =  wf_path+'/../' + context['data_conversion_pattern_file']
