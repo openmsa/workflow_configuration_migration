@@ -46,14 +46,31 @@ confprofile  = ConfProfile(deployment_settings_id)
 all_ms_attached = confprofile.read()
 all_ms_attached = json.loads(all_ms_attached)
 MS_list_destination=[]
+MS_list_destination_order = {}
+all_order = {}
 if all_ms_attached.get("microserviceUris"):
   all_ms_attached = all_ms_attached["microserviceUris"] 
   context[ 'MS_attached destination device_id' + device_id + ' : '] = all_ms_attached
+  # all_ms_attached = {        "CommandDefinition/LINUX/CISCO_IOS_XR_emulation/address_family.xml": {"name": "address_family","groups": ["EMULATION","CISCO", "IOS"],"order": 0,"importRank": 10},
+  
   if all_ms_attached:
+    # We should sort by the value 'importRank', but we can have many MS with samed importRank values
     for full_ms, MS in all_ms_attached.items():
       if Path(full_ms).stem:
-        MS_list_destination.append(Path(full_ms).stem)   #MS filename without extension
-        
+        importRank = MS['importRank']
+        if MS_list_destination_order.get(importRank):
+          MS_list_destination_order[importRank].append(Path(full_ms).stem)
+        else:
+          MS_list_destination_order[importRank] = []
+          MS_list_destination_order[importRank].append(Path(full_ms).stem)
+      
+    if MS_list_destination_order:
+      orderlist = sorted(MS_list_destination_order.keys())
+      for importRank in orderlist:
+        if  MS_list_destination_order.get(importRank):
+          for  val in MS_list_destination_order[importRank]:
+            MS_list_destination.append(val)   
+            
 context['MS_list_destination']  = MS_list_destination
 
 ms_not_attached_destination_device = []
