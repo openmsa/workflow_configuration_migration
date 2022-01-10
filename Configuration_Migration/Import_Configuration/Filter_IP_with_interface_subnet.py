@@ -95,6 +95,9 @@ context['source_interfaces_name_list'] = source_interfaces_name_list
 #if context.get('interface_values') and not context.get('interface_values_orig'):
 #  context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
 
+if not context['enable_filter']:
+  MSA_API.task_success('Filter are disabled, no filters applied', context, True)
+
 interfaces_IP_available = {}
     
 if context.get('interface_values'):

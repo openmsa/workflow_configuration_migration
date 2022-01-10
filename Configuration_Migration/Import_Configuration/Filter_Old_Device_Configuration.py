@@ -80,6 +80,8 @@ device_id = context['destination_device_id'][3:]
 ########### ADD LINK #############
 MS_list_string        = context['MS_list']  
 
+if not context['enable_filter']:
+  MSA_API.task_success('Filter are disabled, no filters applied', context, True)
     
 #read filter file
 wf_path = os.path.dirname(__file__)

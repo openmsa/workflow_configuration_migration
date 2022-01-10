@@ -38,6 +38,9 @@ MS_imported =[]
 deployment_settings_id = obmf.command_get_deployment_settings_id()
 context['destination_deployment_settings_id'] = deployment_settings_id
 
+#MSA_API.task_error('test led', context, True)
+
+
 #Get all microservices attached to this deployment setting.
 confprofile  = ConfProfile(deployment_settings_id)
 all_ms_attached = confprofile.read()

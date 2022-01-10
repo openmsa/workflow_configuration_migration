@@ -15,6 +15,7 @@ dev_var.add('customer_id', var_type='String')
 dev_var.add('source_interfaces_name', var_type='String')
 dev_var.add('destination_interfaces_name', var_type='String')
 dev_var.add('data_filter', var_type='String')
+dev_var.add('enable_filter', var_type='Boolean')
 
 INTERFACE = 'interface'
 
@@ -56,11 +57,14 @@ MS_list_string        = context['MS_list']
 MS = INTERFACE
 # Start with THE INTERFACE MS
 # We wan keep only interface names which are given in context['source_interfaces_name']
-context['source_interfaces_name'] = context['source_interfaces_name'].replace('\+','') #reove lanc space
+context['source_interfaces_name'] = context['source_interfaces_name'].replace('\+','') #remove lanc space
 source_interfaces_name      = context['source_interfaces_name']
 source_interfaces_name_list = source_interfaces_name.split(';')
 
 context['source_interfaces_name_list'] = source_interfaces_name_list
+
+if not context['enable_filter']:
+  MSA_API.task_success('Filter are disabled, no filters applied', context, True)
 
 nb_interfaces_found=0
 if context.get(MS+'_values'):
