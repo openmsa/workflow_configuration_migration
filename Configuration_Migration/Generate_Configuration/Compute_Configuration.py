@@ -11,8 +11,6 @@ from datetime import datetime
 dev_var = Variables()
 
 dev_var.add('customer_id', var_type='String')
-dev_var.add('source_interfaces_name', var_type='String')
-dev_var.add('destination_interfaces_name', var_type='String')
 dev_var.add('data_conversion', var_type='String')
 
 context = Variables.task_call(dev_var)
@@ -55,8 +53,17 @@ def  data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_p
 device_id = context['destination_device_id'][3:]
 
 #########################################################
-source_interfaces_name      = context['source_interfaces_name']
-destination_interfaces_name = context['destination_interfaces_name']
+
+source_interfaces_name_list = []
+destination_interfaces_name_list = []
+if context.get('interfaces'):
+  interfaces = context['interfaces']
+  for interface in interfaces:
+    if interface.get('source'):
+      source_interfaces_name_list.append(interface['source'])
+    if interface.get('destination'):
+      destination_interfaces_name_list.append(interface['destination'])
+
 
 #CHANGE THE INTERFACE NAME in INTERFACE MS
 #if context.get('interface_values') and not context.get('interface_values_orig'):
@@ -64,11 +71,9 @@ destination_interfaces_name = context['destination_interfaces_name']
 
 if context.get('interface_values'):
   interfaces_newvalues = context['interface_values']
-  if source_interfaces_name and destination_interfaces_name:
-    source_interfaces_name_list = source_interfaces_name.split(';')
-    destination_interfaces_name_list = destination_interfaces_name.split(';')
+  if source_interfaces_name_list and destination_interfaces_name_list:
     if len(source_interfaces_name_list) != len(destination_interfaces_name_list):
-      MSA_API.task_error('Error, the length of old interfaces names and new interfaces name are differentes (old=('+source_interfaces_name+'), new=('+destination_interfaces_name+')', context, True)
+      MSA_API.task_error('Error, the length of old interfaces names and new interfaces name are differentes (old=('+','.join(source_interfaces_name_list)+'), new=('+','.join(destination_interfaces_name_list)+')', context, True)
     for i in range(len(source_interfaces_name_list)):
       old_interface_name = source_interfaces_name_list[i]
       new_interface_name = destination_interfaces_name_list[i]
@@ -102,11 +107,9 @@ if context.get('interface_values'):
 #  context['ip_route_values_orig'] = copy.deepcopy(context['ip_route_values'])
 if context.get('ip_route_values'):
   ip_routes_newvalues = context['ip_route_values']
-  if source_interfaces_name and destination_interfaces_name:
-    source_interfaces_name_list = source_interfaces_name.split(';')
-    destination_interfaces_name_list = destination_interfaces_name.split(';')
+  if source_interfaces_name_list and destination_interfaces_name_list:
     if len(source_interfaces_name_list) != len(destination_interfaces_name_list):
-      MSA_API.task_error('Error, the length of old interfaces names and new interfaces name are differentes (old=('+source_interfaces_name+'), new=('+destination_interfaces_name+')', context, True)
+      MSA_API.task_error('Error, the length of old interfaces names and new interfaces name are differentes (old=('+','.join(source_interfaces_name_list)+'), new=('+','.join(destination_interfaces_name_list)+')', context, True)
     for i in range(len(source_interfaces_name_list)):
       old_interfaces_name = source_interfaces_name_list[i]
       new_interfaces_name = destination_interfaces_name_list[i]

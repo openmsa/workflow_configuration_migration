@@ -9,9 +9,7 @@ from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 dev_var = Variables()
 dev_var.add('source_device_id', var_type='Device')
-dev_var.add('source_interfaces_name', var_type='String')
 dev_var.add('destination_device_id', var_type='Device')
-dev_var.add('destination_interfaces_name', var_type='String')
 dev_var.add('customer_id', var_type='String')
 #dev_var.add('MS_list', var_type='String')
 dev_var.add('link.0.MicroService', var_type='String')
@@ -28,14 +26,12 @@ device_id = context['source_device_id'][3:]
 obmf  = Order(device_id=device_id)
 
 
-MS_source_path = context['MS_source_path']
-
 #we synchronise all MS attached to the source device because some MS are intermediated and need to be synchronized with good order.
 obmf.command_synchronize(timeout)
 responses = json.loads(obmf.content)
+#context[ 'ALL source MS_synch_values'] = responses
 MS_list = []
 if isinstance(responses, typing.List): 
-  #context[ 'ALL MS_synch_values'] = responses
   #responses contains only MS which contains some datas, we don't get attached MS without datas
   for response in responses:
     # "commandId": 0, "status": "OK","message": "{\"class_map\":{\"RT\":{\"object_id\":\"RT\",\"matches\":{\"0\":{\"not\":\"\",\"match_cmd\":\"ip \"}}}},\"ip_route\"

@@ -12,14 +12,11 @@ from datetime import datetime
 dev_var = Variables()
 
 dev_var.add('customer_id', var_type='String')
-dev_var.add('source_interfaces_name', var_type='String')
-dev_var.add('destination_interfaces_name', var_type='String')
-dev_var.add('data_filter', var_type='String')
 
 
 context = Variables.task_call(dev_var)
  
-# This Script will also remove all given MS values which are not present in the given field 'source_interfaces_name'
+# This Script will also remove all given MS values which are not present in the given field :
 #    example in 'data_filter_file' file (filter_cisco_IOS_to_XR.txt) we have the line "interface|vrf_name|ip_vrf|object_id", the script  will remove all MS values for the field object_id in the 'ip_vrf' MS where the object_id is not in find in field 'vrf_name' in the 'interface' MS values 
 
 

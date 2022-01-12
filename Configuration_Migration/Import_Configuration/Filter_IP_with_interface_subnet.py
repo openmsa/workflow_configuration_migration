@@ -13,8 +13,6 @@ from datetime import datetime
 dev_var = Variables()
 
 dev_var.add('customer_id', var_type='String')
-dev_var.add('source_interfaces_name', var_type='String')
-dev_var.add('original_interfaces_name', var_type='String')
 dev_var.add('data_filter_ip_file', var_type='String')
 
 context = Variables.task_call(dev_var)
@@ -86,11 +84,6 @@ else:
   
 context['IP_data_filter'] = ip_data_filter_list
 
-# Start with THE INTERFACE MS
-source_interfaces_name      = context['source_interfaces_name']
-source_interfaces_name_list = source_interfaces_name.split(';')
-source_interfaces_name_list = [i for i in source_interfaces_name_list if i] #remove empty element
-context['source_interfaces_name_list'] = source_interfaces_name_list
 
 #if context.get('interface_values') and not context.get('interface_values_orig'):
 #  context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
@@ -98,13 +91,14 @@ context['source_interfaces_name_list'] = source_interfaces_name_list
 if not context['enable_filter']:
   MSA_API.task_success('Filter are disabled, no filters applied', context, True)
 
+source_interfaces_name_list = context['source_interfaces_name_list']
 interfaces_IP_available = {}
     
 if context.get('interface_values'):
   interfaces_values = context['interface_values']
   #interfaces_newvalues: { "Multilink45": { "object_id": "Multilink45", "addresses": { "0": { "ipv4_address": "186.239.124.197", "ipv4_mask": "255.255.255.252" }
   for interface, interface_value in interfaces_values.items():
-    #if interface in source_interfaces_name_list:
+    if interface in source_interfaces_name_list:
       if interface_value.get("addresses"):
         addresses = interface_value["addresses"]
         for key, address in addresses.items():

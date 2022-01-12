@@ -13,17 +13,73 @@ dev_var = Variables()
 dev_var.add('interfaces.0.source' )
 dev_var.add('interfaces.0.destination' )
 dev_var.add('interfaces.0.xconnect_group' )
+dev_var.add('interfaces.0.dot1q' )
+dev_var.add('interfaces.0.second_dot1q' )
 dev_var.add('interfaces.0.pseudowire_id' )
+dev_var.add('interfaces.0.pseudowire_ip' )
 dev_var.add('interfaces.0.pseudowire_class' )
 dev_var.add('interfaces.0.gil' )
 
-
 context = Variables.task_call(dev_var)
 
-timeout = 600
+XCONNECT = 'xconnect'
 
-    
-MSA_API.task_success('TO DO'+context['source_device_id'] , context, True)
+
+if context.get('xconnect_group'):
+  groups = context['xconnect_group']
+else:
+  group = { 'xconnect_group' : 'PW-HE-TEST', 'source' : 'PW-Ether1600', 'destination' : 'AAPW-Ether1600', 'pseudowire_id' : '1600', 'pseudowire_ip' : '177.61.178.254', 'pseudowire_class' : 'pw-class1', 'gil' : 'gil1'}
+  groups = [group]
+  context['groups'] = groups
+
+if context.get(XCONNECT+'_values'):
+  xconnect_values = context[XCONNECT+'_values']
+else:
+  xconnect_values = {}
+
+#reset xconnect_values
+xconnect_values = {}
+
+values={}
+counts = {}
+for group in groups:
+  value = {}
+  groupe_name               = group['xconnect_group']
+  #value['object_id']        = groupe_name
+  value['interface']        = group['destination']
+  value['pseudowire_id']    = group['pseudowire_id']
+  value['pseudowire_ip']    = group['pseudowire_ip']
+  value['pseudowire_class'] = group['pseudowire_class']
+  value['gil']              = group['gil']
+  if not values.get(groupe_name):
+    values[groupe_name] = {}
+    counts[groupe_name]=0
+  else:
+    counts[groupe_name] = counts[groupe_name] + 1
+  values[groupe_name][counts[groupe_name]] = value
+
+
+'''
+ xconnect group PW-HE-TEST
+  p2p pw-he-test1600
+   interface PW-Ether1600
+   neighbor ipv4 177.61.178.254 pw-id 1600
+   !
+  !
+  p2p pw-he-test1700
+   interface PW-Ether1700
+   neighbor ipv4 177.61.178.254 pw-id 1700
+   !
+  !
+  p2p pw-he-test1800
+   interface PW-Ether1800
+   neighbor ipv4 177.61.178.254 pw-id 1800
+   !
+  !
+'''
+context[XCONNECT+'_values'] = values
+ 
+MSA_API.task_success('MS "' + XCONNECT + '" filled', context, True)
 
 
 

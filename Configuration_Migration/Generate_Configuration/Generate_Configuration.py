@@ -9,8 +9,6 @@ from msa_sdk.conf_profile import ConfProfile
 from pathlib import Path
 
 dev_var = Variables()
-dev_var.add('source_interfaces_name' )
-dev_var.add('destination_interfaces_name')
 dev_var.add('customer_id')
 dev_var.add('generate_file')
  
@@ -108,7 +106,7 @@ if MS_list:
             f = open(file_link, "w")
             f.write(message)
             f.close()
-            full_message = full_message + ' \n ' + message
+            full_message = full_message + '\n\n############# from MS ' + MS+  ' ############# '  + message
             link={}
             link['MicroService'] = MS
             link['file_link']    = file_link
