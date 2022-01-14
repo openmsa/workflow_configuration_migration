@@ -57,10 +57,10 @@ def remove_bad_ip_values_recursif(orig_field_name, fields, ms_newvalues, interfa
                if value:
                  match = re.match(r"^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$", value)
                  if bool(match) and value not in interfaces_IP_available:
-                   #ms_newvalues[key][field]  = 'IP_TO_REMOVE_value='+value
+                   #ms_newvalues[key][field]  = 'IP_TO_REMOVE for '+orig_field_name+ ', value='+value
                    ms_newvalues.pop(key)  #remove parent value
                  #else: 
-                   #ms_newvalues[key][field]  = 'OK TO KEEP_value='+value
+                   #ms_newvalues[key][field]  = 'OK TO KEEP for '+orig_field_name+ ', value='+value
                  
   return 'not found'
     
@@ -96,15 +96,17 @@ interfaces_IP_available = {}
     
 if context.get('interface_values'):
   interfaces_values = context['interface_values']
-  #interfaces_newvalues: { "Multilink45": { "object_id": "Multilink45", "addresses": { "0": { "ipv4_address": "186.239.124.197", "ipv4_mask": "255.255.255.252" }
+  #interfaces_newvalues: { "Serial1/0/0_1/3/1/1:0": { "object_id": "Serial1/0/0.1/3/1/1:0", "addresses": { "0": { "ipv4_address": "186.239.124.197", "ipv4_mask": "255.255.255.252" }
   for interface, interface_value in interfaces_values.items():
-    if interface in source_interfaces_name_list:
-      if interface_value.get("addresses"):
-        addresses = interface_value["addresses"]
-        for key, address in addresses.items():
-          ipv4_address = address["ipv4_address"]
-          ipv4_mask    = address["ipv4_mask"]          
-          interfaces_IP_available = find_all_ip_in_subnet(interface+'_'+key, ipv4_address, ipv4_mask, interfaces_IP_available)
+    if interface_value.get("object_id"):
+      interface_full_name = interface_value["object_id"]    #=Serial1/0/0.1/3/1/1:0, interface=Serial1/0/0_1/3/1/1:0
+      if interface_full_name in source_interfaces_name_list:
+        if interface_value.get("addresses"):
+          addresses = interface_value["addresses"]
+          for key, address in addresses.items():
+            ipv4_address = address["ipv4_address"]
+            ipv4_mask    = address["ipv4_mask"]          
+            interfaces_IP_available = find_all_ip_in_subnet(interface_full_name+'_'+key, ipv4_address, ipv4_mask, interfaces_IP_available)
 
 context['interfaces_IP_available'] = interfaces_IP_available      
 
@@ -118,17 +120,14 @@ if MS_list_string:
     for line in ip_data_filter_list:
       if (not line.startswith('#')) and line.strip():
         context['data_ip_filter_line'] = line
-        list = line.split('|')  # #orig_MS_Name|orig_field_name|original_MS_Name|original_field_name
+        list = line.split('|')  # #MS_Name|field_name
         if len(list) > 1:
-          original_MS_Name     = list[0]
-          original_field_name  = list[1]
-          context['MS_IP_filter'][original_MS_Name] = 1
-          if context.get(original_MS_Name+'_values'):
-            #if not context.get(original_MS_Name+'_values_orig'):
-            #  context[original_MS_Name+'_values_orig'] = copy.deepcopy(context[original_MS_Name+'_values'])
-             
-            fields = original_field_name.split('.0.')
-            remove_bad_ip_values_recursif(original_field_name, fields, context[original_MS_Name+'_values'], interfaces_IP_available);
+          MS_Name     = list[0]
+          field_name  = list[1]
+          context['MS_IP_filter'][MS_Name] = 1
+          if context.get(MS_Name+'_values'):             
+            fields = field_name.split('.0.')
+            remove_bad_ip_values_recursif(field_name, fields, context[MS_Name+'_values'], interfaces_IP_available);
             
 
 #MSA_API.task_error('TETS33T22  '+ context['data_filter_ip_file'], context, True)
