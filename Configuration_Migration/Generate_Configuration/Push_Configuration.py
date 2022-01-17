@@ -12,10 +12,17 @@ dev_var = Variables()
 dev_var.add('customer_id')
 dev_var.add('generate_file')
 dev_var.add('destination_cisco_device_id')
+dev_var.add('push_to_cisco_device')
 
 context = Variables.task_call(dev_var)
 
 timeout = 600
+
+push_to_cisco_device = context['push_to_cisco_device']
+
+if push_to_cisco_device == "false":
+  MSA_API.task_error('You should first valide the configuration file by clicking on previous checkbox (Are you shure to push on Cisco device, simulation file is verifed ?) for device  '+context['destination_cisco_device_id'], context, True)
+
 
 #get device_id from context
 device_id = context['destination_cisco_device_id'][3:]
