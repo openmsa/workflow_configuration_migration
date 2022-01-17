@@ -159,30 +159,6 @@
       <displayName>Generate Configuration</displayName>
     </task>
   </process>
-  <process name="Generate_Configuration">
-    <displayName>Generate Configuration</displayName>
-    <type>UPDATE</type>
-    <visibility>5</visibility>
-    <allowSchedule/>
-    <task name="Compute_Configuration.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
-      <displayName>Compute Configuration</displayName>
-    </task>
-    <task name="Generate_Configuration.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
-      <displayName>Generate Configuration</displayName>
-    </task>
-  </process>
-  <process name="Push_Configuration">
-    <displayName>Push_Configuration</displayName>
-    <type>UPDATE</type>
-    <visibility>5</visibility>
-    <allowSchedule/>
-    <task name="Push_Configuration.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
-      <displayName>Push Configuration</displayName>
-    </task>
-  </process>
   <process name="Import_Simulation_Configuration">
     <displayName>Import configuration from simulation source device</displayName>
     <type>UPDATE</type>
@@ -207,6 +183,30 @@
     <task name="Fill_Xconnect.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Fill Xconnect MS with given parameter</displayName>
+    </task>
+  </process>
+  <process name="Generate_Configuration">
+    <displayName>Generate Configuration</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Compute_Configuration.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
+      <displayName>Compute Configuration</displayName>
+    </task>
+    <task name="Generate_Configuration.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
+      <displayName>Generate Configuration</displayName>
+    </task>
+  </process>
+  <process name="Push_Configuration">
+    <displayName>Push Configuration</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Push_Configuration.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
+      <displayName>Push Configuration</displayName>
     </task>
   </process>
   <process name="Delete_Service">
