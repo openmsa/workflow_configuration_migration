@@ -45,19 +45,33 @@ counts = {}
 for group in groups:
   value = {}
   groupe_name               = group['xconnect_group']
-  #value['object_id']        = groupe_name
+  value= {}
   value['interface']        = group['destination']
   value['pseudowire_id']    = group['pseudowire_id']
   value['pseudowire_ip']    = group['pseudowire_ip']
   value['pseudowire_class'] = group['pseudowire_class']
   value['gil']              = group['gil']
   if not values.get(groupe_name):
-    values[groupe_name] = {}
-    counts[groupe_name]=0
+    values[groupe_name]            = {}
+    values[groupe_name]['groups']  = {}
+    counts[groupe_name]            = 0
   else:
     counts[groupe_name] = counts[groupe_name] + 1
-  values[groupe_name][counts[groupe_name]] = value
+  values[groupe_name]['object_id']   = groupe_name
+  values[groupe_name]['groups'][counts[groupe_name]] = value
 
+  '''   "xconnect_values": {
+        "PW-HE-TEST": {
+            "0": {
+                "interface": "AAPW-Ether1600",
+                "pseudowire_id": "1600",
+                "pseudowire_ip": "177.61.178.254",
+                "pseudowire_class": "pw-class1",
+                "gil": "gil1"
+            }
+        }
+    },
+  '''
 
 '''
  xconnect group PW-HE-TEST

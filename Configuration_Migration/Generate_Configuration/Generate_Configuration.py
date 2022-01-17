@@ -100,8 +100,8 @@ if MS_list:
             # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
             message =  response.get("entity").get("message") 
             file_link = context[MS + '_link']
-            message = re.sub(r'\n\s*\n', '\n', message)  #remove blank lines
-            message = re.sub(r' \s+', ' ', message)  #remove more than 1 blank space
+            message = re.sub('\s+\n', '\n', message, flags=re.UNICODE)  #remove blank lines
+            message = re.sub(' \s+', ' ', message, flags=re.UNICODE)      #remove more than 1 blank space, but  \s+ remove also newline
             #message = '<pre> \n' + message + '\n </pre>'
             f = open(file_link, "w")
             f.write(message)
