@@ -8,8 +8,7 @@ from msa_sdk.conf_profile import ConfProfile
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 dev_var = Variables()
-dev_var.add('source_device_id', var_type='Device')
-dev_var.add('destination_device_id', var_type='Device')
+dev_var.add('source_simul_device_id', var_type='Device')
 dev_var.add('customer_id', var_type='String')
 #dev_var.add('MS_list', var_type='String')
 dev_var.add('link.0.MicroService', var_type='String')
@@ -20,7 +19,7 @@ context = Variables.task_call(dev_var)
 timeout = 600
 
 #get device_id from context
-device_id = context['source_device_id'][3:]
+device_id = context['source_simul_device_id'][3:]
 
 # instantiate device object
 obmf  = Order(device_id=device_id)
@@ -37,7 +36,7 @@ if isinstance(responses, typing.List):
     # "commandId": 0, "status": "OK","message": "{\"class_map\":{\"RT\":{\"object_id\":\"RT\",\"matches\":{\"0\":{\"not\":\"\",\"match_cmd\":\"ip \"}}}},\"ip_route\"
     if response.get('message') and response.get('status'):
       if response['status'] != 'OK':
-        MSA_API.task_error('Error during synchronise DeviceId:'+context['source_device_id'] + ' : ' + str(response), context, True)
+        MSA_API.task_error('Error during synchronise DeviceId:'+context['source_simul_device_id'] + ' : ' + str(response), context, True)
       else:
         response_message = json.loads(response.get('message'))  #convert into json array
         for MS in response_message:
@@ -74,7 +73,7 @@ else:
     
     
     
-MSA_API.task_success('Good, all MS attached to the device DeviceId:'+context['source_device_id'] + ' imported ('+MS_list+')', context, True)
+MSA_API.task_success('Good, all MS attached to the device DeviceId:'+context['source_simul_device_id'] + ' imported ('+MS_list+')', context, True)
 
 
 

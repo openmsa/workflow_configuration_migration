@@ -47,10 +47,6 @@ def  data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_p
                
    return 'ok'
    
-   
-   
-#get device_id from context
-device_id = context['destination_device_id'][3:]
 
 #########################################################
 

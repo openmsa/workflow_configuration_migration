@@ -11,14 +11,14 @@ from pathlib import Path
 dev_var = Variables()
 dev_var.add('customer_id')
 dev_var.add('generate_file')
-dev_var.add('destination_simul_device_id')
+dev_var.add('destination_cisco_device_id')
 
 context = Variables.task_call(dev_var)
 
 timeout = 600
 
 #get device_id from context
-device_id = context['destination_simul_device_id'][3:]
+device_id = context['destination_cisco_device_id'][3:]
 # instantiate device object
 obmf  = Order(device_id=device_id)
 
@@ -84,7 +84,7 @@ if MS_list:
         params[MS] = config
         context[MS + '_export_params'] = params
         #obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
-        obmf.command_call(command, 1, params, timeout)  #mode=1 :  Apply to base only (create new element in the MSA DB, it will not run any commands on device)
+        obmf.command_call(command, 2, params, timeout)  #mode=2 :  Apply to device and in DB
    
         response = json.loads(obmf.content)
         context[ MS + '_generate_response'] = response
@@ -172,9 +172,9 @@ f.write(full_message)
 f.close()
 
 if ms_not_attached_destination_device:
-  MSA_API.task_success('Warning , some MS ('+';'.join(ms_not_attached_destination_device)+') was not found for destination device :'+context['destination_simul_device_id']+', other MS imported successfully ('+';'.join(MS_imported)+')', context, True)
+  MSA_API.task_success('Warning , some MS ('+';'.join(ms_not_attached_destination_device)+') was not found for destination device :'+context['destination_cisco_device_id']+', other MS imported successfully ('+';'.join(MS_imported)+')', context, True)
 else:
-  MSA_API.task_success('Good, all MS ('+MS_list+') imported for DeviceId:'+context['destination_simul_device_id'], context, True)
+  MSA_API.task_success('Good, all MS ('+MS_list+') imported for DeviceId:'+context['destination_cisco_device_id'], context, True)
 
 
 

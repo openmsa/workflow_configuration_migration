@@ -44,10 +44,6 @@ def data_find_migrate_recursif(orig_field_name, fields, ms_newvalues):
                  context[orig_field_name+'_field_values'][value] = ''
   return 'not found'
    
-   
- 
-#get device_id from context
-device_id = context['destination_device_id'][3:]
 
 ########### ADD LINK #############
 MS_list_string        = context['MS_list']  
