@@ -24,6 +24,7 @@ device_id = context['source_simul_device_id'][3:]
 # instantiate device object
 obmf  = Order(device_id=device_id)
 
+context['customer_id_instance_id'] =  context['customer_id'] + '_#' +context['SERVICEINSTANCEID']
 
 #we synchronise all MS attached to the source device because some MS are intermediated and need to be synchronized with good order.
 obmf.command_synchronize(timeout)

@@ -16,6 +16,8 @@ dev_var.add('push_to_cisco_device')
 
 context = Variables.task_call(dev_var)
 
+DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
+
 timeout = 600
 
 push_to_cisco_device = context['push_to_cisco_device']
@@ -109,7 +111,7 @@ if MS_list:
             message =  response.get("entity").get("message") 
             file_link = context[MS + '_link']
             message = re.sub('\s+\n', '\n', message, flags=re.UNICODE)  #remove blank lines
-            message = re.sub(' \s+', ' ', message, flags=re.UNICODE)      #remove more than 1 blank space, but  \s+ remove also newline
+            message = re.sub('  \s+', '  ', message, flags=re.UNICODE)      #remove more than 2 blank space, but  \s+ remove also newline
             #message = '<pre> \n' + message + '\n </pre>'
             f = open(file_link, "w")
             f.write(message)
@@ -154,7 +156,7 @@ if MS_list:
                    
                 
             #Add MS import Skip result link:
-            MS_file = '/opt/fmc_repository/Datafiles/Import_MS_Result/' + MS + '.log'
+            MS_file = DIRECTORIE + '/' + MS + '.log'
             link={}
             link['MicroService'] = MS + '_Import_parse'
             link['file_link']    = MS_file       

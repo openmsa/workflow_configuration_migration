@@ -8,3 +8,5 @@ interface|object_id|ip_route|interface
 interface|vrf_name|router_static|vrf_routes.0.vrf_name
 interface|object_id|router_static|vrf_routes.0.routes.0.interface
 interface|object_id|router_static|routes.0.interface
+interface|service_policy.0.name|policy_map|object_id
+policy_map|pmap_class.0.class_name|class_map|object_id

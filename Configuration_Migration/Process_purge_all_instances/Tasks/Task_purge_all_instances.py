@@ -15,6 +15,9 @@ import time
 dev_var = Variables()
 context = Variables.task_call(dev_var)
 
+context['customer_id_instance_id'] =  'No_customer_#' +context['SERVICEINSTANCEID']
+
+
 Orchestration = Orchestration(context['UBIQUBEID'])
 response = Orchestration.list_service_instances()
 service_list = json.loads(Orchestration.content)

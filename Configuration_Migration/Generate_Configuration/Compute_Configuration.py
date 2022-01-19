@@ -1,7 +1,7 @@
 import json
 import copy
 import typing
-import os.path
+import os
 from msa_sdk import constants
 from msa_sdk.order import Order
 from msa_sdk.variables import Variables
@@ -14,6 +14,8 @@ dev_var.add('customer_id', var_type='String')
 dev_var.add('data_conversion', var_type='String')
 
 context = Variables.task_call(dev_var)
+
+DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
 
 #########################################################
 # Function: Parse all MS values recursivly and change the value (by reference) if needed 
@@ -170,14 +172,19 @@ if MS_list:
       #########################################################
       # ADD THE DOWNLOAD FILE LINK FOR EACH VALUES
       config = context.get( MS + '_values')
-      link = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '.txt'
-      link_orig = "/opt/fmc_repository/Datafiles/TEST/" + MS + '_'  + day + '_orig.txt'
+      link =      DIRECTORIE + "/" + MS + '_'  + day + '.txt'
+      link_orig = DIRECTORIE + "/" + MS + '_'  + day + '_orig.txt'
       
       context[MS + '_link'] = link
       context[MS + '_link_orig'] = link_orig
 
-context['generate_file'] = "/opt/fmc_repository/Datafiles/TEST/ALL_MS_"  + day + '.txt'
 
+
+context['generate_file'] = DIRECTORIE+ "/" + "ALL_MS_"  + day + '.txt'
+
+#check if the directorie  DIRECTORIE exist, else create it
+if not os.path.isdir(DIRECTORIE):
+ os.mkdir(DIRECTORIE)
 
 
 MSA_API.task_success('Good, update the interfaces names and compute data from '+ context['data_conversion_pattern_file'], context, True)
