@@ -132,29 +132,29 @@
   </variables>
   <example/>
   <process name="New_Service">
-    <displayName>New Service</displayName>
+    <displayName>New Migration</displayName>
     <type>CREATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
     <task name="Import_Old_Device_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Import Old Device Configuration</displayName>
+      <displayName>Import legacy configuration</displayName>
     </task>
     <task name="Filter_Interfaces_Names.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Filter Interfaces Names</displayName>
+      <displayName>Filter interfaces</displayName>
     </task>
     <task name="Filter_Old_Device_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Filter Old Device Configuration</displayName>
+      <displayName>Filter legay configuration</displayName>
     </task>
     <task name="Filter_IP_with_interface_subnet.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Filter IP with interfaces subnet range.py</displayName>
+      <displayName>Filter IP with interfaces subnets</displayName>
     </task>
     <task name="Fill_Xconnect.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Fill Xconnect MS with given parameter</displayName>
+      <displayName>Fill Xconnect microservice with parameters</displayName>
     </task>
     <task name="Compute_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
@@ -166,29 +166,29 @@
     </task>
   </process>
   <process name="Import_Simulation_Configuration">
-    <displayName>Import configuration from simulation source device</displayName>
+    <displayName>Re-import configuration from emulated device</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
     <task name="Import_Old_Device_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Import Old Simulation Device Configuration</displayName>
+      <displayName>Import legacy configuration</displayName>
     </task>
     <task name="Filter_Interfaces_Names.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Filter Interfaces Names</displayName>
+      <displayName>Filter interfaces</displayName>
     </task>
     <task name="Filter_Old_Device_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Filter Old Device Configuration</displayName>
+      <displayName>Filter legay configuration</displayName>
     </task>
     <task name="Filter_IP_with_interface_subnet.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Filter IP with interfaces subnet range.py</displayName>
+      <displayName>Filter IP with interfaces subnets</displayName>
     </task>
     <task name="Fill_Xconnect.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Fill Xconnect MS with given parameter</displayName>
+      <displayName>Fill Xconnect microservice with parameters</displayName>
     </task>
   </process>
   <process name="Generate_Configuration">
@@ -206,7 +206,7 @@
     </task>
   </process>
   <process name="Push_Configuration">
-    <displayName>Push Configuration</displayName>
+    <displayName>Push Configur+ation</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
