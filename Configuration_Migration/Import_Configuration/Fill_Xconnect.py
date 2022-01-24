@@ -51,6 +51,9 @@ for group in groups:
   value['pseudowire_ip']    = group['pseudowire_ip']
   value['pseudowire_class'] = group['pseudowire_class']
   value['gil']              = group['gil']
+  if context.get('customer_id'):
+    value['p2p']            = 'ELINE_'+context['customer_id']
+  
   if not values.get(groupe_name):
     values[groupe_name]            = {}
     values[groupe_name]['groups']  = {}
