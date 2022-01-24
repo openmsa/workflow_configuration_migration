@@ -71,7 +71,7 @@ if context.get('interface_values'):
   interfaces_newvalues = context['interface_values']
   if source_interfaces_name_list and destination_interfaces_name_list:
     if len(source_interfaces_name_list) != len(destination_interfaces_name_list):
-      MSA_API.task_error('Error, the length of old interfaces names and new interfaces name are differentes (old=('+','.join(source_interfaces_name_list)+'), new=('+','.join(destination_interfaces_name_list)+')', context, True)
+      MSA_API.task_error('ERROR: the length of source interfaces list and target interfaces list are different (old=('+','.join(source_interfaces_name_list)+'), new=('+','.join(destination_interfaces_name_list)+')', context, True)
     for i in range(len(source_interfaces_name_list)):
       old_interface_name = source_interfaces_name_list[i]
       new_interface_name = destination_interfaces_name_list[i]
@@ -92,7 +92,7 @@ if context.get('interface_values'):
       if interfaces_newvalues.get(old_interface_name_ob):
         if new_interface_name_ob != old_interface_name_ob:
           if interfaces_newvalues.get(new_interface_name_ob):
-            MSA_API.task_error('Error, interface name "'+new_interface_name_ob+'" already exist on the device', context, True)
+            MSA_API.task_error('ERROR: interface "'+new_interface_name_ob+'" already exist on the device', context, True)
           interfaces_newvalues[new_interface_name_ob] = interfaces_newvalues[old_interface_name_ob]
           if (interfaces_newvalues[new_interface_name_ob].get("object_id")):
             interfaces_newvalues[new_interface_name_ob]["object_id"] = new_interface_name
@@ -107,7 +107,7 @@ if context.get('ip_route_values'):
   ip_routes_newvalues = context['ip_route_values']
   if source_interfaces_name_list and destination_interfaces_name_list:
     if len(source_interfaces_name_list) != len(destination_interfaces_name_list):
-      MSA_API.task_error('Error, the length of old interfaces names and new interfaces name are differentes (old=('+','.join(source_interfaces_name_list)+'), new=('+','.join(destination_interfaces_name_list)+')', context, True)
+      MSA_API.task_error('ERROR: the length of source interfaces and target interfaces list are different (old=('+','.join(source_interfaces_name_list)+'), new=('+','.join(destination_interfaces_name_list)+')', context, True)
     for i in range(len(source_interfaces_name_list)):
       old_interfaces_name = source_interfaces_name_list[i]
       new_interfaces_name = destination_interfaces_name_list[i]
@@ -187,7 +187,7 @@ if not os.path.isdir(DIRECTORIE):
  os.mkdir(DIRECTORIE)
 
 
-MSA_API.task_success('Good, update the interfaces names and compute data from '+ context['data_conversion_pattern_file'], context, True)
+MSA_API.task_success('DONE: update the interfaces names and compute data from '+ context['data_conversion_pattern_file'], context, True)
 
 
 

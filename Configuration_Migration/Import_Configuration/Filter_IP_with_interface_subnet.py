@@ -88,7 +88,7 @@ context['IP_data_filter'] = ip_data_filter_list
 #  context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
 
 if not context['enable_filter']:
-  MSA_API.task_success('Filter are disabled, no filters applied', context, True)
+  MSA_API.task_success('DONE: filter are disabled, no filters applied', context, True)
 
 source_interfaces_name_list = context['source_interfaces_name_list']
 interfaces_IP_available = {}
@@ -133,9 +133,9 @@ if MS_list_string:
          
    
 if context['MS_IP_filter']:
-  MSA_API.task_success('Good, filter IP on all MS (' + ';'.join(context['MS_IP_filter'].keys()) + ') values from '+ context['data_filter_ip_file']+ ', find '+ str(len(interfaces_IP_available)) +' IP availables for given interfaces', context, True)
+  MSA_API.task_success('DONE, filter IP on all microservices (' + ';'.join(context['MS_IP_filter'].keys()) + ') values from '+ context['data_filter_ip_file']+ ', found '+ str(len(interfaces_IP_available)) +' IP availables for the selected interfaces', context, True)
 else:
-  MSA_API.task_success('Good, no MS filter available from '+ context['data_filter_ip_file'], context, True)
+  MSA_API.task_success('DONE, no microservice filter available for '+ context['data_filter_ip_file'], context, True)
 
 
 

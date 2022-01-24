@@ -37,7 +37,7 @@ if isinstance(responses, typing.List):
     # "commandId": 0, "status": "OK","message": "{\"class_map\":{\"RT\":{\"object_id\":\"RT\",\"matches\":{\"0\":{\"not\":\"\",\"match_cmd\":\"ip \"}}}},\"ip_route\"
     if response.get('message') and response.get('status'):
       if response['status'] != 'OK':
-        MSA_API.task_error('Error during synchronise DeviceId:'+context['source_simul_device_id'] + ' : ' + str(response), context, True)
+        MSA_API.task_error('ERROR: during synchronise. Managed entity Id: '+context['source_simul_device_id'] + ' : ' + str(response), context, True)
       else:
         response_message = json.loads(response.get('message'))  #convert into json array
         for MS in response_message:
@@ -74,7 +74,7 @@ else:
     
     
     
-MSA_API.task_success('Good, all MS attached to the device DeviceId:'+context['source_simul_device_id'] + ' imported ('+MS_list+')', context, True)
+MSA_API.task_success('DONE: all MS attached to the managed entity: '+context['source_simul_device_id'] + ' imported ('+MS_list+')', context, True)
 
 
 

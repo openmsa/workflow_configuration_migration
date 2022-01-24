@@ -74,7 +74,7 @@ def remove_bad_values_recursif(destination_field_name, fields, ms_newvalues, ava
 MS_list_string        = context['MS_list']  
 
 if not context['enable_filter']:
-  MSA_API.task_success('Filter are disabled, no filters applied', context, True)
+  MSA_API.task_success('DONE: filter are disabled, no filters applied', context, True)
     
 #read filter file
 wf_path = os.path.dirname(__file__)
@@ -127,6 +127,6 @@ if MS_list_string:
             remove_bad_values_recursif(destination_field_name, fields, context[destination_MS_Name+'_values'], context['Filter_'+orig_field_name+'_field_values']);
             
    
-MSA_API.task_success('Good, Filter all MS (' + ';'.join(context['MS_to_filter']) + ') values from ' + context['data_filter_file'], context, True)
+MSA_API.task_success('DONE: filter all microservices (' + ';'.join(context['MS_to_filter']) + ') values from ' + context['data_filter_file'], context, True)
 
 

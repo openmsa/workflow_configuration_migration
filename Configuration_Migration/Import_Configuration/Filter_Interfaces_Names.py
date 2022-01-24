@@ -50,7 +50,7 @@ MS_list_string        = context['MS_list']
 
 
 if not context['enable_filter']:
-  MSA_API.task_success('Filter are disabled, no filters applied', context, True)
+  MSA_API.task_success('DONE: filter are disabled, no filters applied', context, True)
 
 # Start with THE INTERFACE MS
 # We wan keep only interface names which are given in context['interfaces.0.source']
@@ -92,9 +92,9 @@ if nb_interfaces_found:
       if not value.get('migrate') or value['migrate'] == 0:
         context[INTERFACE+'_values'].pop(object_id)  #remove value
         
-  MSA_API.task_success('Good, Found '+str(nb_interfaces_found)+' interfaces (' + ', '.join(interfaces_found) + ')', context, True)
+  MSA_API.task_success('DONE: found '+str(nb_interfaces_found)+' interfaces (' + ', '.join(interfaces_found) + ')', context, True)
   
 else:
-  MSA_API.task_error('Can not find any given interfaces (' + ', '.join(source_interfaces_name_list) + '), , we found on device the interfaces (' + ', '.join(interfaces_MS_found) + ')', context, True)
+  MSA_API.task_error('ERROR: cannot find any interfaces: (' + ', '.join(source_interfaces_name_list) + '), , interfaces found: (' + ', '.join(interfaces_MS_found) + ')', context, True)
 
 
