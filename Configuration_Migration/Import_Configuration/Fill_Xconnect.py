@@ -96,7 +96,7 @@ for group in groups:
 '''
 context[XCONNECT+'_values'] = values
  
-MSA_API.task_success('DONE: "' + XCONNECT + '"microservice updated', context, True)
+MSA_API.task_success('DONE: Insert workflow parameters into microservices', context, True)
 
 
 
