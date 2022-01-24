@@ -113,18 +113,21 @@ if MS_list_string:
           destination_MS_Name     = list[2]
           destination_field_name  = list[3]
           if  context.get(orig_MS_Name+'_values') and context.get(destination_MS_Name+'_values'):
-            #if not context.get(destination_MS_Name+'_values_orig'):
-            #  context[destination_MS_Name+'_values_orig'] = copy.deepcopy(context[destination_MS_Name+'_values'])
             context['MS_to_filter'][destination_MS_Name] = 1
-             
             context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
             context['Filter_'+orig_field_name+'_field_values'] = {}
             ## Find all source values
             data_find_migrate_recursif(orig_field_name, fields,context[orig_MS_Name+'_values'])
-            
-            fields = destination_field_name.split('.0.')
-            remove_bad_values_recursif(destination_field_name, fields, context[destination_MS_Name+'_values'], context['Filter_'+orig_field_name+'_field_values']);
+          else:
+            if not context.get(orig_MS_Name+'_values'):
+              context['Filter_'+orig_field_name+'_field_values'] = {}
+            if not context.get(destination_MS_Name+'_values'):
+              context[destination_MS_Name+'_values'] = {}           
+              context['Filter_'+orig_field_name+'_field_values'] = {}
+
+          fields = destination_field_name.split('.0.')
+          remove_bad_values_recursif(destination_field_name, fields, context[destination_MS_Name+'_values'], context['Filter_'+orig_field_name+'_field_values']);
             
    
 MSA_API.task_success('DONE: filter all microservices (' + ';'.join(context['MS_to_filter']) + ') values from ' + context['data_filter_file'], context, True)

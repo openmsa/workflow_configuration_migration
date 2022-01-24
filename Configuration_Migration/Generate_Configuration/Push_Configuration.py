@@ -11,8 +11,8 @@ from pathlib import Path
 dev_var = Variables()
 dev_var.add('customer_id')
 dev_var.add('generate_file')
-dev_var.add('destination_cisco_device_id')
-dev_var.add('push_to_cisco_device')
+dev_var.add('destination_device_id')
+dev_var.add('push_to_device')
 
 context = Variables.task_call(dev_var)
 
@@ -20,14 +20,14 @@ DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
 
 timeout = 600
 
-push_to_cisco_device = context['push_to_cisco_device']
+push_to_device = context['push_to_device']
 
-if push_to_cisco_device == "false":
-  MSA_API.task_error('You should first valide the configuration file by clicking on previous checkbox (Are you shure to push on Cisco device, simulation file is verifed ?) for device  '+context['destination_cisco_device_id'], context, True)
+if push_to_device == "false":
+  MSA_API.task_error('You should first valide the configuration file by clicking on previous checkbox (Are you shure to push on Cisco device, simulation file is verifed ?) for device  '+context['destination_device_id'], context, True)
 
 
 #get device_id from context
-device_id = context['destination_cisco_device_id'][3:]
+device_id = context['destination_device_id'][3:]
 # instantiate device object
 obmf  = Order(device_id=device_id)
 
@@ -47,7 +47,7 @@ deployment_settings_id = obmf.command_get_deployment_settings_id()
 context['destination_deployment_settings_id'] = deployment_settings_id
 
 if not deployment_settings_id:
-  MSA_API.task_error('There is no deployement setting for the Cisco device '+context['destination_cisco_device_id'], context, True)
+  MSA_API.task_error('There is no deployement setting for the Cisco device '+context['destination_device_id'], context, True)
 
 #Get all microservices attached to this deployment setting.
 confprofile  = ConfProfile(deployment_settings_id)
@@ -181,9 +181,9 @@ f.write(full_message)
 f.close()
 
 if ms_not_attached_destination_device:
-  MSA_API.task_success('Warning , some MS ('+';'.join(ms_not_attached_destination_device)+') was not found for destination device :'+context['destination_cisco_device_id']+', other MS imported successfully ('+';'.join(MS_imported)+')', context, True)
+  MSA_API.task_success('Warning , some MS ('+';'.join(ms_not_attached_destination_device)+') was not found for destination device :'+context['destination_device_id']+', other MS imported successfully ('+';'.join(MS_imported)+')', context, True)
 else:
-  MSA_API.task_success('Good, all MS ('+MS_list+') imported for DeviceId:'+context['destination_cisco_device_id'], context, True)
+  MSA_API.task_success('Good, all MS ('+MS_list+') imported for DeviceId:'+context['destination_device_id'], context, True)
 
 
 

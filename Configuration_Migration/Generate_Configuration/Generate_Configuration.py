@@ -40,8 +40,8 @@ deployment_settings_id = obmf.command_get_deployment_settings_id()
 context['destination_deployment_settings_id'] = deployment_settings_id
 
 if not deployment_settings_id:
-  MSA_API.task_error('ERROR: no deployement setting found the target device '+context['destination_cisco_device_id'], context, True)
-
+  MSA_API.task_error('There is no deployement setting for the Cisco device '+context['destination_device_id'], context, True)
+  
 #Get all microservices attached to this deployment setting.
 confprofile  = ConfProfile(deployment_settings_id)
 all_ms_attached = confprofile.read()
