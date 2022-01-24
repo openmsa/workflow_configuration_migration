@@ -158,7 +158,7 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Filter IP with interfaces subnets</displayName>
     </task>
-    <task name="Fill_Xconnect.py">
+    <task name="Import_WF_parameters_into_Microservice.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Insert workflow parameters into microservices</displayName>
     </task>
@@ -192,9 +192,9 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Filter IP with interfaces subnets</displayName>
     </task>
-    <task name="Fill_Xconnect.py">
+    <task name="Import_WF_parameters_into_Microservice.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Fill Xconnect microservice with parameters</displayName>
+      <displayName>Insert workflow parameters into microservices</displayName>
     </task>
   </process>
   <process name="Generate_Configuration">
