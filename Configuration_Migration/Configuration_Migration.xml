@@ -199,6 +199,10 @@
     <type>CREATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
+    <task name="Get_New_Migration_Parameters.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Get Parameter</displayName>
+    </task>
     <task name="Import_Old_Device_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Import legacy configuration</displayName>
@@ -233,6 +237,10 @@
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
+    <task name="Get_ReImport_Parameters.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Get Parameter</displayName>
+    </task>
     <task name="Import_Old_Device_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Import legacy configuration</displayName>
@@ -259,6 +267,10 @@
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
+    <task name="Get_Generate_Configuration_Parameters.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
+      <displayName>Get Parameter</displayName>
+    </task>
     <task name="Compute_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
       <displayName>Compute Configuration</displayName>
@@ -273,6 +285,10 @@
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
+    <task name="Get_Push_Configuration_Parameters.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
+      <displayName>Get Parameter</displayName>
+    </task>
     <task name="Push_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
       <displayName>Push Configuration</displayName>
@@ -283,16 +299,6 @@
     <type>DELETE</type>
     <visibility>5</visibility>
     <allowSchedule/>
-  </process>
-  <process name="Process/workflow_configuration_migration/Configuration_Migration/Process_purge_all_instances">
-    <displayName>Purge all old WF instances</displayName>
-    <type>CREATE</type>
-    <visibility>5</visibility>
-    <allowSchedule/>
-    <task name="Task_purge_all_instances.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Process_purge_all_instances/Tasks</processPath>
-      <displayName>Purge all old WF instances</displayName>
-    </task>
   </process>
   <information>
     <icon/>

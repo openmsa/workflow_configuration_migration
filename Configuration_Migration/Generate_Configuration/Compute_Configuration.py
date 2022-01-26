@@ -10,9 +10,6 @@ from datetime import datetime
 
 dev_var = Variables()
 
-dev_var.add('customer_id', var_type='String')
-dev_var.add('data_conversion', var_type='String')
-
 context = Variables.task_call(dev_var)
 
 DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'

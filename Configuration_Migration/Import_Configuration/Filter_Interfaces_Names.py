@@ -11,11 +11,6 @@ from datetime import datetime
 
 dev_var = Variables()
 
-dev_var.add('customer_id', var_type='String')
-dev_var.add('interfaces.0.source', var_type='String')
-dev_var.add('data_filter', var_type='String')
-dev_var.add('enable_filter', var_type='Boolean')
-
 INTERFACE = 'interface'
 
 context = Variables.task_call(dev_var)

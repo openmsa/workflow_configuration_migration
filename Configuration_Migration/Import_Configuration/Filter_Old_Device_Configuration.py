@@ -11,9 +11,6 @@ from datetime import datetime
 
 dev_var = Variables()
 
-dev_var.add('customer_id', var_type='String')
-
-
 context = Variables.task_call(dev_var)
  
 # This Script will also remove all given MS values which are not present in the given field :

@@ -9,9 +9,6 @@ from msa_sdk.conf_profile import ConfProfile
 from pathlib import Path
 
 dev_var = Variables()
-dev_var.add('customer_id')
-dev_var.add('generate_file')
-dev_var.add('destination_simul_device_id')
 
 context = Variables.task_call(dev_var)
 
