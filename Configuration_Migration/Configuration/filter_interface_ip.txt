@@ -1,5 +1,7 @@
-#This  file contains the list of element to filter on IP wich are in Interface range IP
-#MS_Name|MS_field_name
+#
+# This  file contains the list of element to filter based on the interface subnet.
+# Microservice Name | Microservice variable
+#
 address_family|neighbor.0.bgp_neighbor
 ip_route|gateway
 router_bgp|neighbors.0.bgp_neighbor
