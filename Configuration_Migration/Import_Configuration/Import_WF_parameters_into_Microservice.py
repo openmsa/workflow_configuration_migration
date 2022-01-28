@@ -103,41 +103,6 @@ context['import_wf_fields'] =  wf_fields
                 "groups.0.p2p"
             ],
             "destination_MS_Name": "xconnect"
-
-context "interfaces": [
-        {
-            "destination": "BBSerial2/3/0.1/3/6/2:0",
-            "dot1q": "511",
-            "gil": "gil-PWHE-TEF",
-            "pseudowire_class": "pseudowire_class1",
-            "pseudowire_id": "1700",
-            "pseudowire_ip": "177.61.178.254",
-            "second_dot1q": "100",
-            "source": "Serial2/3/0.1/3/6/2:0",
-            "xconnect_group": "PWHE_FAT"
-        }
-    ],       
-
-    "xconnect_group_values55577": "xconnect_group",
-    "xconnect_group_values55577CONTEXT": {
-        "destination": "BBSerial2/3/0.1/3/6/2:0",
-        "dot1q": "511",
-        "gil": "gil-PWHE-TEF",
-        "pseudowire_class": "pseudowire_class1",
-        "pseudowire_id": "1700",
-        "pseudowire_ip": "177.61.178.254",
-        "second_dot1q": "100",
-        "source": "Serial2/3/0.1/3/6/2:0",
-        "xconnect_group": "PWHE_FAT"
-    },
-        "gil_values55577idx": 5,
-    "gil_values55577item": [
-        "xconnect_group",
-        "groups.0.interface",
-        "groups.0.pseudowire_id",
-        "groups.0.pseudowire_ip",
-        "groups.0.pseudowire_class",
-        "groups.0.gil"
 '''
 
 object_id =''
@@ -145,65 +110,71 @@ object_id =''
 #Get original fields values
 for first_wf_field,item  in wf_fields.items():
     #We should fill one array
-    value= {}
-    count=0
-    if item['second_level']:
-      for context_val in context[first_wf_field]:
-        context['import_wf_'+first_wf_field+'count'+str(count)] = context_val
-        for idx, second_field in enumerate(item['second_level']) :
-          if context_val.get(second_field) and item['destination_field_name'][idx]:
-            destination_field_name = item['destination_field_name'][idx]
-            if destination_field_name == 'object_id':
-              object_id = context_val[second_field] 
-            else:
-              fields = destination_field_name.split('.0.')  # groups.0.pseudowire_ip
-              if isinstance(fields, typing.List) and fields and (len(fields) > 1):
-                first  = fields[0]
-                second = fields[1]
-                if not value.get(first):
-                  value[first]={}
-                if not value[first].get(count):
-                  value[first][count]={}              
-                if context_val.get(second_field):
-                  value[first][count][second] =  context_val[second_field]
-                else:
-                  value[first][count][second] =  "No available"
-            #value[item['destination_field_name'][idx]] = context_val[second_field] 
-        if context.get(item['destination_MS_Name']+'_values'):
-          newvalue = context[item['destination_MS_Name']+'_values']
-        else:
-          newvalue = {}
-        if value and object_id:
-          newvalue[object_id] = value
-        context[item['destination_MS_Name']+'_values'] = newvalue
-        count = count +1
-    else:
-      #get value directly from the context to add new value to all current values
-      fields = first_wf_field.split('+')   
-      if isinstance(fields, typing.List) and fields and (len(fields) > 1):
-        # first_wf_field = 'ELINE_'+customer_id
-        if fields[0].startswith("'") and fields[0].endswith("'"):  #like 'ELINE_'
-          newval = fields[0].replace("'",'')
-        else:
-          newval = context[fields[0]]
-        if fields[1].startswith("'") and fields[1].endswith("'"):
-          newval = newval + fields[1]
-        else:
-          newval = newval+ context[fields[1]]        
-      else:
-        newval = context[first_wf_field] #get value directly from the context
-      destination_MS_context = context[item['destination_MS_Name']+'_values']
-      fields = item['destination_field_name'][0].split('.0.')  # groups.0.p2p
-      if isinstance(fields, typing.List) and fields and (len(fields) > 1):
-        first  = fields[0]  # groups
-        second = fields[1]  # p2p
-        for objectid, val in destination_MS_context.items():
-          if val.get(first):          
-            for num,valfirts_field in val[first].items():
-              valfirts_field[second] = newval
+    value = {}
+    count = 0
+    current_object_id = ''
+    if context.get(first_wf_field) and context[first_wf_field]:
+      if item['second_level']:
+        for context_val in context[first_wf_field]:
+          context['import_wf_'+first_wf_field+'count'+str(count)] = context_val
+          for idx, second_field in enumerate(item['second_level']) :
+            if context_val.get(second_field) and item['destination_field_name'][idx]:
+              destination_field_name = item['destination_field_name'][idx]
+              if destination_field_name == 'object_id':
+                object_id = context_val[second_field]
+                if current_object_id != object_id:
+                  value = {}
+                  count = 0
+                  current_object_id = object_id                
+              else:
+                fields = destination_field_name.split('.0.')  # groups.0.pseudowire_ip
+                if isinstance(fields, typing.List) and fields and (len(fields) > 1):
+                  first  = fields[0]
+                  second = fields[1]
+                  if not value.get(first):
+                    value[first]={}
+                  if not value[first].get(count):
+                    value[first][count]={}              
+                  if context_val.get(second_field):
+                    value[first][count][second] =  context_val[second_field]
+                  else:
+                    value[first][count][second] =  "No available"
+              #value[item['destination_field_name'][idx]] = context_val[second_field] 
+          if context.get(item['destination_MS_Name']+'_values'):
+            newvalue = context[item['destination_MS_Name']+'_values']
           else:
-             val[first]={}
-             val[first][second] = newval
+            newvalue = {}
+          if value and object_id:
+            newvalue[object_id] = value
+          context[item['destination_MS_Name']+'_values'] = newvalue
+          count = count +1
+      else:
+        #get value directly from the context to add new value to all current values
+        fields = first_wf_field.split('+')   
+        if isinstance(fields, typing.List) and fields and (len(fields) > 1):
+          # first_wf_field = 'ELINE_'+customer_id
+          if fields[0].startswith("'") and fields[0].endswith("'"):  #like 'ELINE_'
+            newval = fields[0].replace("'",'')
+          else:
+            newval = context[fields[0]]
+          if fields[1].startswith("'") and fields[1].endswith("'"):
+            newval = newval + fields[1]
+          else:
+            newval = newval+ context[fields[1]]        
+        else:
+          newval = context[first_wf_field] #get value directly from the context
+        destination_MS_context = context[item['destination_MS_Name']+'_values']
+        fields = item['destination_field_name'][0].split('.0.')  # groups.0.p2p
+        if isinstance(fields, typing.List) and fields and (len(fields) > 1):
+          first  = fields[0]  # groups
+          second = fields[1]  # p2p
+          for objectid, val in destination_MS_context.items():
+            if val.get(first):          
+              for num,valfirts_field in val[first].items():
+                valfirts_field[second] = newval
+            else:
+               val[first]={}
+               val[first][second] = newval
 
 MSA_API.task_success('DONE: Insert workflow parameters into microservices', context, True)
 
