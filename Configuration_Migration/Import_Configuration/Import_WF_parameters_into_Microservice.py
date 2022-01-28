@@ -54,31 +54,31 @@ if import_liste_list:
         destination_MS_Name     = list[1]
         destination_field_name  = list[2]
         fields = orig_field_name.split('.0.')
+        key = fields[0] +'|'+ destination_MS_Name
         if isinstance(fields, typing.List) and fields and (len(fields) > 1):
           #interfaces.0.destination
-          if not wf_fields.get(fields[0]):
-            wf_fields[fields[0]] = {}
-          if not wf_fields[fields[0]].get('second_level'):
-            wf_fields[fields[0]]['second_level'] = []
-            wf_fields[fields[0]]['destination_field_name'] = []
-          wf_fields[fields[0]]['second_level'].append(fields[1])
-          wf_fields[fields[0]]['destination_MS_Name'] = destination_MS_Name
-          wf_fields[fields[0]]['destination_field_name'].append(destination_field_name)
+          if not wf_fields.get(key):
+            wf_fields[key] = {}
+          if not wf_fields[key].get('second_level'):
+            wf_fields[key]['second_level'] = []
+            wf_fields[key]['destination_field_name'] = []
+          wf_fields[key]['second_level'].append(fields[1])
+          wf_fields[key]['destination_MS_Name'] = destination_MS_Name
+          wf_fields[key]['destination_field_name'].append(destination_field_name)
         else:
           #fields is a simple field
-          if not wf_fields.get(fields[0]):
-            wf_fields[fields[0]]  = {}
-          if not wf_fields[fields[0]].get('second_level'):
-            wf_fields[fields[0]]['second_level'] = []
-            wf_fields[fields[0]]['destination_field_name'] = []
-          wf_fields[fields[0]]['destination_MS_Name'] = destination_MS_Name
-          wf_fields[fields[0]]['destination_field_name'].append(destination_field_name)
+          if not wf_fields.get(key):
+            wf_fields[key]  = {}
+          if not wf_fields[key].get('second_level'):
+            wf_fields[key]['second_level'] = []
+            wf_fields[key]['destination_field_name'] = []
+          wf_fields[key]['destination_MS_Name'] = destination_MS_Name
+          wf_fields[key]['destination_field_name'].append(destination_field_name)
 
 context['import_wf_fields'] =  wf_fields
 
-
-''' "wf_fields": {
-        "interfaces": {
+'''     "import_wf_fields": {
+        "interfaces|xconnect": {
             "second_level": [
                 "xconnect_group",
                 "destination",
@@ -97,35 +97,69 @@ context['import_wf_fields'] =  wf_fields
             ],
             "destination_MS_Name": "xconnect"
         },
-        "'ELINE_'+customer_id": {
+        "'ELINE_'+customer_id|xconnect": {
             "second_level": [],
             "destination_field_name": [
                 "groups.0.p2p"
             ],
             "destination_MS_Name": "xconnect"
+        },
+        "interfaces|interface": {
+            "second_level": [
+                "destination",
+                "dot1q",
+                "second_dot1q"
+            ],
+            "destination_field_name": [
+                "object_id",
+                "encapsulation_dot1q",
+                "encapsulation_second_dot1q"
+            ],
+            "destination_MS_Name": "interface"
+        }
 '''
 
 object_id =''
+object_id_without_point =''
 
 #Get original fields values
-for first_wf_field,item  in wf_fields.items():
+for source_key,item  in wf_fields.items():
     #We should fill one array
     value = {}
     count = 0
     current_object_id = ''
+    key = source_key.split('|')   #first_wf_field|destination_MS_Name
+    first_wf_field = key[0]
     if context.get(first_wf_field) and context[first_wf_field]:
       if item['second_level']:
         for context_val in context[first_wf_field]:
-          context['import_wf_'+first_wf_field+'count'+str(count)] = context_val
+          context['import_wf_'+first_wf_field+'_count'+str(count)] = context_val
+          ''' context_val =>
+              "import_wf_interfaces_count0": {
+              "source": "Serial2/3/0.1/3/6/2:0",
+              "destination": "BBSerial2/3/0.1/3/6/2:0",
+              "xconnect_group": "PWHE_FAT",
+              "dot1q": "LOLOdout1",
+              "second_dot1q": "LOLOdot1Sec",
+              "pseudowire_id": "1700",
+              "pseudowire_ip": "177.61.178.254",
+              "pseudowire_class": "pseudowire_class1",
+              "gil": "gil-PWHE-TEF"
+          '''
           for idx, second_field in enumerate(item['second_level']) :
             if context_val.get(second_field) and item['destination_field_name'][idx]:
               destination_field_name = item['destination_field_name'][idx]
               if destination_field_name == 'object_id':
                 object_id = context_val[second_field]
+                object_id_without_point = object_id.replace('.','_')
                 if current_object_id != object_id:
-                  value = {}
+                  if context[item['destination_MS_Name']+'_values'] and context[item['destination_MS_Name']+'_values'].get(object_id_without_point):
+                    value = context[item['destination_MS_Name']+'_values'][object_id_without_point]
+                  else:
+                    value = {}
                   count = 0
-                  current_object_id = object_id                
+                  current_object_id = object_id
+                  value['object_id'] = object_id
               else:
                 fields = destination_field_name.split('.0.')  # groups.0.pseudowire_ip
                 if isinstance(fields, typing.List) and fields and (len(fields) > 1):
@@ -139,13 +173,16 @@ for first_wf_field,item  in wf_fields.items():
                     value[first][count][second] =  context_val[second_field]
                   else:
                     value[first][count][second] =  "No available"
+                else:
+                  value[destination_field_name] =  context_val[second_field]
+              
               #value[item['destination_field_name'][idx]] = context_val[second_field] 
           if context.get(item['destination_MS_Name']+'_values'):
             newvalue = context[item['destination_MS_Name']+'_values']
           else:
             newvalue = {}
           if value and object_id:
-            newvalue[object_id] = value
+            newvalue[object_id_without_point] = value
           context[item['destination_MS_Name']+'_values'] = newvalue
           count = count +1
       else:

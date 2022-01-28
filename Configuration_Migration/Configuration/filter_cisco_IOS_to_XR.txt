@@ -16,3 +16,4 @@ interface|service_policy.0.name|policy_map|object_id
 policy_map|pmap_class.0.class_name|class_map|object_id
 interface|object_id|router_isis|interfaces.0.interface
 ip_vrf|route_map|route_map|object_id
+interface|object_id|xconnect|object_id
