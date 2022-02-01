@@ -8,13 +8,11 @@
 interface|vrf_name|ip_vrf|object_id
 interface|vrf_name|bgp_vrf|object_id
 interface|service_policy_out|policy_map|object_id
-interface|vrf_name|ip_route|vrf_name
+interface|service_policy_in|policy_map|object_id
 interface|object_id|ip_route|interface
 interface|vrf_name|router_static|vrf_routes.0.vrf_name
 interface|object_id|router_static|vrf_routes.0.routes.0.interface
 interface|object_id|router_static|routes.0.interface
-interface|service_policy.0.name|policy_map|object_id
 interface|object_id|router_isis|interfaces.0.interface
-interface|object_id|xconnect|object_id
 policy_map|pmap_class.0.class_name|class_map|object_id
 ip_vrf|route_map|route_map|object_id
