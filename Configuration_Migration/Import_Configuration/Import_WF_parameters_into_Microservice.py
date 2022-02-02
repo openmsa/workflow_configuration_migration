@@ -153,8 +153,9 @@ for source_key,item  in wf_fields.items():
                 object_id = context_val[second_field]
                 object_id_without_point = object_id.replace('.','_')
                 if current_object_id != object_id:
-                  if context[item['destination_MS_Name']+'_values'] and context[item['destination_MS_Name']+'_values'].get(object_id_without_point):
-                    value = context[item['destination_MS_Name']+'_values'][object_id_without_point]
+                  destMS = item['destination_MS_Name']+'_values'
+                  if context.get(destMS) and context[destMS] and context[destMS].get(object_id_without_point):
+                    value = context[destMS][object_id_without_point]
                   else:
                     value = {}
                   count = 0
