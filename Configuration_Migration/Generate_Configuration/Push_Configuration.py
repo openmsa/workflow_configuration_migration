@@ -81,8 +81,8 @@ ms_not_attached_destination_device = []
 full_message = ''
 
 if MS_list:
-  for MS in  MS_list.split(';'):
-    if MS and MS in MS_list_destination:
+  for MS in  MS_list_destination:
+    if MS and MS in MS_list.split(';'):
       config = context.get( MS + '_values') 
       if config:
         params = dict()

@@ -47,74 +47,7 @@ def  data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_p
    return 'ok'
    
 
-#########################################################
 
-source_interfaces_name_list = []
-destination_interfaces_name_list = []
-if context.get('interfaces'):
-  interfaces = context['interfaces']
-  for interface in interfaces:
-    if interface.get('source'):
-      source_interfaces_name_list.append(interface['source'])
-    if interface.get('destination'):
-      destination_interfaces_name_list.append(interface['destination'])
-
-
-#CHANGE THE INTERFACE NAME in INTERFACE MS
-#if context.get('interface_values') and not context.get('interface_values_orig'):
-#  context['interface_values_orig'] = copy.deepcopy(context['interface_values'])
-
-if context.get('interface_values'):
-  interfaces_newvalues = context['interface_values']
-  if source_interfaces_name_list and destination_interfaces_name_list:
-    if len(source_interfaces_name_list) != len(destination_interfaces_name_list):
-      MSA_API.task_error('ERROR: the length of source interfaces list and target interfaces list are different (old=('+','.join(source_interfaces_name_list)+'), new=('+','.join(destination_interfaces_name_list)+')', context, True)
-    for i in range(len(source_interfaces_name_list)):
-      old_interface_name = source_interfaces_name_list[i]
-      new_interface_name = destination_interfaces_name_list[i]
-      old_interface_name_ob      = old_interface_name.replace('.','_')  # replace '.' with '_'
-      new_interface_name_ob      = new_interface_name.replace('.','_')  # replace '.' with '_'
-      '''    "interface_values": {
-        "Multilink45": {
-            "addresses": {
-                "0": {
-                    "ipv4_address": "186.239.12.61",
-                    "ipv4_mask": "255.255.255.252"
-                }
-            },
-            "int_description": "By VPNSC: Job Id# = 178482 (Sabesp_SAO_PAULO_SP_582841)",
-            "object_id": "Multilink45",
-            "ppp": {
-      '''
-      if interfaces_newvalues.get(old_interface_name_ob):
-        if new_interface_name_ob != old_interface_name_ob:
-          if interfaces_newvalues.get(new_interface_name_ob):
-            MSA_API.task_error('ERROR: interface "'+new_interface_name_ob+'" already exist on the device', context, True)
-          interfaces_newvalues[new_interface_name_ob] = interfaces_newvalues[old_interface_name_ob]
-          if (interfaces_newvalues[new_interface_name_ob].get("object_id")):
-            interfaces_newvalues[new_interface_name_ob]["object_id"] = new_interface_name
-          del interfaces_newvalues[old_interface_name_ob]  
-  
-  context['interface_values'] = interfaces_newvalues 
-
-#CHANGE THE INTERFACE NAME in IP_ROUTE MS
-#if context.get('ip_route_values') and not context.get('ip_route_values_orig'):
-#  context['ip_route_values_orig'] = copy.deepcopy(context['ip_route_values'])
-if context.get('ip_route_values'):
-  ip_routes_newvalues = context['ip_route_values']
-  if source_interfaces_name_list and destination_interfaces_name_list:
-    if len(source_interfaces_name_list) != len(destination_interfaces_name_list):
-      MSA_API.task_error('ERROR: the length of source interfaces and target interfaces list are different (old=('+','.join(source_interfaces_name_list)+'), new=('+','.join(destination_interfaces_name_list)+')', context, True)
-    for i in range(len(source_interfaces_name_list)):
-      old_interfaces_name = source_interfaces_name_list[i]
-      new_interfaces_name = destination_interfaces_name_list[i]
-      ''' ip_route_values": {  "866d05ae2f8822cce90b0d1cf5855c70": {  "vrf_name": "", "ipv4_address": "186.200.4.50",  "interface": "Serial1/1/0.1/3/2/3:0",
-      '''
-      for key, value in ip_routes_newvalues.items():
-        if value.get("interface") and value["interface"] == old_interfaces_name:
-          ip_routes_newvalues[key]["interface"] = new_interfaces_name
-  
-  context['ip_route_values'] = ip_routes_newvalues 
   
 
 ########### LOOP ON ALL GIVEN MS #############
