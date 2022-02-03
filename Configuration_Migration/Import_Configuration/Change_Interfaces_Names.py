@@ -1,6 +1,8 @@
 import json
 import typing
 import os
+import copy
+
 from pathlib import Path
 from msa_sdk import constants
 from msa_sdk.order import Order
