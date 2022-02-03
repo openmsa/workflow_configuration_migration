@@ -23,9 +23,6 @@ dev_var.add('interfaces.0.gil' )
 context = Variables.task_call(dev_var)
 
 
-
-
-    
 #read import_WF_parameters_into_MS.txt file
 wf_path = os.path.dirname(__file__)
 file =  wf_path+'/../'+context['import_WF_parameters_into_MS_file']   # import_WF_parameters_into_MS.txt
@@ -116,7 +113,15 @@ context['import_wf_fields'] =  wf_fields
                 "encapsulation_second_dot1q"
             ],
             "destination_MS_Name": "interface"
+        },
+        "customer_id|interface": {
+            "second_level": [],
+            "destination_field_name": [
+                "customer_name"
+            ],
+            "destination_MS_Name": "interface"
         }
+    },
 '''
 
 object_id =''
@@ -213,6 +218,9 @@ for source_key,item  in wf_fields.items():
             else:
                val[first]={}
                val[first][second] = newval
+        else:
+          for objectid, val in destination_MS_context.items():
+            val[item['destination_field_name'][0]] = newval
 
 MSA_API.task_success('DONE: Insert workflow parameters into microservices', context, True)
 
