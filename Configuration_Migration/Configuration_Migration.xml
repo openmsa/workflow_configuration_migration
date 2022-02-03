@@ -69,7 +69,7 @@
         <sections>interface</sections>
       </sections>
       <values>
-        <values displayValue="BBSerial2/3/0.1/3/6/2:0">BBSerial2/3/0.1/3/6/2:0</values>
+        <values displayValue="pw-ether1700">pw-ether1700</values>
         <values displayValue="BBSerial1/0/0.1/3/1/1:0">BBSerial1/0/0.1/3/1/1:0</values>
         <values displayValue="BBMultilink45">BBMultilink45</values>
         <values displayValue="BBMultilink66">BBMultilink66</values>
@@ -186,9 +186,6 @@
     <variable displayName="data_filter_ip_file" name="params.data_filter_ip_file" startIncrement="0" type="String" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="Configuration/filter_interface_ip.txt" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
     </variable>
-    <variable displayName="change_interfaces_names_file" name="params.change_interfaces_names_file" startIncrement="0" type="String" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="Configuration/change_interfaces_names.txt" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
-      <repositories/>
-    </variable>
     <variable displayName="import_WF_parameters_into_MS_file" name="params.import_WF_parameters_into_MS_file" startIncrement="0" type="String" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="Configuration/import_WF_parameters_into_MS.txt" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
     </variable>
@@ -225,17 +222,13 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Filter IP with interfaces subnets</displayName>
     </task>
-    <task name="Change_Interfaces_Names.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Change Interfaces Names</displayName>
+    <task name="Compute_Configuration.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
+      <displayName>Compute Configuration</displayName>
     </task>
     <task name="Import_WF_parameters_into_Microservice.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Insert workflow parameters into microservices</displayName>
-    </task>
-    <task name="Compute_Configuration.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
-      <displayName>Compute Configuration</displayName>
     </task>
     <task name="Generate_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
@@ -266,10 +259,6 @@
     <task name="Filter_IP_with_interface_subnet.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Filter IP with interfaces subnets</displayName>
-    </task>
-    <task name="Change_Interfaces_Names.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Change Interfaces Names</displayName>
     </task>
     <task name="Import_WF_parameters_into_Microservice.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
