@@ -18,5 +18,18 @@ dev_var.add('enable_filter')
 
 context = Variables.task_call(dev_var)
 
+
+'''
+if context.get('interfaces'):
+  interfaces = context['interfaces']
+  for interface in interfaces:
+    if interface.get('source') and interface.get('dot1q') and interface.get('second_dot1q'):
+      source        = interface['source']
+      dot1q         = interface['dot1q']
+      second_dot1q  = interface['second_dot1q']
+
+
+'''     
+        
 MSA_API.task_success('DONE', context, True)
 print(ret)

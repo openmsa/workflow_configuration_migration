@@ -39,11 +39,6 @@ def data_find_migrate_recursif(orig_field_name, fields, ms_newvalues):
                  context[orig_field_name+'_field_values'][value] = ''
   return 'not found'
    
-
-########### ADD LINK #############
-MS_list_string        = context['MS_list']  
-
-
 if not context['enable_filter']:
   MSA_API.task_success('DONE: filter are disabled, no filters applied', context, True)
 

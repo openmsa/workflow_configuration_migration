@@ -62,7 +62,7 @@ if context.get('interfaces'):
       source_interfaces_name_list.append(interface['source'])
     if interface.get('destination'):
       destination_interfaces_name_list.append(interface['destination'])
-      if interface.get('source'):
+      if interface.get('source') and interface['destination'] != interface['source']:
         new_interfaces_names[interface['source']] = interface['destination']
         new_interfaces_names_clean[interface['source'].replace('.','_') ] = interface['destination'].replace('.','_')  # replace '.' with '_'
 
