@@ -14,7 +14,7 @@ context = Variables.task_call(dev_var)
 timeout = 600
 
 #get device_id from context
-if context['source_simul_device_id'] == 'simulator': 
+if context['real_or_simul_device'] == 'simulator': 
   device_id_full = context['source_simul_device_id']
 else:
   device_id_full = context['source_device_id']
