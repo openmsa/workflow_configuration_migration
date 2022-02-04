@@ -14,7 +14,12 @@ context = Variables.task_call(dev_var)
 timeout = 600
 
 #get device_id from context
-device_id = context['source_simul_device_id'][3:]
+if context['source_simul_device_id'] == 'simulator': 
+  device_id_full = context['source_simul_device_id']
+else:
+  device_id_full = context['source_device_id']
+
+device_id = device_id_full[3:]
 
 # instantiate device object
 obmf  = Order(device_id=device_id)
@@ -32,7 +37,7 @@ if isinstance(responses, typing.List):
     # "commandId": 0, "status": "OK","message": "{\"class_map\":{\"RT\":{\"object_id\":\"RT\",\"matches\":{\"0\":{\"not\":\"\",\"match_cmd\":\"ip \"}}}},\"ip_route\"
     if response.get('message') and response.get('status'):
       if response['status'] != 'OK':
-        MSA_API.task_error('ERROR: during synchronise. Managed entity Id: '+context['source_simul_device_id'] + ' : ' + str(response), context, True)
+        MSA_API.task_error('ERROR: during synchronise. Managed entity Id: '+ device_id_full + ' : ' + str(response), context, True)
       else:
         response_message = json.loads(response.get('message'))  #convert into json array
         for MS in response_message:
@@ -69,7 +74,7 @@ else:
     
     
     
-MSA_API.task_success('DONE: all MS attached to the managed entity: '+context['source_simul_device_id'] + ' imported ('+MS_list+')', context, True)
+MSA_API.task_success('DONE: all MS attached to the managed entity: '+ device_id_full + ' imported ('+MS_list+')', context, True)
 
 
 

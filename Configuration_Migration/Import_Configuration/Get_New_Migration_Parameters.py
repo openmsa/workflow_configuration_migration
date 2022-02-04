@@ -3,6 +3,8 @@ from msa_sdk.msa_api import MSA_API
 
 dev_var = Variables()
 
+dev_var.add('real_or_simul_device')
+dev_var.add('source_device_id')
 dev_var.add('source_simul_device_id')
 dev_var.add('destination_simul_device_id')
 
