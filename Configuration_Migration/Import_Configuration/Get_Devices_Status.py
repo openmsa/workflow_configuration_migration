@@ -56,11 +56,11 @@ if all_ms_attached.get("microserviceUris"):
   all_ms_attached = all_ms_attached["microserviceUris"] 
 context['MS_attached source device_id' + device_id + ' : '] = all_ms_attached
 #all_ms_attached = {"id" : 44, ..."microserviceUris" : { "CommandDefinition/LINUX/CISCO_IOS_emu  },  "CommandDefinition/LINUX/CISCO_IOS_emulation/bgp_vrf.xml" : {  "name" : "bgp_vrf",   "groups" : [ "EMULATION", "CISCO", "IOS" ].....
-MS_list = {}
+MS_list = []
 if all_ms_attached:
   for full_ms, MS in all_ms_attached.items():
     if Path(full_ms).stem:
-      MS_list[Path(full_ms).stem] = '1'  # Path(full_ms).stem = MS filename without extension 
+      MS_list.append(Path(full_ms).stem)  # Path(full_ms).stem = MS filename without extension 
  
 if data_list:
   for line in data_list:
@@ -156,37 +156,12 @@ if data_list:
         else:
           warning = warning + "\n the Micros service "+ms_source+" is no attached to the device "+ device_id_full
        
-
-MSA_API.task_success('TEST SKIPPED', context, True)
-
-
-#we synchronise all MS attached to the source device because some MS are intermediated and need to be synchronized with good order.
-obmf.command_synchronize(timeout)
-responses = json.loads(obmf.content)
-#context[ 'ALL source MS_synch_values'] = responses
-MS_list = []
-if isinstance(responses, typing.List): 
-  #responses contains only MS which contains some datas, we don't get attached MS without datas
-  for response in responses:
-    # "commandId": 0, "status": "OK","message": "{\"class_map\":{\"RT\":{\"object_id\":\"RT\",\"matches\":{\"0\":{\"not\":\"\",\"match_cmd\":\"ip \"}}}},\"ip_route\"
-    if response.get('message') and response.get('status'):
-      if response['status'] != 'OK':
-        MSA_API.task_error('ERROR: during synchronise. Managed entity Id: '+ device_id_full + ' : ' + str(response), context, True)
-      else:
-        response_message = json.loads(response.get('message'))  #convert into json array
-        for MS in response_message:
-          if response_message.get(MS):
-            #MS_list.append(MS)
-            context[ MS + '_values'] = response_message.get(MS)
-          else:
-            context[ MS + '_values'] = response_message
-            
-            
-            
-
+if MS_list:
+  MS_list             = ';'.join(MS_list)  
+else:
+  MS_list = ''
     
-    
-MSA_API.task_success('DONE: all MS attached to the managed entity: '+ device_id_full + ' imported ('+MS_list+')', context, True)
+MSA_API.task_success('DONE: Get Status for '+ device_id_full + ' ('+MS_list+')', context, True)
 
 
 
