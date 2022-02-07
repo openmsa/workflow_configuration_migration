@@ -19,41 +19,17 @@
         <values displayValue="real device">real</values>
       </values>
     </variable>
-    <variable displayName="Emulated Source Device" name="params.source_simul_device_id" startIncrement="0" type="Composite" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" selector="params.real_or_simul_device" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
-      <behaviors>
-        <behaviour arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" editable="false" visible="true" displayName="Emulated Source Device" displayOrder="3" maxLength="0" isMandatory="false" isUserLocked="false" name="params.source_simul_device_id" selectorValue="simulator" startIncrement="0" type="Device" default="">
-          <sdTypes>
-            <sdTypes manId="14020601" modId="29112021"/>
-          </sdTypes>
-        </behaviour>
-        <behaviour arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" editable="false" visible="false" displayName="Emulated Source Device" displayOrder="3" maxLength="0" isMandatory="false" isUserLocked="false" name="params.source_simul_device_id" selectorValue="real" startIncrement="0" type="Device">
-          <sdTypes>
-            <sdTypes manId="14020601" modId="29112021"/>
-          </sdTypes>
-        </behaviour>
-      </behaviors>
+    <variable displayName="Emulated Source Device" name="params.source_simul_device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
-      <sections>
-        <sections>device</sections>
-      </sections>
+      <sdTypes>
+        <sdTypes manId="14020601" modId="29112021"/>
+      </sdTypes>
     </variable>
-    <variable displayName="Real Source Device" name="params.source_device_id" startIncrement="0" type="Composite" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" selector="params.real_or_simul_device" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
-      <behaviors>
-        <behaviour arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" editable="false" visible="false" displayName="Real Source Device" displayOrder="3" maxLength="0" isMandatory="false" isUserLocked="false" name="params.source_device_id" selectorValue="simulator" startIncrement="0" type="Device">
-          <sdTypes>
-            <sdTypes manId="1" modId="113"/>
-          </sdTypes>
-        </behaviour>
-        <behaviour arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" editable="false" visible="true" displayName="Real Source Device" displayOrder="3" maxLength="0" isMandatory="false" isUserLocked="false" name="params.source_device_id" selectorValue="real" startIncrement="0" type="Device" default="">
-          <sdTypes>
-            <sdTypes manId="1" modId="113"/>
-          </sdTypes>
-        </behaviour>
-      </behaviors>
+    <variable displayName="Real Source Device" name="params.source_device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
-      <sections>
-        <sections>device</sections>
-      </sections>
+      <sdTypes>
+        <sdTypes manId="1" modId="113"/>
+      </sdTypes>
     </variable>
     <variable displayName="Emulated Destination Device" name="params.destination_simul_device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
@@ -220,6 +196,9 @@
     <variable displayName="import_WF_parameters_into_MS_file" name="params.import_WF_parameters_into_MS_file" startIncrement="0" type="String" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="Configuration/import_WF_parameters_into_MS.txt" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
     </variable>
+    <variable displayName="get_devices_status_file" name="params.get_devices_status_file" startIncrement="0" type="String" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="Configuration/get_devices_status.txt" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <repositories/>
+    </variable>
     <variable displayName="data_filter" name="params.data_filter" startIncrement="0" type="String" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
     </variable>
@@ -302,6 +281,16 @@
     <task name="Import_WF_parameters_into_Microservice.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Insert workflow parameters into microservices</displayName>
+    </task>
+  </process>
+  <process name="Get_Devices_Status">
+    <displayName>Get Devices Status</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Get_Devices_Status.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Get Devices Status</displayName>
     </task>
   </process>
   <process name="Generate_Configuration">

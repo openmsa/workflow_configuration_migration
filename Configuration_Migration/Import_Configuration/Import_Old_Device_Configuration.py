@@ -50,7 +50,7 @@ if isinstance(responses, typing.List):
             
   # Get deployment settings ID for the device.
   deployment_settings_id = obmf.command_get_deployment_settings_id()
-  context['source_deployment_settings_id'] = deployment_settings_id
+  context['source_deployment_settings_id_'+device_id_full] = deployment_settings_id
   
   #Get all microservices attached to this deployment setting.
   confprofile  = ConfProfile(deployment_settings_id)
@@ -64,7 +64,7 @@ if isinstance(responses, typing.List):
   if all_ms_attached:
     for full_ms, MS in all_ms_attached.items():
       if Path(full_ms).stem:
-        MS_list.append(Path(full_ms).stem)   #MS filename without extension
+        MS_list.append(Path(full_ms).stem)    # Path(full_ms).stem = MS filename without extension
    
 if MS_list:
   MS_list             = ';'.join(MS_list)  
