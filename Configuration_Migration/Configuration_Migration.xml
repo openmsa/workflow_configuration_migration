@@ -228,6 +228,10 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Get Parameter</displayName>
     </task>
+    <task name="Create_Subinterface_Name.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Create subinterface name</displayName>
+    </task>
     <task name="Import_Old_Device_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Import legacy configuration</displayName>
