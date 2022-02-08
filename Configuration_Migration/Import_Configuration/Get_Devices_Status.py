@@ -127,7 +127,7 @@ if data_list:
                      else:
                        values_to_send.append(new_value)
                        
-                       
+            # values_to_send: [  {  "object_id": "TRIBUNAL-JUSTICA",  "ip_bgp_neighbor": "187.93.7.58" },{"object_id": "TRIBUNAL-JUSTICA"...
             context['Status_'+full_source_field+'_field_values'] = values_to_send              
   
             #Run IMPORT for the give MS to update the DB
@@ -140,16 +140,19 @@ if data_list:
   
             for values in values_to_send:
               ms_input = {}
+              object_id =''
               for key,val in values.items():
                 ms_input[key] = val
-    
-                obj = {"":ms_input}  
-                params = {}
-                params[ms_to_run] = obj 
-                context['ms_params_'+ms_to_run+'_'+parameter1_to_give_to_ms] = params
-                obmf.command_execute('READ', params, timeout) #execute the MS to get new status
-                response = json.loads(obmf.content)
-                context['ms_params_response_'+ms_to_run+'_'+parameter1_to_give_to_ms] = response 
+                if key == 'object_id':
+                  object_id = val
+              obj               = {}
+              obj[object_id]    = ms_input  
+              params            = {}
+              params[ms_to_run] = obj 
+              #context['ms_params_'+ms_to_run+'_'+parameter1_to_give_to_ms] = params
+              obmf.command_execute('READ', params, timeout) #execute the MS to get new status
+              response = json.loads(obmf.content)
+              context['ms_status_response_'+ms_to_run+'_'+parameter1_to_give_to_ms+'_'+object_id] = response 
 
           else:
             warning = warning + "\n the first field should be object_id instead of '" +ms_source_field1+"'"
