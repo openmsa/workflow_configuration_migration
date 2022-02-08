@@ -318,6 +318,10 @@
     <type>CREATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
+    <task name="Process/workflow_configuration_migration/Configuration_Migration/Device_Status/Get_Devices_Status_parameters.py">
+      <processPath></processPath>
+      <displayName>Get Parameters</displayName>
+    </task>
     <task name="Get_Devices_Status.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Device_Status</processPath>
       <displayName>Get Devices Status</displayName>
@@ -328,6 +332,10 @@
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
+    <task name="Process/workflow_configuration_migration/Configuration_Migration/Device_Status/Get_Devices_Status_parameters.py">
+      <processPath></processPath>
+      <displayName>Get Parameters</displayName>
+    </task>
     <task name="Get_Devices_Status.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Device_Status</processPath>
       <displayName>Get Devices Status</displayName>
