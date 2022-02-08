@@ -12,7 +12,7 @@
     <variable displayName="Real or simulator source device" name="params.real_or_simul_device" startIncrement="0" type="String" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="simulator" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
       <sections>
-        <sections>device</sections>
+        <sections></sections>
       </sections>
       <values>
         <values displayValue="simulator">simulator</values>
@@ -22,34 +22,34 @@
     <variable displayName="Emulated Source Device" name="params.source_simul_device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
       <sections>
-        <sections>device</sections>
+        <sections>emulated device</sections>
       </sections>
       <sdTypes>
         <sdTypes manId="14020601" modId="29112021"/>
       </sdTypes>
     </variable>
-    <variable displayName="Real Source Device" name="params.source_device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
-      <repositories/>
-      <sections>
-        <sections>device</sections>
-      </sections>
-      <sdTypes>
-        <sdTypes manId="1" modId="113"/>
-      </sdTypes>
-    </variable>
     <variable displayName="Emulated Destination Device" name="params.destination_simul_device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
       <sections>
-        <sections>device</sections>
+        <sections>emulated device</sections>
       </sections>
       <sdTypes>
         <sdTypes manId="14020601" modId="28112021"/>
       </sdTypes>
     </variable>
+    <variable displayName="Real Source Device" name="params.source_device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <repositories/>
+      <sections>
+        <sections>actual router</sections>
+      </sections>
+      <sdTypes>
+        <sdTypes manId="1" modId="113"/>
+      </sdTypes>
+    </variable>
     <variable displayName="Real Destination Device" name="params.destination_device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
       <sections>
-        <sections>device</sections>
+        <sections>actual router</sections>
       </sections>
       <sdTypes>
         <sdTypes manId="1" modId="20211007"/>
