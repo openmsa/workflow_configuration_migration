@@ -7,6 +7,9 @@ from msa_sdk.order import Order
 from msa_sdk.conf_profile import ConfProfile
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
+from datetime import datetime
+
+
 dev_var = Variables()
 
 dev_var.add('source_device_id')
@@ -14,7 +17,8 @@ dev_var.add('source_device_id')
 context = Variables.task_call(dev_var)
 
 context['real_or_simul_device'] = 'real'
-   
+DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
+
 timeout = 600
 
 #read import_WF_parameters_into_MS.txt file
@@ -62,6 +66,9 @@ if all_ms_attached:
     if Path(full_ms).stem:
       MS_list.append(Path(full_ms).stem)  # Path(full_ms).stem = MS filename without extension 
  
+full_message = ''
+previous_ms_to_run = ''
+
 if data_list:
   for line in data_list:
     if (not line.startswith('#')) and line.strip():
@@ -152,7 +159,18 @@ if data_list:
               #context['ms_params_'+ms_to_run+'_'+parameter1_to_give_to_ms] = params
               obmf.command_execute('READ', params, timeout) #execute the MS to get new status
               response = json.loads(obmf.content)
+              #  response =  {"commandId": 0, "status": "OK",  "message": "#\n## interface status ##\n#\ninterface: GigabitEthernet3.123\n  state:  administratively down\n  line_protocol:  down\n  ip_address:  \n",
               context['ms_status_response_'+ms_to_run+'_'+parameter1_to_give_to_ms+'_'+object_id] = response 
+              if response.get("status") and response["status"] == "OK":
+                 message =  response["message"] 
+                 if ms_to_run == previous_ms_to_run :
+                   full_message = full_message + '\n '  + message
+                 else:
+                   full_message = full_message + '\n\n############# from MS ' + ms_to_run +  ' ############# '  + message
+                   previous_ms_to_run = ms_to_run
+              else:
+                MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ ms_to_run + ', response='+ str(response) , context, True)
+
 
           else:
             warning = warning + "\n the first field should be object_id instead of '" +ms_source_field1+"'"
@@ -163,6 +181,18 @@ if MS_list:
   MS_list             = ';'.join(MS_list)  
 else:
   MS_list = ''
+    
+now = datetime.now() # current date and time
+day = now.strftime("%m-%d-%Y-%Hh%M")
+    
+#Create the global config file :
+generate_file = DIRECTORIE+ "/" + "ALL_SORUCE_STATUS_"  + day + '.txt'
+context['generate_status_file'] = generate_file
+
+f = open(generate_file, "w")
+f.write(full_message)
+f.close()
+    
     
 MSA_API.task_success('DONE: Get Status for '+ device_id_full + ' ('+MS_list+')', context, True)
 

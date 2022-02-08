@@ -33,7 +33,6 @@ context[ 'ALL source MS_synch_values for '+device_id] = responses
 if isinstance(responses, dict) and responses.get("wo_status") and responses["wo_status"] == "FAIL":
   MSA_API.task_error('Can not synchronise device '+ device_id_full + ' : '+responses['wo_newparams'], context, True)
   
-
 MS_list = []
 if isinstance(responses, typing.List): 
   #responses contains only MS which contains some datas, we don't get attached MS without datas

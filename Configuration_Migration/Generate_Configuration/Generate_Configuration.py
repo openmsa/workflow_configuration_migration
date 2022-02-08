@@ -95,7 +95,7 @@ if MS_list:
           # },
           
         if response.get("entity"):
-          if response.get("entity").get("status") == "OK":
+          if response.get("entity").get("status") and response["entity"]["status"] == "OK":
            if response.get("entity").get("message"):
             # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
             message =  response.get("entity").get("message") 
