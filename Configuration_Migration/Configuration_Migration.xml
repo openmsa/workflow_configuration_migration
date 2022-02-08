@@ -262,7 +262,7 @@
     </task>
   </process>
   <process name="Import_Simulation_Configuration">
-    <displayName>Re-import configuration from emulated device</displayName>
+    <displayName>Re-import Configuration from Emulated Device</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
@@ -295,16 +295,6 @@
       <displayName>Insert workflow parameters into microservices</displayName>
     </task>
   </process>
-  <process name="Get_Devices_Status">
-    <displayName>Get Devices Status</displayName>
-    <type>UPDATE</type>
-    <visibility>5</visibility>
-    <allowSchedule/>
-    <task name="Get_Devices_Status.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
-      <displayName>Get Devices Status</displayName>
-    </task>
-  </process>
   <process name="Generate_Configuration">
     <displayName>Generate Configuration</displayName>
     <type>UPDATE</type>
@@ -323,8 +313,18 @@
       <displayName>Generate Configuration</displayName>
     </task>
   </process>
+  <process name="Get_Devices_Status">
+    <displayName>Get Devices Status</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Get_Devices_Status.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Get Devices Status</displayName>
+    </task>
+  </process>
   <process name="Push_Configuration">
-    <displayName>Push Configuration</displayName>
+    <displayName>Push Configuration Real Device</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
