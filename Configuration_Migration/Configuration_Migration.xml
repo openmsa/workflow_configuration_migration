@@ -313,12 +313,12 @@
       <displayName>Generate Configuration</displayName>
     </task>
   </process>
-  <process name="Process/workflow_configuration_migration/Configuration_Migration/Process_New_Status">
-    <displayName>New Status</displayName>
+  <process name="New_Device_Status">
+    <displayName>New Device Status</displayName>
     <type>CREATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
-    <task name="Process/workflow_configuration_migration/Configuration_Migration/Device_Status/Get_Devices_Status_parameters.py">
+    <task name="Process/workflow_configuration_migration/Configuration_Migration/Device_Status/Get_Devices_Status_Parameters.py">
       <processPath></processPath>
       <displayName>Get Parameters</displayName>
     </task>
@@ -332,7 +332,7 @@
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
-    <task name="Process/workflow_configuration_migration/Configuration_Migration/Device_Status/Get_Devices_Status_parameters.py">
+    <task name="Process/workflow_configuration_migration/Configuration_Migration/Device_Status/Get_Devices_Status_Parameters.py">
       <processPath></processPath>
       <displayName>Get Parameters</displayName>
     </task>
