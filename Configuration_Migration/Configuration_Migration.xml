@@ -318,9 +318,9 @@
     <type>CREATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
-    <task name="Task_task1.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Process_New_Status/Tasks</processPath>
-      <displayName>task1</displayName>
+    <task name="Get_Devices_Status.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Device_Status</processPath>
+      <displayName>Get Devices Status</displayName>
     </task>
   </process>
   <process name="Get_Devices_Status">
@@ -329,7 +329,7 @@
     <visibility>5</visibility>
     <allowSchedule/>
     <task name="Get_Devices_Status.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Device_Status</processPath>
       <displayName>Get Devices Status</displayName>
     </task>
   </process>
