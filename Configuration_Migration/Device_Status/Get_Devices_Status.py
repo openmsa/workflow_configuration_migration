@@ -12,12 +12,10 @@ from datetime import datetime
 
 dev_var = Variables()
 
-dev_var.add('source_device_id')
-
 context = Variables.task_call(dev_var)
 
 context['real_or_simul_device'] = 'real'
-DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
+DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
 
 timeout = 600
 
@@ -186,7 +184,7 @@ now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%Hh%M")
     
 #Create the global config file :
-generate_file = DIRECTORIE+ "/" + "ALL_SORUCE_STATUS_"  + day + '.txt'
+generate_file = DIRECTORY+ "/" + "ALL_SOURCE_STATUS_"  + day + '.txt'
 context['generate_status_file'] = generate_file
 
 f = open(generate_file, "w")

@@ -3,11 +3,11 @@
     <map>
         <entry>
             <key>DISPLAYNAME</key>
-            <value>Import_Old_Device_Configuration.py</value>
+            <value>Get_Devices_Status.py</value>
         </entry>
         <entry>
             <key>DATE_MODIFICATION</key>
-            <value>1643189016853</value>
+            <value>1644333816033</value>
         </entry>
         <entry>
             <key>REPOSITORY</key>
@@ -15,7 +15,7 @@
         </entry>
         <entry>
             <key>DATE_CREATION</key>
-            <value>1643189016843</value>
+            <value>1644333816031</value>
         </entry>
         <entry>
             <key>TAG</key>
