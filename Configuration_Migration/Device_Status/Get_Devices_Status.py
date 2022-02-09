@@ -12,10 +12,12 @@ from datetime import datetime
 
 dev_var = Variables()
 
+dev_var.add('source_device_id')
+
 context = Variables.task_call(dev_var)
 
 context['real_or_simul_device'] = 'real'
-DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
+DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
 
 timeout = 600
 
@@ -81,8 +83,8 @@ if data_list:
         ms_to_run                = list[3]
         parameter1_to_give_to_ms = list[4]
         parameter2_to_give_to_ms = list[5]
-        
-        if context.get(ms_source+'_values') and context[ms_source+'_values']:
+
+        if ms_source != 'None' and context.get(ms_source+'_values') and context[ms_source+'_values'] :
           ''' "interface_values": {
                 "Port-channel1": {
                     "object_id": "Port-channel1",
@@ -158,7 +160,7 @@ if data_list:
               obmf.command_execute('READ', params, timeout) #execute the MS to get new status
               response = json.loads(obmf.content)
               #  response =  {"commandId": 0, "status": "OK",  "message": "#\n## interface status ##\n#\ninterface: GigabitEthernet3.123\n  state:  administratively down\n  line_protocol:  down\n  ip_address:  \n",
-              context['ms_status_response_'+ms_to_run+'_'+parameter1_to_give_to_ms+'_'+object_id] = response 
+              context['ms_status_READ_response_'+ms_to_run+'_'+parameter1_to_give_to_ms+'_'+object_id] = response 
               if response.get("status") and response["status"] == "OK":
                  message =  response["message"] 
                  if ms_to_run == previous_ms_to_run :
@@ -172,6 +174,41 @@ if data_list:
 
           else:
             warning = warning + "\n the first field should be object_id instead of '" +ms_source_field1+"'"
+        
+        elif ms_source == 'None' and ms_to_run:
+          #Run IMPORT for the give MS to update the DB
+          ms_input = {}
+          ms_input['test'] = 'test'
+          obj = {"":ms_input}  
+          obj['test'] = ms_input  
+          params = {}
+          params[ms_to_run] = obj 
+          obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
+          response = json.loads(obmf.content)
+          context['ms_status_import_response_'+ms_to_run] = response #   "message ="{\"arp_summary\":{\"274f9f441f0dd0bc3ab2af14ef7bc6d5\":{\"total\":\"7\",\"incomplete\":\"0\"}}}",
+          #obj               = {}
+          #params            = {}
+          #params[ms_to_run] = obj 
+          #obmf.command_execute('READ', params, timeout) #execute the MS to get new status       
+          #response = json.loads(obmf.content)
+          #response =  {"commandId": 0, "status": "OK",  "message": "{\"sms_status\":\"OK\"}",
+          #context['ms_status_READ_response_'+ms_to_run] = response 
+          if response.get("status") and response["status"] == "OK":
+             message =  response["message"]
+             message = json.loads(message)
+             if message.get(ms_to_run):
+               message = message[ms_to_run]
+               if isinstance(message, dict):
+                 new_message=''
+                 for key2,val2 in message.items():
+                   new_message = new_message + '\n' + str(val2) 
+                 message = new_message  
+             if ms_to_run == previous_ms_to_run :
+               full_message = full_message + '\n '  + str(message)
+             else:
+               full_message = full_message + '\n\n############# from MS ' + ms_to_run +  ' ############# '  + str(message)
+               previous_ms_to_run = ms_to_run
+        
         else:
           warning = warning + "\n the Micros service "+ms_source+" is no attached to the device "+ device_id_full
        
@@ -184,7 +221,7 @@ now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%Hh%M")
     
 #Create the global config file :
-generate_file = DIRECTORY+ "/" + "ALL_SOURCE_STATUS_"  + day + '.txt'
+generate_file = DIRECTORIE+ "/" + "ALL_SORUCE_STATUS_"  + day + '.txt'
 context['generate_status_file'] = generate_file
 
 f = open(generate_file, "w")

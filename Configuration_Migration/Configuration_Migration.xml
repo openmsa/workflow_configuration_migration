@@ -356,7 +356,7 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Set source real device</displayName>
     </task>
-        <task name="Create_Subinterface_Name.py">
+    <task name="Create_Subinterface_Name.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Create subinterface name</displayName>
     </task>
