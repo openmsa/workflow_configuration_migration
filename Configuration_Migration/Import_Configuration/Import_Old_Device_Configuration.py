@@ -13,13 +13,8 @@ context = Variables.task_call(dev_var)
 
 timeout = 600
 
-#get device_id from context
-if context['real_or_simul_device'] == 'simulator': 
-  device_id_full = context['source_simul_device_id']
-else:
-  device_id_full = context['source_device_id']
-
-device_id = device_id_full[3:]
+device_id_full = context['source_device_id_full']
+device_id      = device_id_full[3:]
 
 # instantiate device object
 obmf  = Order(device_id=device_id)

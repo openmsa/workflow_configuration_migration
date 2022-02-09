@@ -228,6 +228,10 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Get Parameter</displayName>
     </task>
+    <task name="Set_Simulator_Source_Device.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Set source simulated device</displayName>
+    </task>
     <task name="Create_Subinterface_Name.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Create subinterface name</displayName>
@@ -273,6 +277,10 @@
     <task name="Get_ReImport_Parameters.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Get Parameter</displayName>
+    </task>
+    <task name="Set_Simulator_Source_Device.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Set source simulated device</displayName>
     </task>
     <task name="Create_Subinterface_Name.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
@@ -333,6 +341,48 @@
     <task name="Get_Devices_Status.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Device_Status</processPath>
       <displayName>Get Devices Status</displayName>
+    </task>
+  </process>
+  <process name="Import_Real_Configuration">
+    <displayName>Import Configuration from Real Device</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Get_ReImport_Parameters.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Get Parameter</displayName>
+    </task>
+    <task name="Set_Source_Real_Device.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Set source real device</displayName>
+    </task>
+    <task name="Create_Subinterface_Name.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Create subinterface name</displayName>
+    </task>
+    <task name="Import_Old_Device_Configuration.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Import legacy configuration</displayName>
+    </task>
+    <task name="Filter_Interfaces_Names.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Filter interfaces</displayName>
+    </task>
+    <task name="Filter_Old_Device_Configuration.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Filter legacy configuration</displayName>
+    </task>
+    <task name="Filter_IP_with_interface_subnet.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Filter IP with interfaces subnets</displayName>
+    </task>
+    <task name="Change_Interfaces_Names.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Change Interfaces Names</displayName>
+    </task>
+    <task name="Import_WF_parameters_into_Microservice.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
+      <displayName>Insert workflow parameters into microservices</displayName>
     </task>
   </process>
   <process name="Push_Configuration">
