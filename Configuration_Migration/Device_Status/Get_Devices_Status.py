@@ -138,11 +138,11 @@ if data_list:
             context['Status_'+full_source_field+'_field_values'] = values_to_send              
   
             #Run IMPORT for the give MS to update the DB
-            ms_input = {}
-            obj = {"":ms_input}  
-            params = {}
-            params[ms_to_run] = obj 
-            obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
+            #ms_input = {}
+            #obj = {"":ms_input}  
+            #params = {}
+            #params[ms_to_run] = obj 
+            #obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
 
   
             for values in values_to_send:
@@ -157,12 +157,18 @@ if data_list:
               params            = {}
               params[ms_to_run] = obj 
               #context['ms_params_'+ms_to_run+'_'+parameter1_to_give_to_ms] = params
-              obmf.command_execute('READ', params, timeout) #execute the MS to get new status
+              obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
+              #obmf.command_execute('READ', params, timeout) #execute the MS to get new status
               response = json.loads(obmf.content)
               #  response =  {"commandId": 0, "status": "OK",  "message": "#\n## interface status ##\n#\ninterface: GigabitEthernet3.123\n  state:  administratively down\n  line_protocol:  down\n  ip_address:  \n",
-              context['ms_status_READ_response_'+ms_to_run+'_'+parameter1_to_give_to_ms+'_'+object_id] = response 
+              context['ms_status_IMPORT1_response_'+ms_to_run+'_'+parameter1_to_give_to_ms+'_'+object_id] = response 
               if response.get("status") and response["status"] == "OK":
                  message =  response["message"] 
+                 if isinstance(message, dict):
+                   new_message=''
+                   for key2,val2 in message.items():
+                     new_message = new_message + '\n' + str(val2) 
+                   message = new_message
                  if ms_to_run == previous_ms_to_run :
                    full_message = full_message + '\n '  + message
                  else:
