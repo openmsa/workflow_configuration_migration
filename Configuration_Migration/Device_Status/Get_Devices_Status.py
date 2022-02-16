@@ -61,6 +61,9 @@ if all_ms_attached.get("microserviceUris"):
 context['MS_attached source device_id' + device_id + ' : '] = all_ms_attached
 #all_ms_attached = {"id" : 44, ..."microserviceUris" : { "CommandDefinition/LINUX/CISCO_IOS_emu  },  "CommandDefinition/LINUX/CISCO_IOS_emulation/bgp_vrf.xml" : {  "name" : "bgp_vrf",   "groups" : [ "EMULATION", "CISCO", "IOS" ].....
 MS_list = []
+MS_list_run = {}
+MS_list_not_run = {}
+
 if all_ms_attached:
   for full_ms, MS in all_ms_attached.items():
     if Path(full_ms).stem:
@@ -103,10 +106,10 @@ if data_list:
           field1_values={}
           if (ms_source_field1 == 'object_id'):
             #fields = ms_source_field1.split('.0.')
-            full_source_field = ms_source+'_'+ms_source_field1
+            full_source_field = ms_source+'_'+ms_source_field1+'_'+ms_source_field2
             context['Status_'+full_source_field+'_field_values'] = {}
             context['Status_'+full_source_field+'_list'] = list
-            values_to_send = []
+            values_to_send = {}
             ## Find all source values
             ms_values = context[ms_source+'_values']
             if isinstance(ms_values, dict):
@@ -127,15 +130,16 @@ if data_list:
                              for  key2, value2 in value_lev1.items():
                                if value2.get(field_lev2):
                                  new_value[parameter2_to_give_to_ms] = value2[field_lev2]                               
-                                 values_to_send.append(new_value)
+                                 key =  field1_value+'|'+value2[field_lev2] #used key to not get many times the same values                         
+                                 values_to_send[key] = new_value
                                  new_value                   = {}
                                  new_value[parameter1_to_give_to_ms] = field1_value
 
                      else:
-                       values_to_send.append(new_value)
+                       values_to_send[field1_value] = new_value
                        
-            # values_to_send: [  {  "object_id": "TRIBUNAL-JUSTICA",  "ip_bgp_neighbor": "187.93.7.58" },{"object_id": "TRIBUNAL-JUSTICA"...
-            context['Status_'+full_source_field+'_field_values'] = values_to_send              
+            # values_to_send: { {  "object_id": "TRIBUNAL-JUSTICA",  "ip_bgp_neighbor": "187.93.7.58" },{"object_id": "TRIBUNAL-JUSTICA"...
+            context['Status_'+full_source_field+'_field_values333'] = values_to_send              
   
             #Run IMPORT for the give MS to update the DB
             #ms_input = {}
@@ -144,8 +148,7 @@ if data_list:
             #params[ms_to_run] = obj 
             #obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
 
-  
-            for values in values_to_send:
+            for key1, values in values_to_send.items():
               ms_input = {}
               object_id =''
               for key,val in values.items():
@@ -164,18 +167,23 @@ if data_list:
               context['ms_status_IMPORT1_response_'+ms_to_run+'_'+parameter1_to_give_to_ms+'_'+object_id] = response 
               if response.get("status") and response["status"] == "OK":
                  message =  response["message"] 
-                 if isinstance(message, dict):
-                   new_message=''
-                   for key2,val2 in message.items():
-                     new_message = new_message + '\n' + str(val2) 
-                   message = new_message
-                 if ms_to_run == previous_ms_to_run :
-                   full_message = full_message + '\n '  + message
-                 else:
-                   full_message = full_message + '\n\n############# from MS ' + ms_to_run +  ' ############# '  + message
-                   previous_ms_to_run = ms_to_run
+                 message = json.loads(message)
+                 if message.get(ms_to_run):
+                   message = message[ms_to_run]
+                   if isinstance(message, dict):
+                     new_message=''
+                     for key2,val2 in message.items():
+                       new_message = new_message + '\n' + str(val2) 
+                     message = new_message
+                   if ms_to_run == previous_ms_to_run :
+                     full_message = full_message + '\n '  + message
+                   else:
+                     full_message = full_message + '\n\n############# from MS ' + ms_to_run +  ' ############# '  + message
+                     previous_ms_to_run = ms_to_run
+                     MS_list_run[ms_to_run] = 1
               else:
-                MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ ms_to_run + ', response='+ str(response) , context, True)
+                #MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ ms_to_run + ', response='+ str(response) , context, True)
+                MS_list_not_run[ms_to_run]=1
 
 
           else:
@@ -212,30 +220,36 @@ if data_list:
              if ms_to_run == previous_ms_to_run :
                full_message = full_message + '\n '  + str(message)
              else:
-               full_message = full_message + '\n\n############# from MS ' + ms_to_run +  ' ############# '  + str(message)
+               full_message = full_message + '\n\n############# from MS '+ ms_to_run +  ' ############# '  + str(message)
                previous_ms_to_run = ms_to_run
-        
+               MS_list_run[ms_to_run] = 1
         else:
           warning = warning + "\n the Micros service "+ms_source+" is no attached to the device "+ device_id_full
        
-if MS_list:
-  MS_list             = ';'.join(MS_list)  
+if MS_list_run:
+  MS_list_run             = ', '.join(MS_list_run.keys())  
 else:
-  MS_list = ''
+  MS_list_run = ''
+if MS_list_not_run:
+  MS_list_not_run             = ', '.join(MS_list_not_run.keys())  
+else:
+  MS_list_not_run = ''  
     
 now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%Hh%M")
     
 #Create the global config file :
-generate_file = DIRECTORIE+ "/" + "ALL_SORUCE_STATUS_"  + day + '.txt'
+generate_file = DIRECTORIE+ "/" + "ALL_SOURCE_STATUS_"  + day + '.txt'
 context['generate_status_file'] = generate_file
 
 f = open(generate_file, "w")
 f.write(full_message)
 f.close()
     
-    
-MSA_API.task_success('DONE: Get Status for '+ device_id_full + ' ('+MS_list+')', context, True)
+if MS_list_not_run:    
+  MSA_API.task_success('DONE: for device ' + device_id_full + ', but can not get status for (' + MS_list_not_run + ') but get the status for ('+MS_list_run+')' , context, True)
+else:
+  MSA_API.task_success('DONE: Get Status for '+ device_id_full + ' ('+MS_list_run+')', context, True)
 
 
 

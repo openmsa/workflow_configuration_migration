@@ -2,10 +2,14 @@
 # This  file contains the list of element where we should change the interface name
 # ms_source|ms_source_field1|ms_source_field2|MS_to_run|parameter1_to_give_to_MS|parameter2_to_give_to_MS
 interface|object_id|None|interface_status|object_id|None
-None|None|None|arp_summary|None|None
-bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_neighbor_status|object_id|ip_bgp_neighbor
-#bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_neighbor_status|ip_bgp_neighbor|None
-address_family|neighbor.0.bgp_neighbor|None|neighbor_ipv4_icmp_status|object_id|None
 interface|subslot_num|interface_num|interface_power|subslot_num|interface_num
-
+None|None|None|arp_summary|None|None
+None|None|None|bgp_neighbor_status|object_id|ip_bgp_neighbor
+bgp_vrf|object_id|None|bgp_vrf_summary|object_id|None
+bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|neighbor_vrf_icmp_status|object_id|neighbor
+address_family|object_id|neighbor.0.bgp_neighbor|neighbor_ipv4_icmp_status|object_id|ip
+None|None|None|ip_route_summary|None|None
 bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_neighbor_status|object_id|neighbor
+bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_received_routes|object_id|neighbor
+bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_advertised_routes|object_id|neighbor
+bgp_vrf|object_id|None|vrf_route_summary|object_id|None
