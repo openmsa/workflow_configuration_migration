@@ -11,7 +11,7 @@ dev_var = Variables()
 
 context = Variables.task_call(dev_var)
 
-timeout = 600
+timeout = 3600
 
 device_id_full = context['source_device_id_full']
 device_id      = device_id_full[3:]

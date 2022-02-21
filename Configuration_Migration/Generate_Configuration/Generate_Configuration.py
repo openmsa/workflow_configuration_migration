@@ -14,7 +14,7 @@ context = Variables.task_call(dev_var)
 
 DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
 
-timeout = 600
+timeout = 3600
 
 #get device_id from context
 device_id = context['destination_simul_device_id'][3:]

@@ -20,7 +20,7 @@ context = Variables.task_call(dev_var)
 context['real_or_simul_device'] = 'real'
 DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
 
-timeout = 600
+timeout = 3600
 
 
 #########################################################
