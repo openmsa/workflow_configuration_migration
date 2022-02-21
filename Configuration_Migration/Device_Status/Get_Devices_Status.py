@@ -30,6 +30,37 @@ def printTable(myDict):
   return df.to_string()
 
 
+#########################################################
+# Function: Run the MS import and store the result
+def run_MS_import():
+  global ms_to_run, previous_ms_to_run, MS_list_run, previous_ms_data, full_message, params, timeout, parameter1_to_give_to_ms, object_id,MS_list_not_run
+  if ms_to_run != previous_ms_to_run :
+    previous_ms_to_run = ms_to_run
+    MS_list_run[ms_to_run] = 1
+    if previous_ms_data:
+      full_message = full_message +  printTable(previous_ms_data)
+      previous_ms_data = []
+    full_message = full_message + '\n\n############# from MS '+ ms_to_run +  ' ############# \n'
+  obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
+  response = json.loads(obmf.content)
+  context['ms_status_import_response_'+ms_to_run] = response #   "message ="{\"arp_summary\":{\"274f9f441f0dd0bc3ab2af14ef7bc6d5\":{\"total\":\"7\",\"incomplete\":\"0\"}}}",
+
+  if response.get("status") and response["status"] == "OK":
+     message =  response["message"]
+     message = json.loads(message)
+     if message.get(ms_to_run):
+       message = message[ms_to_run]
+       if isinstance(message, dict):
+         for key2,val2 in message.items():
+           previous_ms_data.append(val2)
+       else:
+         previous_ms_data.append(message)
+  else:
+    #MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ ms_to_run + ', response='+ str(response) , context, True)
+    MS_list_not_run[ms_to_run]=1
+            
+            
+            
 #read import_WF_parameters_into_MS.txt file
 wf_path = os.path.dirname(__file__)
 file =  wf_path+'/../'+context['get_devices_status_file']   # get_devices_status.txt
@@ -97,12 +128,7 @@ if data_list:
         parameter2_to_give_to_ms = list[5]
 
         if ms_source != 'None' and context.get(ms_source+'_values') and context[ms_source+'_values'] :
-          ''' "interface_values": {
-                "Port-channel1": {
-                    "object_id": "Port-channel1",
-                    "type": "Port-channel",
-                    
-           "bgp_vrf_values": {
+          '''  "bgp_vrf_values": {
              "TRIBUNAL-JUSTICA": {
                     "object_id": "TRIBUNAL-JUSTICA",
                     "neighbor": {
@@ -149,13 +175,6 @@ if data_list:
                        
             # values_to_send: { {  "object_id": "TRIBUNAL-JUSTICA",  "ip_bgp_neighbor": "187.93.7.58" },{"object_id": "TRIBUNAL-JUSTICA"...
             context['Status_'+full_source_field+'_field_values333'] = values_to_send              
-  
-            #Run IMPORT for the give MS to update the DB
-            #ms_input = {}
-            #obj = {"":ms_input}  
-            #params = {}
-            #params[ms_to_run] = obj 
-            #obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
 
             for key1, values in values_to_send.items():
               ms_input = {}
@@ -168,33 +187,8 @@ if data_list:
               obj[object_id]    = ms_input  
               params            = {}
               params[ms_to_run] = obj 
-              if ms_to_run != previous_ms_to_run :
-                previous_ms_to_run = ms_to_run
-                MS_list_run[ms_to_run] = 1
-                if previous_ms_data:
-                  full_message = full_message +  printTable(previous_ms_data)
-                  previous_ms_data = []
-                full_message = full_message + '\n\n############# from MS '+ ms_to_run +  ' ############# \n'
-              #context['ms_params_'+ms_to_run+'_'+parameter1_to_give_to_ms] = params
-              obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
-              #obmf.command_execute('READ', params, timeout) #execute the MS to get new status
-              response = json.loads(obmf.content)
-              #  response =  {"commandId": 0, "status": "OK",  "message": "#\n## interface status ##\n#\ninterface: GigabitEthernet3.123\n  state:  administratively down\n  line_protocol:  down\n  ip_address:  \n",
-              context['ms_status_IMPORT1_response_'+ms_to_run+'_'+parameter1_to_give_to_ms+'_'+object_id] = response 
-              if response.get("status") and response["status"] == "OK":
-                 message =  response["message"] 
-                 message = json.loads(message)
-                 if message.get(ms_to_run):
-                   message = message[ms_to_run]
-                   if isinstance(message, dict):
-                     for key2,val2 in message.items():
-                       previous_ms_data.append(val2)
-                   else:
-                     previous_ms_data.append(message)
-              else:
-                #MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ ms_to_run + ', response='+ str(response) , context, True)
-                MS_list_not_run[ms_to_run]=1
-
+              # Run the MS import and store the result
+              run_MS_import()
 
           else:
             warning = warning + "\n the first field should be object_id instead of '" +ms_source_field1+"'"
@@ -207,28 +201,8 @@ if data_list:
           obj['test'] = ms_input  
           params = {}
           params[ms_to_run] = obj 
-          if ms_to_run != previous_ms_to_run :
-            previous_ms_to_run = ms_to_run
-            MS_list_run[ms_to_run] = 1
-            if previous_ms_data:
-              full_message = full_message +  printTable(previous_ms_data)
-              previous_ms_data = []
-            full_message = full_message + '\n\n############# from MS '+ ms_to_run +  ' ############# \n'
-          obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
-          response = json.loads(obmf.content)
-          context['ms_status_import_response_'+ms_to_run] = response #   "message ="{\"arp_summary\":{\"274f9f441f0dd0bc3ab2af14ef7bc6d5\":{\"total\":\"7\",\"incomplete\":\"0\"}}}",
- 
-          if response.get("status") and response["status"] == "OK":
-             message =  response["message"]
-             message = json.loads(message)
-             if message.get(ms_to_run):
-               message = message[ms_to_run]
-               if isinstance(message, dict):
-                 new_message=[]
-                 for key2,val2 in message.items():
-                   previous_ms_data.append(val2)
-               else:
-                 previous_ms_data.append(message)
+          # Run the MS import and store the result
+          run_MS_import()
         else:
           warning = warning + "\n the Micros service "+ms_source+" is no attached to the device "+ device_id_full
 
