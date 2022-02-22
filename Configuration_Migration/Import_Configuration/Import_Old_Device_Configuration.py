@@ -8,40 +8,34 @@ from msa_sdk.conf_profile import ConfProfile
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 dev_var = Variables()
-dev_var.add('source_device_id', var_type='Device')
-dev_var.add('source_interfaces_name', var_type='String')
-dev_var.add('destination_device_id', var_type='Device')
-dev_var.add('destination_interfaces_name', var_type='String')
-dev_var.add('customer_id', var_type='String')
-#dev_var.add('MS_list', var_type='String')
-dev_var.add('link.0.MicroService', var_type='String')
-dev_var.add('link.0.file_link', var_type='Link')
 
 context = Variables.task_call(dev_var)
 
-timeout = 600
+timeout = 3600
 
-#get device_id from context
-device_id = context['source_device_id'][3:]
+device_id_full = context['source_device_id_full']
+device_id      = device_id_full[3:]
 
 # instantiate device object
 obmf  = Order(device_id=device_id)
 
-
-MS_source_path = context['MS_source_path']
+context['customer_id_instance_id'] =  context['customer_id'] + '_#' +context['SERVICEINSTANCEID']
 
 #we synchronise all MS attached to the source device because some MS are intermediated and need to be synchronized with good order.
 obmf.command_synchronize(timeout)
 responses = json.loads(obmf.content)
+context[ 'ALL source MS_synch_values for '+device_id] = responses
+if isinstance(responses, dict) and responses.get("wo_status") and responses["wo_status"] == "FAIL":
+  MSA_API.task_error('Can not synchronise device '+ device_id_full + ' : '+responses['wo_newparams'], context, True)
+  
 MS_list = []
 if isinstance(responses, typing.List): 
-  #context[ 'ALL MS_synch_values'] = responses
   #responses contains only MS which contains some datas, we don't get attached MS without datas
   for response in responses:
     # "commandId": 0, "status": "OK","message": "{\"class_map\":{\"RT\":{\"object_id\":\"RT\",\"matches\":{\"0\":{\"not\":\"\",\"match_cmd\":\"ip \"}}}},\"ip_route\"
     if response.get('message') and response.get('status'):
       if response['status'] != 'OK':
-        MSA_API.task_error('Error during synchronise DeviceId:'+context['source_device_id'] + ' : ' + str(response), context, True)
+        MSA_API.task_error('ERROR: during synchronise. Managed entity Id: '+ device_id_full + ' : ' + str(response), context, True)
       else:
         response_message = json.loads(response.get('message'))  #convert into json array
         for MS in response_message:
@@ -54,7 +48,7 @@ if isinstance(responses, typing.List):
             
   # Get deployment settings ID for the device.
   deployment_settings_id = obmf.command_get_deployment_settings_id()
-  context['source_deployment_settings_id'] = deployment_settings_id
+  context['source_deployment_settings_id_'+device_id_full] = deployment_settings_id
   
   #Get all microservices attached to this deployment setting.
   confprofile  = ConfProfile(deployment_settings_id)
@@ -68,7 +62,7 @@ if isinstance(responses, typing.List):
   if all_ms_attached:
     for full_ms, MS in all_ms_attached.items():
       if Path(full_ms).stem:
-        MS_list.append(Path(full_ms).stem)   #MS filename without extension
+        MS_list.append(Path(full_ms).stem)    # Path(full_ms).stem = MS filename without extension
    
 if MS_list:
   MS_list             = ';'.join(MS_list)  
@@ -78,7 +72,7 @@ else:
     
     
     
-MSA_API.task_success('Good, all MS attached to the device DeviceId:'+context['source_device_id'] + ' imported ('+MS_list+')', context, True)
+MSA_API.task_success('DONE: all MS attached to the managed entity: '+ device_id_full + ' imported ('+MS_list+')', context, True)
 
 
 

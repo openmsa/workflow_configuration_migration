@@ -16,8 +16,15 @@ DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
 
 timeout = 3600
 
+push_to_device = context['push_to_device']
+
+if push_to_device == "false":
+  MSA_API.task_error('You should first valide the configuration file by clicking on previous checkbox (Are you shure to push on Cisco device, simulation file is verifed ?) for device  '+context['destination_device_id'], context, True)
+
+context['push_to_device'] = "false"
+
 #get device_id from context
-device_id = context['destination_simul_device_id'][3:]
+device_id = context['destination_device_id'][3:]
 # instantiate device object
 obmf  = Order(device_id=device_id)
 
@@ -38,7 +45,7 @@ context['destination_deployment_settings_id'] = deployment_settings_id
 
 if not deployment_settings_id:
   MSA_API.task_error('There is no deployement setting for the Cisco device '+context['destination_device_id'], context, True)
-  
+
 #Get all microservices attached to this deployment setting.
 confprofile  = ConfProfile(deployment_settings_id)
 all_ms_attached = confprofile.read()
@@ -83,7 +90,7 @@ if MS_list:
         params[MS] = config
         context[MS + '_export_params'] = params
         #obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
-        obmf.command_call(command, 1, params, timeout)  #mode=1 :  Apply to base only (create new element in the MSA DB, it will not run any commands on device)
+        obmf.command_call(command, 2, params, timeout)  #mode=2 :  Apply to device and in DB
    
         response = json.loads(obmf.content)
         context[ MS + '_generate_response'] = response
@@ -95,7 +102,7 @@ if MS_list:
           # },
           
         if response.get("entity"):
-          if response.get("entity").get("status") and response["entity"]["status"] == "OK":
+          if response.get("entity").get("status") == "OK":
            if response.get("entity").get("message"):
             # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
             message =  response.get("entity").get("message") 
@@ -146,19 +153,19 @@ if MS_list:
                    
                 
             #Add MS import Skip result link:
-            MS_file = DIRECTORIE + '/' + MS + '_simul.log'
+            MS_file = DIRECTORIE + '/' + MS + '.log'
             link={}
             link['MicroService'] = MS + '_Import_parse'
             link['file_link']    = MS_file       
             links.append(link)
 
           else:
-            MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response) , context, True)
+            MSA_API.task_error('Can not run create on MS: '+ MS + ', response='+ str(response) , context, True)
         else: 
           if 'wo_newparams' in response:
-            MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response.get('wo_newparams')), context, True)
+            MSA_API.task_error('Can not run create on MS: '+ MS + ', response='+ str(response.get('wo_newparams')), context, True)
           else:
-            MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response) , context, True)
+             MSA_API.task_error('Can not run create on MS: '+ MS + ', response='+ str(response) , context, True)
     else:
       ms_not_attached_destination_device.append(MS)
     
@@ -171,9 +178,9 @@ f.write(full_message)
 f.close()
 
 if ms_not_attached_destination_device:
-  MSA_API.task_success('WARNING , some microservices ('+';'.join(ms_not_attached_destination_device)+') not found for destination device :'+context['destination_simul_device_id']+', other microservice imported successfully ('+';'.join(MS_imported)+')', context, True)
+  MSA_API.task_success('Warning , some MS ('+';'.join(ms_not_attached_destination_device)+') was not found for destination device :'+context['destination_device_id']+', other MS imported successfully ('+';'.join(MS_imported)+')', context, True)
 else:
-  MSA_API.task_success('DONE, microservices ('+MS_list+') imported for managed entity: '+context['destination_simul_device_id'], context, True)
+  MSA_API.task_success('Good, all MS ('+MS_list+') imported for DeviceId:'+context['destination_device_id'], context, True)
 
 
 

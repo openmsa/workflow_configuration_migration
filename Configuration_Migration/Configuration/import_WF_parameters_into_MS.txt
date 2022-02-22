@@ -1,0 +1,16 @@
+#This  file contains the list of variable to import from the WF into the MS
+#WF_variable|MS_Name|MS_field_name
+# Fill xconnect microservice
+interfaces.0.xconnect_group|xconnect|object_id
+interfaces.0.destination|xconnect|groups.0.interface
+interfaces.0.pseudowire_id|xconnect|groups.0.pseudowire_id
+interfaces.0.pseudowire_ip|xconnect|groups.0.pseudowire_ip
+interfaces.0.pseudowire_class|xconnect|groups.0.pseudowire_class
+interfaces.0.gil|xconnect|groups.0.gil
+customer_id|xconnect|groups.0.p2p
+# Fill interface microservice
+interfaces.0.destination|interface|object_id
+interfaces.0.dot1q|interface|encapsulation_dot1q
+interfaces.0.second_dot1q|interface|encapsulation_second_dot1q
+customer_id|interface|customer_name
+

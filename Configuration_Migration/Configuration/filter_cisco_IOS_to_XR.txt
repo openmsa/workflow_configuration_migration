@@ -1,8 +1,20 @@
-#This file contains the dependency between MS
-#orig_MS_Name|orig_field_name|destination_MS_Name|destination_field_name
+# This file contains the definition of the dependency between Microservices
+# it will filter out some destinations values when they are not in the source values list
+#
+# Format:
+#
+# Source Microservice Name|source variable name|destination Microservice Name|destination variable name
+#
 interface|vrf_name|ip_vrf|object_id
 interface|vrf_name|bgp_vrf|object_id
 interface|service_policy_out|policy_name|object_id
-interface|addresses.0.ipv4_address|ip_route|ipv4_address
+interface|service_policy_in|policy_map|object_id
 interface|object_id|ip_route|interface
-
+interface|vrf_name|router_static|vrf_routes.0.vrf_name
+interface|object_id|router_static|vrf_routes.0.routes.0.interface
+interface|object_id|router_static|routes.0.interface
+interface|service_policy.0.name|policy_map|object_id
+policy_map|pmap_class.0.class_name|class_map|object_id
+interface|object_id|router_isis|interfaces.0.interface
+ip_vrf|route_map|route_map|object_id
+interface|object_id|xconnect|object_id
