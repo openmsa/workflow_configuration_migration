@@ -66,24 +66,14 @@
       <sections>
         <sections>interface</sections>
       </sections>
-      <values>
-        <values displayValue="Serial2/3/0.1/3/6/2:0">Serial2/3/0.1/3/6/2:0</values>
-        <values displayValue="Serial1/0/0.1/3/1/1:0">Serial1/0/0.1/3/1/1:0</values>
-        <values displayValue="Multilink45">Multilink45</values>
-        <values displayValue="Multilink66">Multilink66</values>
-      </values>
+      <values/>
     </variable>
     <variable displayName="Dst Interface" name="params.interfaces.0.destination" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
       <sections>
         <sections>interface</sections>
       </sections>
-      <values>
-        <values displayValue="pw-ether1700">pw-ether1700</values>
-        <values displayValue="BBSerial1/0/0.1/3/1/1:0">BBSerial1/0/0.1/3/1/1:0</values>
-        <values displayValue="BBMultilink45">BBMultilink45</values>
-        <values displayValue="BBMultilink66">BBMultilink66</values>
-      </values>
+      <values/>
     </variable>
     <variable displayName="XconnectGroup" name="params.interfaces.0.xconnect_group" startIncrement="0" type="String" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <repositories/>
