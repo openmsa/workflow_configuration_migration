@@ -1,6 +1,7 @@
 import json
 import typing
 import os
+import time
 import pandas as Pandas
 from pathlib import Path
 from msa_sdk import constants
@@ -33,7 +34,8 @@ def printTable(myDict):
 #########################################################
 # Function: Run the MS import and store the result
 def run_MS_import():
-  global ms_to_run, previous_ms_to_run, MS_list_run, previous_ms_data, full_message, params, timeout, parameter1_to_give_to_ms, object_id,MS_list_not_run
+  global ms_to_run, previous_ms_to_run, MS_list_run, previous_ms_data, full_message, params, timeout, parameter1_to_give_to_ms, object_id,MS_list_not_run, nb_ms_to_run
+  nb_ms_to_run = nb_ms_to_run + 1 
   if ms_to_run != previous_ms_to_run :
     previous_ms_to_run = ms_to_run
     MS_list_run[ms_to_run] = 1
@@ -59,8 +61,9 @@ def run_MS_import():
     #MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ ms_to_run + ', response='+ str(response) , context, True)
     MS_list_not_run[ms_to_run]=1
             
-            
-            
+start_sec  = time.time()            
+nb_ms_to_run = 0   
+         
 #read import_WF_parameters_into_MS.txt file
 wf_path = os.path.dirname(__file__)
 file =  wf_path+'/../'+context['get_devices_status_file']   # get_devices_status.txt
@@ -228,10 +231,14 @@ f = open(generate_file, "w")
 f.write(full_message)
 f.close()
     
+end_sec  = time.time()   
+         
+exec_sec = int(end_sec - start_sec) 
+   
 if MS_list_not_run:    
-  MSA_API.task_success('DONE: for device ' + device_id_full + ', but can not get status for (' + MS_list_not_run + ') but get the status for ('+MS_list_run+')' , context, True)
+  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: for device ' + device_id_full + ', but can not get status for (' + MS_list_not_run + ') but get the status for ('+MS_list_run+') run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
 else:
-  MSA_API.task_success('DONE: Get Status for '+ device_id_full + ' ('+MS_list_run+')', context, True)
+  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: Get Status for '+ device_id_full + ' ('+MS_list_run+'), run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
 
 
 

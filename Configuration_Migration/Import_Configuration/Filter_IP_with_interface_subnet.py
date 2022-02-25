@@ -18,7 +18,7 @@ context = Variables.task_call(dev_var)
 
 #########################################################
 # Function: Parse all MS values recursivly for the given field
-def find_all_ip_in_subnet(interface_name, ipv4_address, ipv4_mask, interfaces_IP_available):
+def find_all_ip_in_subnet_ipv4(interface_name, ipv4_address, ipv4_mask, interfaces_IP_available):
   if ipv4_address and ipv4_mask:
     # convert ipv4 subnet mask to cidr notation 
     len = ipaddress.IPv4Network('0.0.0.0/'+ipv4_mask).prefixlen  #24 
@@ -103,7 +103,7 @@ if context.get('interface_values'):
           for key, address in addresses.items():
             ipv4_address = address["ipv4_address"]
             ipv4_mask    = address["ipv4_mask"]          
-            interfaces_IP_available = find_all_ip_in_subnet(interface_full_name+'_'+key, ipv4_address, ipv4_mask, interfaces_IP_available)
+            interfaces_IP_available = find_all_ip_in_subnet_ipv4(interface_full_name+'_'+key, ipv4_address, ipv4_mask, interfaces_IP_available)
 
 context['interfaces_IP_available'] = interfaces_IP_available      
 
