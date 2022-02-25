@@ -1,7 +1,7 @@
 #
 # This  file contains the list of element where we should change the interface name
 # ms_source|ms_source_field1|ms_source_field2|MS_to_run|parameter1_to_give_to_MS|parameter2_to_give_to_MS
-interface|object_id|None|interface_status|object_id|None
+interface|orig_object_id|None|interface_status|object_id|None
 interface|subslot_num|interface_num|interface_power|subslot_num|interface_num
 None|None|None|arp_summary|None|None
 None|None|None|bgp_neighbor_status|object_id|ip_bgp_neighbor
