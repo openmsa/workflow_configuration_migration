@@ -47,8 +47,11 @@ def run_MS_import():
   response = json.loads(obmf.content)
   context['ms_status_import_response_'+ms_to_run] = response #   "message ="{\"arp_summary\":{\"274f9f441f0dd0bc3ab2af14ef7bc6d5\":{\"total\":\"7\",\"incomplete\":\"0\"}}}",
 
-  if response.get("status") and response["status"] == "OK":
-     message =  response["message"]
+  if (response.get("status") and response["status"] == "OK") or (response.get("wo_status") and response["wo_status"] == "OK"):
+     if response.get("status"):
+       message =  response["message"]
+     else:
+       message =  response["wo_newparams"]
      message = json.loads(message)
      if message.get(ms_to_run):
        message = message[ms_to_run]
@@ -58,7 +61,10 @@ def run_MS_import():
        else:
          previous_ms_data.append(message)
   else:
-    #MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ ms_to_run + ', response='+ str(response) , context, True)
+    if response.get("wo_newparams"):
+      wo_newparams =  response["wo_newparams"]
+      if 'An update is already running' in wo_newparams:
+        MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ ms_to_run + ' : '+ str(wo_newparams) , context, True)
     MS_list_not_run[ms_to_run]=1
             
 start_sec  = time.time()            
