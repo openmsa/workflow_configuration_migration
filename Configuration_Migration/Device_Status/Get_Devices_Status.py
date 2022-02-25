@@ -34,7 +34,7 @@ def printTable(myDict):
 #########################################################
 # Function: Run the MS import and store the result
 def run_MS_import():
-  global ms_to_run, previous_ms_to_run, MS_list_run, previous_ms_data, full_message, params, timeout, parameter1_to_give_to_ms, object_id,MS_list_not_run, nb_ms_to_run
+  global ms_to_run, previous_ms_to_run, MS_list_run, previous_ms_data, full_message, params, timeout, parameter1_to_give_to_ms, object_id,MS_list_not_run, nb_ms_to_run, device_id_full
   nb_ms_to_run = nb_ms_to_run + 1 
   if ms_to_run != previous_ms_to_run :
     previous_ms_to_run = ms_to_run
@@ -64,7 +64,7 @@ def run_MS_import():
     if response.get("wo_newparams"):
       wo_newparams =  response["wo_newparams"]
       if 'An update is already running' in wo_newparams:
-        MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ ms_to_run + ' : '+ str(wo_newparams) , context, True)
+        MSA_API.task_error('SMS ERROR: on device '+device_id_full+' can not run MS '+ ms_to_run + ' : '+ str(wo_newparams) , context, True)
     MS_list_not_run[ms_to_run]=1
             
 start_sec  = time.time()            
