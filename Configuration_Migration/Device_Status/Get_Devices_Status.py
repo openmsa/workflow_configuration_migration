@@ -148,60 +148,55 @@ if data_list:
           '''
           all_values_to_test=[]
           field1_values={}
-          if (ms_source_field1 == 'object_id'):
-            #fields = ms_source_field1.split('.0.')
-            full_source_field = ms_source+'_'+ms_source_field1+'_'+ms_source_field2
-            context['Status_'+full_source_field+'_field_values'] = {}
-            context['Status_'+full_source_field+'_list'] = list
-            values_to_send = {}
-            ## Find all source values
-            ms_values = context[ms_source+'_values']
-            if isinstance(ms_values, dict):
-              for  key, value1 in ms_values.items():
-                if isinstance(value1, dict):
-                  if value1.get(ms_source_field1):
-                     field1_value                = value1[ms_source_field1]
-                     new_value                   = {}
-                     new_value[parameter1_to_give_to_ms] = field1_value
-                     if ms_source_field2 and ms_source_field2 != 'None':
-                       fields = ms_source_field2.split('.0.')
-                       if isinstance(fields, typing.List) and fields and len(fields) > 1:
-                         field_lev1 = fields[0]
-                         field_lev2 = fields[1]
-                         if value1.get(field_lev1):
-                           value_lev1 = value1[field_lev1]
-                           if isinstance(value_lev1, dict):
-                             for  key2, value2 in value_lev1.items():
-                               if value2.get(field_lev2):
-                                 new_value[parameter2_to_give_to_ms] = value2[field_lev2]                               
-                                 key =  field1_value+'|'+value2[field_lev2] #used key to not get many times the same values                         
-                                 values_to_send[key] = new_value
-                                 new_value                   = {}
-                                 new_value[parameter1_to_give_to_ms] = field1_value
+          full_source_field = ms_source+'_'+ms_source_field1+'_'+ms_source_field2
+          context['Status_'+full_source_field+'_field_values'] = {}
+          context['Status_'+full_source_field+'_list'] = list
+          values_to_send = {}
+          ## Find all source values
+          ms_values = context[ms_source+'_values']
+          if isinstance(ms_values, dict):
+            for  key, value1 in ms_values.items():
+              if isinstance(value1, dict):
+                if value1.get(ms_source_field1):
+                   field1_value                = value1[ms_source_field1]
+                   new_value                   = {}
+                   new_value[parameter1_to_give_to_ms] = field1_value
+                   if ms_source_field2 and ms_source_field2 != 'None':
+                     fields = ms_source_field2.split('.0.')
+                     if isinstance(fields, typing.List) and fields and len(fields) > 1:
+                       field_lev1 = fields[0]
+                       field_lev2 = fields[1]
+                       if value1.get(field_lev1):
+                         value_lev1 = value1[field_lev1]
+                         if isinstance(value_lev1, dict):
+                           for  key2, value2 in value_lev1.items():
+                             if value2.get(field_lev2):
+                               new_value[parameter2_to_give_to_ms] = value2[field_lev2]                               
+                               key =  field1_value+'|'+value2[field_lev2] #used key to not get many times the same values                         
+                               values_to_send[key] = new_value
+                               new_value                   = {}
+                               new_value[parameter1_to_give_to_ms] = field1_value
 
-                     else:
-                       values_to_send[field1_value] = new_value
-                       
-            # values_to_send: { {  "object_id": "TRIBUNAL-JUSTICA",  "ip_bgp_neighbor": "187.93.7.58" },{"object_id": "TRIBUNAL-JUSTICA"...
-            context['Status_'+full_source_field+'_field_values333'] = values_to_send              
+                   else:
+                     values_to_send[field1_value] = new_value
+                     
+          # values_to_send: { {  "object_id": "TRIBUNAL-JUSTICA",  "ip_bgp_neighbor": "187.93.7.58" },{"object_id": "TRIBUNAL-JUSTICA"...
+          context['Status_'+full_source_field+'_field_values333'] = values_to_send              
 
-            for key1, values in values_to_send.items():
-              ms_input = {}
-              object_id =''
-              for key,val in values.items():
-                ms_input[key] = val
-                if key == 'object_id':
-                  object_id = val
-              obj               = {}
-              obj[object_id]    = ms_input  
-              params            = {}
-              params[ms_to_run] = obj 
-              # Run the MS import and store the result
-              run_MS_import()
+          for key1, values in values_to_send.items():
+            ms_input = {}
+            object_id =''
+            for key,val in values.items():
+              ms_input[key] = val
+              if key == 'object_id':
+                object_id = val
+            obj               = {}
+            obj[object_id]    = ms_input  
+            params            = {}
+            params[ms_to_run] = obj 
+            # Run the MS import and store the result
+            run_MS_import()
 
-          else:
-            warning = warning + "\n the first field should be object_id instead of '" +ms_source_field1+"'"
-        
         elif ms_source == 'None' and ms_to_run:
           #Run IMPORT for the give MS to update the DB
           ms_input = {}
