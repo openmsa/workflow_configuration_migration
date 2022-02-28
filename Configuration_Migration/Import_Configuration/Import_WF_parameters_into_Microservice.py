@@ -206,7 +206,10 @@ for source_key,item  in wf_fields.items():
             newval = newval+ context[fields[1]]        
         else:
           newval = context[first_wf_field] #get value directly from the context
-        destination_MS_context = context[item['destination_MS_Name']+'_values']
+        if context.get(item['destination_MS_Name']+'_values'):
+          destination_MS_context = context[item['destination_MS_Name']+'_values']
+        else:
+          destination_MS_context = {}
         fields = item['destination_field_name'][0].split('.0.')  # groups.0.p2p
         if isinstance(fields, typing.List) and fields and (len(fields) > 1):
           first  = fields[0]  # groups
