@@ -33,7 +33,7 @@ def printTable(myDict):
 #########################################################
 # Function: Run the MS import and store the result
 def run_MS_import():
-  global ms_to_run, previous_ms_to_run, MS_list_run, previous_ms_data, full_message, params, timeout, parameter1_to_give_to_ms, object_id,MS_list_not_run, nb_ms_to_run, device_id_full
+  global ms_to_run, previous_ms_to_run, MS_list_run, previous_ms_data, full_message, params, timeout, parameter1_to_give_to_ms, object_id,MS_list_not_run, nb_ms_to_run, device_id_full, dest
   nb_ms_to_run = nb_ms_to_run + 1 
   if ms_to_run != previous_ms_to_run :
     previous_ms_to_run = ms_to_run
@@ -41,7 +41,7 @@ def run_MS_import():
     if previous_ms_data:
       full_message = full_message +  printTable(previous_ms_data)
       previous_ms_data = []
-    full_message = full_message + '\n\n############# from MS '+ ms_to_run +  ' ############# \n'
+    full_message = full_message + '\n\n############# For '+ dest + ' device,  MS '+ ms_to_run +  ' ############# \n'
   obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
   response = json.loads(obmf.content)
   context['ms_status_import_response_'+ms_to_run] = response #   "message ="{\"arp_summary\":{\"274f9f441f0dd0bc3ab2af14ef7bc6d5\":{\"total\":\"7\",\"incomplete\":\"0\"}}}",
@@ -133,90 +133,92 @@ for  dest, device_id_full in devices.items():
     for line in data_list:
       if (not line.startswith('#')) and line.strip():
         list = line.split('|')  
-        #  ms_source|ms_source_field1|ms_source_field2|MS_to_run|parameter1_to_give_to_MS|parameter2_to_give_to_MS
+        # device source ou destination|ms_source|ms_source_field1|ms_source_field2|MS_to_run|parameter1_to_give_to_MS|parameter2_to_give_to_MS
         #  interface|object_id|None|interface_status|object_id|None
         #  bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_neighbor_status|object_id|ip_bgp_neighbor          
-        if len(list) > 2:
-          ms_source                = list[0]
-          ms_source_field1         = list[1]
-          ms_source_field2         = list[2]
-          ms_to_run                = list[3]
-          parameter1_to_give_to_ms = list[4]
-          parameter2_to_give_to_ms = list[5]
+        if len(list) > 6:
+          device_src_dest          = list[0]
+          ms_source                = list[1]
+          ms_source_field1         = list[2]
+          ms_source_field2         = list[3]
+          ms_to_run                = list[4]
+          parameter1_to_give_to_ms = list[5]
+          parameter2_to_give_to_ms = list[6]
 
-          if ms_source != 'None' and context.get(ms_source+'_values') and context[ms_source+'_values'] :
-            '''  "bgp_vrf_values": {
-               "TRIBUNAL-JUSTICA": {
-                      "object_id": "TRIBUNAL-JUSTICA",
-                      "neighbor": {
-                          "0": {
-                              "bgp_vrf_neighbor": "187.93.7.58",
-                              "bgp_vrf_neighbor_remote_as": "65001"
-                          },
-            '''
-            all_values_to_test=[]
-            field1_values={}
-            full_source_field = ms_source+'_'+ms_source_field1+'_'+ms_source_field2
-            context['Status_'+full_source_field+'_field_values'] = {}
-            context['Status_'+full_source_field+'_list'] = list
-            values_to_send = {}
-            ## Find all source values
-            ms_values = context[ms_source+'_values']
-            if isinstance(ms_values, dict):
-              for  key, value1 in ms_values.items():
-                if isinstance(value1, dict):
-                  if value1.get(ms_source_field1):
-                     field1_value                = value1[ms_source_field1]
-                     new_value                   = {}
-                     new_value[parameter1_to_give_to_ms] = field1_value
-                     if ms_source_field2 and ms_source_field2 != 'None':
-                       fields = ms_source_field2.split('.0.')
-                       if isinstance(fields, typing.List) and fields and len(fields) > 1:
-                         field_lev1 = fields[0]
-                         field_lev2 = fields[1]
-                         if value1.get(field_lev1):
-                           value_lev1 = value1[field_lev1]
-                           if isinstance(value_lev1, dict):
-                             for  key2, value2 in value_lev1.items():
-                               if value2.get(field_lev2):
-                                 new_value[parameter2_to_give_to_ms] = value2[field_lev2]                               
-                                 key =  field1_value+'|'+value2[field_lev2] #used key to not get many times the same values                         
-                                 values_to_send[key] = new_value
-                                 new_value                   = {}
-                                 new_value[parameter1_to_give_to_ms] = field1_value
+          if device_src_dest == dest:
+            if ms_source != 'None' and context.get(ms_source+'_values') and context[ms_source+'_values'] :
+              '''  "bgp_vrf_values": {
+                 "TRIBUNAL-JUSTICA": {
+                        "object_id": "TRIBUNAL-JUSTICA",
+                        "neighbor": {
+                            "0": {
+                                "bgp_vrf_neighbor": "187.93.7.58",
+                                "bgp_vrf_neighbor_remote_as": "65001"
+                            },
+              '''
+              all_values_to_test=[]
+              field1_values={}
+              full_source_field = ms_source+'_'+ms_source_field1+'_'+ms_source_field2
+              context['Status_'+full_source_field+'_field_values'] = {}
+              context['Status_'+full_source_field+'_list'] = list
+              values_to_send = {}
+              ## Find all source values
+              ms_values = context[ms_source+'_values']
+              if isinstance(ms_values, dict):
+                for  key, value1 in ms_values.items():
+                  if isinstance(value1, dict):
+                    if value1.get(ms_source_field1):
+                       field1_value                = value1[ms_source_field1]
+                       new_value                   = {}
+                       new_value[parameter1_to_give_to_ms] = field1_value
+                       if ms_source_field2 and ms_source_field2 != 'None':
+                         fields = ms_source_field2.split('.0.')
+                         if isinstance(fields, typing.List) and fields and len(fields) > 1:
+                           field_lev1 = fields[0]
+                           field_lev2 = fields[1]
+                           if value1.get(field_lev1):
+                             value_lev1 = value1[field_lev1]
+                             if isinstance(value_lev1, dict):
+                               for  key2, value2 in value_lev1.items():
+                                 if value2.get(field_lev2):
+                                   new_value[parameter2_to_give_to_ms] = value2[field_lev2]                               
+                                   key =  field1_value+'|'+value2[field_lev2] #used key to not get many times the same values                         
+                                   values_to_send[key] = new_value
+                                   new_value                   = {}
+                                   new_value[parameter1_to_give_to_ms] = field1_value
 
-                     else:
-                       values_to_send[field1_value] = new_value
-                       
-            # values_to_send: { {  "object_id": "TRIBUNAL-JUSTICA",  "ip_bgp_neighbor": "187.93.7.58" },{"object_id": "TRIBUNAL-JUSTICA"...
-            context['Status_'+full_source_field+'_field_values333'] = values_to_send              
+                       else:
+                         values_to_send[field1_value] = new_value
+                         
+              # values_to_send: { {  "object_id": "TRIBUNAL-JUSTICA",  "ip_bgp_neighbor": "187.93.7.58" },{"object_id": "TRIBUNAL-JUSTICA"...
+              context['Status_'+full_source_field+'_field_values333'] = values_to_send              
 
-            for key1, values in values_to_send.items():
+              for key1, values in values_to_send.items():
+                ms_input = {}
+                object_id =''
+                for key,val in values.items():
+                  ms_input[key] = val
+                  if key == 'object_id':
+                    object_id = val
+                obj               = {}
+                obj[object_id]    = ms_input  
+                params            = {}
+                params[ms_to_run] = obj 
+                # Run the MS import and store the result
+                run_MS_import()
+
+            elif ms_source == 'None' and ms_to_run:
+              #Run IMPORT for the give MS to update the DB
               ms_input = {}
-              object_id =''
-              for key,val in values.items():
-                ms_input[key] = val
-                if key == 'object_id':
-                  object_id = val
-              obj               = {}
-              obj[object_id]    = ms_input  
-              params            = {}
+              ms_input['test'] = 'test'
+              obj = {"":ms_input}  
+              obj['test'] = ms_input  
+              params = {}
               params[ms_to_run] = obj 
               # Run the MS import and store the result
               run_MS_import()
-
-          elif ms_source == 'None' and ms_to_run:
-            #Run IMPORT for the give MS to update the DB
-            ms_input = {}
-            ms_input['test'] = 'test'
-            obj = {"":ms_input}  
-            obj['test'] = ms_input  
-            params = {}
-            params[ms_to_run] = obj 
-            # Run the MS import and store the result
-            run_MS_import()
-          else:
-            warning = warning + "\n the Micros service "+ms_source+" is no attached to the device "+ device_id_full
+            else:
+              warning = warning + "\n the Micros service "+ms_source+" is no attached to the device "+ device_id_full
 
 if previous_ms_data:
   full_message = full_message +  printTable(previous_ms_data)
