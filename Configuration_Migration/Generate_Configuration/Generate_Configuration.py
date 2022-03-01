@@ -84,7 +84,7 @@ if MS_list:
         params[MS] = config
         context[MS + '_export_params'] = params
         #obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
-        obmf.command_call(command, 0, params, timeout)  #mode=0 : No application, mode=1 :  Apply to base only (create new element in the MSA DB, it will not run any commands on device)
+        obmf.command_call(command, 1, params, timeout)  #mode=0 : No application, mode=1 :  Apply to base only (create new element in the MSA DB, it will not run any commands on device)
    
         response = json.loads(obmf.content)
         context[ MS + '_generate_response'] = response
