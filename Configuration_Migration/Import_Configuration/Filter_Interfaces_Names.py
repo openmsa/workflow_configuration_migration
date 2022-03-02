@@ -8,37 +8,23 @@ from msa_sdk.order import Order
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 from datetime import datetime
+import sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from common.common import *
 
 dev_var = Variables()
 
 INTERFACE = 'interface'
 
 context = Variables.task_call(dev_var)
- 
+subtenant_ref = context["UBIQUBEID"]
+subtenant_id = context["UBIQUBEID"][4:]
+device_id_full = context['source_device_id_full']
+
 # This Script will filter interfaces names : it remove all interfaces values in INTERFACE MS which are not present in the given field 'interfaces.0.source'
 
-
-#########################################################
-# Function: Parse all MS values recursivly for the given field
-def data_find_migrate_recursif(orig_field_name, fields, ms_newvalues):
-  if isinstance(fields, typing.List) and fields:
-    field = fields[0]
-    fields.pop(0)
-  else:
-    field = fields  #string
-  if field:
-    if isinstance(ms_newvalues, dict):
-      for  key, value1 in ms_newvalues.items():
-        if isinstance(value1, dict):
-          if value1.get(field):
-             value = value1[field]
-             if isinstance(value, dict):
-               data_find_migrate_recursif(orig_field_name, copy.deepcopy(fields), value1[field]) 
-             else:
-               if value :
-                 context[orig_field_name+'_field_values'][value] = ''
-  return 'not found'
-   
 if not context['enable_filter']:
   MSA_API.task_success('DONE: filter are disabled, no filters applied', context, True)
 
@@ -85,6 +71,6 @@ if nb_interfaces_found:
   MSA_API.task_success('DONE: found '+str(nb_interfaces_found)+' interfaces (' + ', '.join(interfaces_found) + ')', context, True)
   
 else:
-  MSA_API.task_error('ERROR: cannot find any interfaces: (' + ', '.join(source_interfaces_name_list) + '), , interfaces found: (' + ', '.join(interfaces_MS_found) + ')', context, True)
-
-
+  msg = 'ERROR: cannot find any interfaces: (' + ', '.join(source_interfaces_name_list) + '), , interfaces found: (' + ', '.join(interfaces_MS_found) + ')'
+  create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+  MSA_API.task_error(msg, context, True)

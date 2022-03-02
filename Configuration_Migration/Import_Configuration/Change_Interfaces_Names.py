@@ -2,6 +2,7 @@ import json
 import typing
 import os
 import copy
+import sys
 
 from pathlib import Path
 from msa_sdk import constants
@@ -9,44 +10,16 @@ from msa_sdk.order import Order
 from msa_sdk.conf_profile import ConfProfile
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
-dev_var = Variables()
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from common.common import *
 
 dev_var = Variables()
 
 context = Variables.task_call(dev_var)
+device_id_full = context['source_device_id_full']
 
-
-#########################################################
-# Function: Parse all MS values recursivly for the given field
-def change_interfaces_names_recursif(source_field, fields, ms_newvalues, new_interfaces_names, new_interfaces_names_clean):
-  if isinstance(fields, typing.List) and fields:
-    field = fields[0]
-    fields.pop(0)
-  else:
-    field = fields  #string
-    
-  if field:
-    if isinstance(ms_newvalues, dict):
-      if field == 'KEY':
-        for old_interface_name, new_interface_name in new_interfaces_names_clean.items():
-          if ms_newvalues.get(old_interface_name):
-            ms_newvalues[new_interface_name] = ms_newvalues[old_interface_name]
-            del ms_newvalues[old_interface_name] 
-      else: 
-        for  key, value1 in ms_newvalues.items():
-          if isinstance(value1, dict):
-            if value1.get(field):
-               value = value1[field]
-               if isinstance(value, dict):
-                 change_interfaces_names_recursif(source_field, copy.deepcopy(fields), value1[field], new_interfaces_names, new_interfaces_names_clean) 
-               else:
-                 if value :
-                   if new_interfaces_names.get(value):
-                     ms_newvalues[key][field] = new_interfaces_names[value]
-
-  return 'not found'
-  
-  
 MS_list_string        = context['MS_list']  
 
 ############# Get new interfaces name from context['interfaces']
