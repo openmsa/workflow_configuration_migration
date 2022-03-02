@@ -7,6 +7,12 @@ from msa_sdk.order import Order
 from msa_sdk.conf_profile import ConfProfile
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
+import sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from common.common import *
+
 dev_var = Variables()
 
 context = Variables.task_call(dev_var)
@@ -22,6 +28,8 @@ obmf  = Order(device_id=device_id)
 context['customer_id_instance_id'] =  context['customer_id'] + '_#' +context['SERVICEINSTANCEID']
 
 #we synchronise all MS attached to the source device because some MS are intermediated and need to be synchronized with good order.
+create_event(device_id_full, "5", "1", subtenant_ref, subtenant_id, "START IMPORT")
+
 obmf.command_synchronize(timeout)
 responses = json.loads(obmf.content)
 context[ 'ALL source MS_synch_values for '+device_id] = responses
