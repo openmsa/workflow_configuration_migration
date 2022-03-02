@@ -7,48 +7,17 @@ from msa_sdk.order import Order
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 from datetime import datetime
+import sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from common.common import *
 
 dev_var = Variables()
 
 context = Variables.task_call(dev_var)
 
-DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
-
-#########################################################
-# Function: Parse all MS values recursivly and change the value (by reference) if needed 
-def  data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination):
-   if isinstance(fields, typing.List) and fields:
-     field = fields[0]
-     fields.pop(0)
-   else:
-     field = fields  #string
-   if field:
-     if isinstance(ms_newvalues, dict):
-       for  key, value1 in ms_newvalues.items():
-       #for key in ms_newvalues:
-         if isinstance(value1, dict):
-           if value1.get(field):
-             value = value1[field]
-             if isinstance(value, dict):
-               data_conversion_recursif(value1[field], copy.deepcopy(fields), convert_condition, convert_pattern_source, convert_pattern_destination) 
-             else:
-               if value :
-                 source=''
-                 # CAN NOT used try.... because it will not parse all values in ms_newvalues (try will used only first value), so we used one convert_condition
-                 if eval(convert_condition):
-                   source      = eval(convert_pattern_source)
-                   destination = eval(convert_pattern_destination)
-       
-                   if source:
-                     context['result_source_'+value]      = source
-                     context['result_destination_'+value] = destination
-                     ms_newvalues[key][field] = value.replace(source,destination)
-               
-   return 'ok'
-   
-
-
-  
+DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
 
 ########### LOOP ON ALL GIVEN MS #############
 MS_list        = context['MS_list']  
@@ -96,25 +65,25 @@ if MS_list:
                 #  context[MS+'_values_orig'] = copy.deepcopy(context[MS+'_values'])
                 ms_newvalues = context[MS+'_values']
                 fields = convert_field.split('.0.')
-                data_conversion_recursif(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination)
+                data_conversion_recursif_compute_conf(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination)
                      
             
       #########################################################
       # ADD THE DOWNLOAD FILE LINK FOR EACH VALUES
       config = context.get( MS + '_values')
-      link =      DIRECTORIE + "/" + MS + '_'  + day + '.txt'
-      link_orig = DIRECTORIE + "/" + MS + '_'  + day + '_orig.txt'
+      link =      DIRECTORY + "/" + MS + '_'  + day + '.txt'
+      link_orig = DIRECTORY + "/" + MS + '_'  + day + '_orig.txt'
       
       context[MS + '_link'] = link
       context[MS + '_link_orig'] = link_orig
 
 
 
-context['generate_file'] = DIRECTORIE+ "/" + "ALL_MS_"  + day + '.txt'
+context['generate_file'] = DIRECTORY+ "/" + "ALL_MS_"  + day + '.txt'
 
-#check if the directorie  DIRECTORIE exist, else create it
-if not os.path.isdir(DIRECTORIE):
- os.mkdir(DIRECTORIE)
+#check if the folder  DIRECTORY exist, else create it
+if not os.path.isdir(DIRECTORY):
+ os.mkdir(DIRECTORY)
 
 
 MSA_API.task_success('DONE: update the interfaces names and compute data from '+ context['data_conversion_pattern_file'], context, True)

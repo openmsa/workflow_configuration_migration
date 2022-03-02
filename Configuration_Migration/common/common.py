@@ -19,6 +19,40 @@ subtenant_ref = context["UBIQUBEID"]
 subtenant_id = context["UBIQUBEID"][4:]
 
 #########################################################
+# Function: Parse all MS values recursivly and change the value (by reference) if needed 
+def  data_conversion_recursif_compute_conf(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination):
+   if isinstance(fields, typing.List) and fields:
+     field = fields[0]
+     fields.pop(0)
+   else:
+     field = fields  #string
+   if field:
+     if isinstance(ms_newvalues, dict):
+       for  key, value1 in ms_newvalues.items():
+       #for key in ms_newvalues:
+         if isinstance(value1, dict):
+           if value1.get(field):
+             value = value1[field]
+             if isinstance(value, dict):
+               data_conversion_recursif_compute_conf(value1[field], copy.deepcopy(fields), convert_condition, convert_pattern_source, convert_pattern_destination) 
+             else:
+               if value :
+                 source=''
+                 # CAN NOT used try.... because it will not parse all values in ms_newvalues (try will used only first value), so we used one convert_condition
+                 if eval(convert_condition):
+                   source      = eval(convert_pattern_source)
+                   destination = eval(convert_pattern_destination)
+       
+                   if source:
+                     context['result_source_'+value]      = source
+                     context['result_destination_'+value] = destination
+                     ms_newvalues[key][field] = value.replace(source,destination)
+               
+   return 'ok'
+   
+
+
+#########################################################
 # Function: to convert 
 def printTable(myDict):
   df = Pandas.DataFrame.from_records(myDict)
