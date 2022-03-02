@@ -45,7 +45,7 @@ deployment_settings_id = obmf.command_get_deployment_settings_id()
 context['destination_deployment_settings_id'] = deployment_settings_id
 
 if not deployment_settings_id:
-  msg = 'There is no deployement setting for the Cisco device '+device_id_full
+  msg = 'ERROR: There is no deployement setting for the Cisco device '+device_id_full
   create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
   MSA_API.task_error(msg, context, True)
 
@@ -163,16 +163,16 @@ if MS_list:
             links.append(link)
 
           else:
-            msg = 'Can not run create on microservice: '+ MS + ', response='+ str(response)
+            msg = 'ERROR: Can not run create on microservice: '+ MS + ', response='+ str(response)
             create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
             MSA_API.task_error(msg , context, True)
         else: 
           if 'wo_newparams' in response:
-            msg = 'Can not run create on microservice: '+ MS + ', response='+ str(response.get('wo_newparams'))
+            msg = 'ERROR: Can not run create on microservice: '+ MS + ', response='+ str(response.get('wo_newparams'))
             create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
             MSA_API.task_error(msg, context, True)
           else:
-             msg = 'Can not run create on microservice: '+ MS + ', response='+ str(response)
+             msg = 'ERROR: Can not run create on microservice: '+ MS + ', response='+ str(response)
              create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
              MSA_API.task_error(msg , context, True)
     else:
