@@ -1,5 +1,6 @@
 import os.path
 import sys
+import typing
 from msa_sdk import constants
 from msa_sdk.order import Order
 from msa_sdk.variables import Variables

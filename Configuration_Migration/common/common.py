@@ -46,26 +46,6 @@ def change_interfaces_names_recursif(source_field, fields, ms_newvalues, new_int
 
   return 'not found'
 
-#########################################################
-# Function: Parse all MS values recursivly for the given field
-def data_find_migrate_recursif(orig_field_name, fields, ms_newvalues):
-  if isinstance(fields, typing.List) and fields:
-    field = fields[0]
-    fields.pop(0)
-  else:
-    field = fields  #string
-  if field:
-    if isinstance(ms_newvalues, dict):
-      for  key, value1 in ms_newvalues.items():
-        if isinstance(value1, dict):
-          if value1.get(field):
-             value = value1[field]
-             if isinstance(value, dict):
-               data_find_migrate_recursif(orig_field_name, copy.deepcopy(fields), value1[field]) 
-             else:
-               if value :
-                 context['Filter_'+orig_field_name+'_field_values'][value] = ''
-  return 'not found'
 
 #########################################################
 # Function: Parse all MS values recursivly for the given field
