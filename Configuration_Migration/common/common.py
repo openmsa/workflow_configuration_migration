@@ -1,8 +1,16 @@
+from msa_sdk.variables import Variables
+from msa_sdk.msa_api import MSA_API
 from msa_sdk import util
 from datetime import datetime
 import time
 import json
 import requests
+
+dev_var = Variables()
+context = Variables.task_call(dev_var)
+
+subtenant_ref = context["UBIQUBEID"]
+subtenant_id = context["UBIQUBEID"][4:]
 
 def create_event(device_id, severity, type_id, subtenant_ref, subtenant_id, message):
 	username='superuser'
