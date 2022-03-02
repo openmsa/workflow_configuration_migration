@@ -7,15 +7,20 @@ from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 from msa_sdk.conf_profile import ConfProfile
 from pathlib import Path
-
+import sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from common.common import *
 dev_var = Variables()
 
 context = Variables.task_call(dev_var)
-
-DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
+DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
 
 timeout = 3600
 
+subtenant_ref = context["UBIQUBEID"]
+subtenant_id = context["UBIQUBEID"][4:]
 #get device_id from context
 device_id_full = context['destination_device_id']
 device_id = device_id_full[3:]
@@ -38,7 +43,9 @@ deployment_settings_id = obmf.command_get_deployment_settings_id()
 context['destination_deployment_settings_id'] = deployment_settings_id
 
 if not deployment_settings_id:
-  MSA_API.task_error('There is no deployement setting for the Cisco device '+device_id_full, context, True)
+  msg = 'ERROR: There is no deployement setting for the managed entity '+device_id_full
+  create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+  MSA_API.task_error(msg, context, True)
   
 #Get all microservices attached to this deployment setting.
 confprofile  = ConfProfile(deployment_settings_id)
@@ -147,19 +154,25 @@ if MS_list:
                    
                 
             #Add MS import Skip result link:
-            MS_file = DIRECTORIE + '/' + MS + '_simul.log'
+            MS_file = DIRECTORY + '/' + MS + '_simul.log'
             link={}
             link['MicroService'] = MS + '_Import_parse'
             link['file_link']    = MS_file       
             links.append(link)
 
           else:
-            MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response) , context, True)
+            msg = 'ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response)
+            create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+            MSA_API.task_error(msg , context, True)
         else: 
           if 'wo_newparams' in response:
-            MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response.get('wo_newparams')), context, True)
+            msg = 'ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response.get('wo_newparams'))
+            create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+            MSA_API.task_error(msg, context, True)
           else:
-            MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response) , context, True)
+            msg = 'ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response)
+            create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+            MSA_API.task_error(msg , context, True)
     else:
       ms_not_attached_destination_device.append(MS)
     
