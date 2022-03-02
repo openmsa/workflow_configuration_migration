@@ -25,6 +25,27 @@ device_id_full = context['source_device_id_full']
 
 # This Script will filter interfaces names : it remove all interfaces values in INTERFACE MS which are not present in the given field 'interfaces.0.source'
 
+#########################################################
+# Function: Parse all MS values recursivly for the given field
+def data_find_migrate_recursif(orig_field_name, fields, ms_newvalues):
+  if isinstance(fields, typing.List) and fields:
+    field = fields[0]
+    fields.pop(0)
+  else:
+    field = fields  #string
+  if field:
+    if isinstance(ms_newvalues, dict):
+      for  key, value1 in ms_newvalues.items():
+        if isinstance(value1, dict):
+          if value1.get(field):
+             value = value1[field]
+             if isinstance(value, dict):
+               data_find_migrate_recursif(orig_field_name, copy.deepcopy(fields), value1[field]) 
+             else:
+               if value :
+                 context[orig_field_name+'_field_values'][value] = ''
+  return 'not found'
+
 if not context['enable_filter']:
   MSA_API.task_success('DONE: filter are disabled, no filters applied', context, True)
 

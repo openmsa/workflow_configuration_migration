@@ -23,7 +23,26 @@ device_id_full = context['source_device_id_full']
 # This Script will also remove all given MS values which are not present in the given field :
 #    example in 'data_filter_file' file (filter_cisco_IOS_to_XR.txt) we have the line "interface|vrf_name|ip_vrf|object_id", the script  will remove all MS values for the field object_id in the 'ip_vrf' MS where the object_id is not in find in field 'vrf_name' in the 'interface' MS values 
 
-
+#########################################################
+# Function: Parse all MS values recursivly for the given field
+def data_find_migrate_recursif(orig_field_name, fields, ms_newvalues):
+  if isinstance(fields, typing.List) and fields:
+    field = fields[0]
+    fields.pop(0)
+  else:
+    field = fields  #string
+  if field:
+    if isinstance(ms_newvalues, dict):
+      for  key, value1 in ms_newvalues.items():
+        if isinstance(value1, dict):
+          if value1.get(field):
+             value = value1[field]
+             if isinstance(value, dict):
+               data_find_migrate_recursif(orig_field_name, copy.deepcopy(fields), value1[field]) 
+             else:
+               if value :
+                 context['Filter_'+orig_field_name+'_field_values'][value] = ''
+  return 'not found'
 
 ########### ADD LINK #############
 MS_list_string        = context['MS_list']  

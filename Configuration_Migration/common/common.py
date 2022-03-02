@@ -46,7 +46,6 @@ def change_interfaces_names_recursif(source_field, fields, ms_newvalues, new_int
 
   return 'not found'
 
-
 #########################################################
 # Function: Parse all MS values recursivly for the given field
 def find_all_ip_in_subnet(interface_name, ipv4_address, ipv4_mask, interfaces_IP_available):
