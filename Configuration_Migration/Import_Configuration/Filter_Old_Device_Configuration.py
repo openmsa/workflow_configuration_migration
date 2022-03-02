@@ -45,13 +45,31 @@ else:
   
 context['data_filter'] = data_filter_list
 context['data_filter_file_full'] = file 
-
-      
 context['MS_to_filter'] = {}
+
+#########################################################
+# Function: Parse all MS values recursivly for the given field
+def data_find_migrate_recursif(orig_field_name, fields, ms_newvalues):
+  if isinstance(fields, typing.List) and fields:
+    field = fields[0]
+    fields.pop(0)
+  else:
+    field = fields  #string
+  if field:
+    if isinstance(ms_newvalues, dict):
+      for  key, value1 in ms_newvalues.items():
+        if isinstance(value1, dict):
+          if value1.get(field):
+             value = value1[field]
+             if isinstance(value, dict):
+               data_find_migrate_recursif(orig_field_name, copy.deepcopy(fields), value1[field]) 
+             else:
+               if value :
+                 context['Filter_'+orig_field_name+'_field_values'][value] = ''
+  return 'not found'
 
 ######### IT WILL put migrate to 1 to all destination fields values 
 # example for "interface|vrf_name|ip_vrf|object_id"  we keep all MS values for ip_vrf where the object_id is equal to vrf_name in interface MS  and we remove all other MS values
-
 
 if MS_list_string:
   MS_list = MS_list_string.split('\s*;\s*')
