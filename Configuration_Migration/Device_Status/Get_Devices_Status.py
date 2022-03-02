@@ -9,58 +9,26 @@ from msa_sdk.conf_profile import ConfProfile
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 from datetime import datetime
-
+import sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from common.common import *
 
 dev_var = Variables()
 
 
 context = Variables.task_call(dev_var)
 
+subtenant_ref = context["UBIQUBEID"]
+subtenant_id = context["UBIQUBEID"][4:]
+
 context['real_or_simul_device'] = 'real'
 DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
 
 timeout = 3600
 
-
-#########################################################
-# Function: to convert 
-def printTable(myDict):
-  df = Pandas.DataFrame.from_records(myDict)
-  return df.to_string()
-
-
-#########################################################
-# Function: Run the MS import and store the result
-def run_MS_import():
-  global ms_to_run, previous_ms_to_run, MS_list_run, previous_ms_data, full_message, params, timeout, parameter1_to_give_to_ms, object_id,MS_list_not_run
-  if ms_to_run != previous_ms_to_run :
-    previous_ms_to_run = ms_to_run
-    MS_list_run[ms_to_run] = 1
-    if previous_ms_data:
-      full_message = full_message +  printTable(previous_ms_data)
-      previous_ms_data = []
-    full_message = full_message + '\n\n############# from MS '+ ms_to_run +  ' ############# \n'
-  obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
-  response = json.loads(obmf.content)
-  context['ms_status_import_response_'+ms_to_run] = response #   "message ="{\"arp_summary\":{\"274f9f441f0dd0bc3ab2af14ef7bc6d5\":{\"total\":\"7\",\"incomplete\":\"0\"}}}",
-
-  if response.get("status") and response["status"] == "OK":
-     message =  response["message"]
-     message = json.loads(message)
-     if message.get(ms_to_run):
-       message = message[ms_to_run]
-       if isinstance(message, dict):
-         for key2,val2 in message.items():
-           previous_ms_data.append(val2)
-       else:
-         previous_ms_data.append(message)
-  else:
-    #MSA_API.task_error('ERROR: Cannot run CREATE on microservice: '+ ms_to_run + ', response='+ str(response) , context, True)
-    MS_list_not_run[ms_to_run]=1
-              
-
-
-              
+           
 #read import_WF_parameters_into_MS.txt file
 wf_path = os.path.dirname(__file__)
 file =  wf_path+'/../'+context['get_devices_status_file']   # get_devices_status.txt
@@ -198,7 +166,7 @@ for  dest, device_id_full in devices.items():
                 params            = {}
                 params[ms_to_run] = obj 
                 # Run the MS import and store the result
-                run_MS_import()
+                run_microservice_import()
 
             else:
               warning = warning + "\n the first field should be object_id instead of '" +ms_source_field1+"'"
@@ -212,9 +180,9 @@ for  dest, device_id_full in devices.items():
             params = {}
             params[ms_to_run] = obj 
             # Run the MS import and store the result
-            run_MS_import()
+            run_microservice_import()
           else:
-            warning = warning + "\n the Micros service "+ms_source+" is no attached to the device "+ device_id_full
+            warning = warning + "\n the Microsservice "+ms_source+" is no attached to the device "+ device_id_full
 
   if previous_ms_data:
     full_message = full_message +  printTable(previous_ms_data)
