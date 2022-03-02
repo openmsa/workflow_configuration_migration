@@ -26,7 +26,7 @@ device_id_full = context['source_device_id_full']
 
 #########################################################
 # Function: Parse all MS values recursively for the given field
-def data_find_migrate_recursif(orig_field_name, fields, ms_newvalues):
+def data_find_migrate_recursive(orig_field_name, fields, ms_newvalues):
   if isinstance(fields, typing.List) and fields:
     field = fields[0]
     fields.pop(0)
@@ -39,7 +39,7 @@ def data_find_migrate_recursif(orig_field_name, fields, ms_newvalues):
           if value1.get(field):
              value = value1[field]
              if isinstance(value, dict):
-               data_find_migrate_recursif(orig_field_name, copy.deepcopy(fields), value1[field]) 
+               data_find_migrate_recursive(orig_field_name, copy.deepcopy(fields), value1[field]) 
              else:
                if value :
                  context['Filter_'+orig_field_name+'_field_values'][value] = ''
@@ -90,7 +90,7 @@ if MS_list_string:
             fields = orig_field_name.split('.0.')
             context['Filter_'+orig_field_name+'_field_values'] = {}
             ## Find all source values
-            data_find_migrate_recursif(orig_field_name, fields,context[orig_MS_Name+'_values'])
+            data_find_migrate_recursive(orig_field_name, fields,context[orig_MS_Name+'_values'])
           else:
             if not context.get(orig_MS_Name+'_values'):
               context['Filter_'+orig_field_name+'_field_values'] = {}
