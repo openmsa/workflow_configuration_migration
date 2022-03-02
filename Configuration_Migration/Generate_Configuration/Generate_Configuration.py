@@ -12,6 +12,7 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 from common.common import *
+
 dev_var = Variables()
 
 context = Variables.task_call(dev_var)
