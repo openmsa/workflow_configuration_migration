@@ -37,8 +37,8 @@ responses = json.loads(obmf.content)
 context[ 'ALL source MS_synch_values for '+device_id] = responses
 if isinstance(responses, dict) and responses.get("wo_status") and responses["wo_status"] == "FAIL":
   msg = 'Can not synchronise device '+ device_id_full + ' : '+responses['wo_newparams']
-  MSA_API.task_error(msg, context, True)
   create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+  MSA_API.task_error(msg, context, True)
 
 create_event(device_id_full, "5", "1", subtenant_ref, subtenant_id, "IMPORT:END:"+device_id_full)
 
