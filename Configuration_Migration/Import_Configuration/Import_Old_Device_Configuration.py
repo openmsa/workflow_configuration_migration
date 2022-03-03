@@ -51,7 +51,7 @@ if isinstance(responses, typing.List):
     if response.get('message') and response.get('status'):
       if response['status'] != 'OK':
         msg = 'ERROR: during synchronise. Managed entity Id: '+ device_id_full + ' : ' + str(response)
-        create_event(device_id_full, "1", "MIGRATION", "SYNCHRONIZE" subtenant_ref, subtenant_id, msg)
+        create_event(device_id_full, "1", "MIGRATION", "SYNCHRONIZE", subtenant_ref, subtenant_id, msg)
         MSA_API.task_error(msg, context, True)
       else:
         response_message = json.loads(response.get('message'))  #convert into json array
