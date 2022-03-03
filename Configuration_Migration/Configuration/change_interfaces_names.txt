@@ -1,5 +1,5 @@
+# This file change_interfaces_names.txt contains the list of element where we should change the interface name
 #
-# This  file contains the list of element where we should change the interface name
 # Microservice Name | Microservice variable
 #
 interface|KEY

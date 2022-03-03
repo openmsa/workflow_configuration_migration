@@ -77,6 +77,7 @@ if os.path.isfile(file):
   ip_data_filter_list = [i for i in ip_data_filter_list if i] #remove empty element
     
 else:
+  MSA_API.task_error('Can not open file "' + file + '"', context, True)
   ip_data_filter_list = ''    
   
 context['IP_data_filter'] = ip_data_filter_list

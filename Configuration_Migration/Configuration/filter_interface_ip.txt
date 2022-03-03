@@ -1,5 +1,5 @@
+# This file filter_interface_ip.txt contains the list of element to filter based on the interface subnet.
 #
-# This  file contains the list of element to filter based on the interface subnet.
 # Microservice Name | Microservice variable
 #
 address_family|neighbor.0.bgp_neighbor

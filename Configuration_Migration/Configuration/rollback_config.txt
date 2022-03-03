@@ -1,0 +1,7 @@
+# This file rollback_config.txt contains the list of element where we should change the interface name
+#
+# ms_source 
+#
+interface
+bgp_vrf
+router_static

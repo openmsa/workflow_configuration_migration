@@ -86,6 +86,7 @@ if os.path.isfile(file):
   data_filter_list = data_filter.split('\n')
   data_filter_list = [i for i in data_filter_list if i] #remove empty element
 else:
+  MSA_API.task_error('Can not open file "' + file + '"', context, True)
   data_filter_list = ''    
   
 context['data_filter'] = data_filter_list

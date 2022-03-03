@@ -1,5 +1,5 @@
-# This file contains the definition of the dependency between Microservices
-# it will filter out some destinations values when they are not in the source values list
+# This file filter_cisco_IOS_to_XR.txt contains the definition of the dependency between Microservices
+# It will filter out some destinations values when they are not in the source values list
 # The order in this file is important, because the filtering is done from the top (filtering after each change of destination Microservice Name or destination variable name)
 #
 # Format:

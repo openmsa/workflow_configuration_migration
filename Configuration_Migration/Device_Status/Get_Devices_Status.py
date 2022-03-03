@@ -80,6 +80,7 @@ if os.path.isfile(file):
   data_list = import_liste.split('\n')
   data_list = [i for i in data_list if i] #remove empty element
 else:
+  MSA_API.task_error('Can not open file "' + file + '"', context, True)
   data_list = ''    
   
 context['status_liste'] = data_list
