@@ -49,7 +49,7 @@ context['destination_deployment_settings_id'] = deployment_settings_id
 
 if not deployment_settings_id:
   msg = 'ERROR: There is no deployement setting for the Cisco device '+device_id_full
-  create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+  create_event(device_id_full, "1", "MIGRATION", "CONFIG",  subtenant_ref, subtenant_id, msg)
   MSA_API.task_error(msg, context, True)
 
 #Get all microservices attached to this deployment setting.
@@ -167,16 +167,16 @@ if MS_list:
 
           else:
             msg = 'ERROR: Can not run create on microservice: '+ MS + ', response='+ str(response)
-            create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+            create_event(device_id_full, "1", "MIGRATION", "CONFIG",  subtenant_ref, subtenant_id, msg)
             MSA_API.task_error(msg , context, True)
         else: 
           if 'wo_newparams' in response:
             msg = 'ERROR: Can not run create on microservice: '+ MS + ', response='+ str(response.get('wo_newparams'))
-            create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+            create_event(device_id_full, "1", "MIGRATION", "CONFIG",  subtenant_ref, subtenant_id, msg)
             MSA_API.task_error(msg, context, True)
           else:
              msg = 'ERROR: Can not run create on microservice: '+ MS + ', response='+ str(response)
-             create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+             create_event(device_id_full, "1", "MIGRATION", "CONFIG", subtenant_ref, subtenant_id, msg)
              MSA_API.task_error(msg , context, True)
     else:
       ms_not_attached_destination_device.append(MS)

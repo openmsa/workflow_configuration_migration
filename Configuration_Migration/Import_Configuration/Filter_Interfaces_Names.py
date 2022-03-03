@@ -72,5 +72,5 @@ if nb_interfaces_found:
   
 else:
   msg = 'ERROR: cannot find any interfaces: (' + ', '.join(source_interfaces_name_list) + '), , interfaces found: (' + ', '.join(interfaces_MS_found) + ')'
-  create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+  create_event(device_id_full, "1", "MIGRATION", "FILTER", subtenant_ref, subtenant_id, msg)
   MSA_API.task_error(msg, context, True)

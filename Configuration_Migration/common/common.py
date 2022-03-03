@@ -184,7 +184,7 @@ def remove_bad_values_recursif(destination_field_name, fields, ms_newvalues, ava
   return 'not found'
 
 
-def create_event(device_id, severity, type_id, subtenant_ref, subtenant_id, message):
+def create_event(device_id, severity, type, subtype, subtenant_ref, subtenant_id, message):
 	username='superuser'
 	password='x^ZyuGM6~u=+fY2G'
 	dateTimeObj = datetime.now()
@@ -195,7 +195,7 @@ def create_event(device_id, severity, type_id, subtenant_ref, subtenant_id, mess
 	timestamp = datetime.timestamp(dateTimeObj)
 	url = "http://msa_es:9200/ubilogs-"+date+"/_doc"
 	#util.log_to_process_file(process_id, url)
-	payload = {"rawlog": ""+message+"", "device_id": ""+device_id+"", "timestamp": ""+str(timestamp)+"", "date": ""+time1+"", "customer_ref": ""+subtenant_ref+"", "customer_id": ""+subtenant_id+"", "severity": ""+severity+"", "type": ""+type_id+"", "subtype": "MIGRATION"}
+	payload = {"rawlog": ""+message+"", "device_id": ""+device_id+"", "timestamp": ""+str(timestamp)+"", "date": ""+time1+"", "customer_ref": ""+subtenant_ref+"", "customer_id": ""+subtenant_id+"", "severity": ""+severity+"", "type": ""+type+"", "subtype": ""+subtype+""}
 	#util.log_to_process_file(process_id, payload)
 	headers = {'content-type': 'application/json'}
 	result = requests.post(url, auth=(username, password), json=payload, headers=headers)

@@ -30,17 +30,17 @@ obmf  = Order(device_id=device_id)
 context['customer_id_instance_id'] =  context['customer_id'] + '_#' +context['SERVICEINSTANCEID']
 
 #we synchronise all MS attached to the source device because some MS are intermediated and need to be synchronized with good order.
-create_event(device_id_full, "5", "1", subtenant_ref, subtenant_id, "IMPORT:START:"+device_id_full)
+create_event(device_id_full, "5", "MIGRATION", "SYNCHRONIZE", subtenant_ref, subtenant_id, "IMPORT:START:"+device_id_full)
 
 obmf.command_synchronize(timeout)
 responses = json.loads(obmf.content)
 context[ 'ALL source MS_synch_values for '+device_id] = responses
 if isinstance(responses, dict) and responses.get("wo_status") and responses["wo_status"] == "FAIL":
   msg = 'Can not synchronise device '+ device_id_full + ' : '+responses['wo_newparams']
-  create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+  create_event(device_id_full, "1", "MIGRATION", "SYNCHRONIZE", subtenant_ref, subtenant_id, msg)
   MSA_API.task_error(msg, context, True)
 
-create_event(device_id_full, "5", "1", subtenant_ref, subtenant_id, "IMPORT:END:"+device_id_full)
+create_event(device_id_full, "5", "MIGRATION", "SYNCHRONIZE", subtenant_ref, subtenant_id, "IMPORT:END:"+device_id_full)
 
 
 MS_list = []
@@ -51,7 +51,7 @@ if isinstance(responses, typing.List):
     if response.get('message') and response.get('status'):
       if response['status'] != 'OK':
         msg = 'ERROR: during synchronise. Managed entity Id: '+ device_id_full + ' : ' + str(response)
-        create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+        create_event(device_id_full, "1", "MIGRATION", "SYNCHRONIZE" subtenant_ref, subtenant_id, msg)
         MSA_API.task_error(msg, context, True)
       else:
         response_message = json.loads(response.get('message'))  #convert into json array
@@ -90,7 +90,7 @@ else:
     
     
 msg = 'DONE: all MS attached to the managed entity: '+ device_id_full + ' imported ('+MS_list+')'
-create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
+#create_event(device_id_full, "1", "MIGRATION", "SYNCHRONIZE", subtenant_ref, subtenant_id, msg)
 MSA_API.task_success(msg, context, True)
 
 
