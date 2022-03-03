@@ -37,10 +37,14 @@ def data_find_migrate_recursive(orig_field_name, fields, ms_newvalues):
           if value1.get(field):
              value = value1[field]
              if isinstance(value, dict):
+
                data_find_migrate_recursive(orig_field_name, copy.deepcopy(fields), value1[field]) 
+
              else:
                if value :
-                 context['Filter_'+orig_field_name+'_field_values'][value] = ''
+                 if not context.get('Filter_keep_'+destination_full+'_field_values'):
+                   context['Filter_keep_'+destination_full+'_field_values'] = {}
+                 context['Filter_keep_'+destination_full+'_field_values'][value] = ''
   return 'not found'
 
 #########################################################
@@ -93,6 +97,7 @@ if os.path.isfile(file):
   data_filter_list = data_filter.split('\n')
   data_filter_list = [i for i in data_filter_list if i] #remove empty element
 else:
+  MSA_API.task_error('Can not open file "' + file + '"', context, True)
   data_filter_list = ''    
   
 context['data_filter'] = data_filter_list
@@ -101,6 +106,11 @@ context['MS_to_filter'] = {}
 
 ######### IT WILL put migrate to 1 to all destination fields values 
 # example for "interface|vrf_name|ip_vrf|object_id"  we keep all MS values for ip_vrf where the object_id is equal to vrf_name in interface MS  and we remove all other MS values
+
+
+previous_destination_MS_Name    = ''
+previous_destination_field_name = ''
+
 
 if MS_list_string:
   MS_list = MS_list_string.split('\s*;\s*')
@@ -115,22 +125,44 @@ if MS_list_string:
           orig_field_name         = list[1]
           destination_MS_Name     = list[2]
           destination_field_name  = list[3]
+          destination_full = destination_MS_Name + '_' + destination_field_name
+
+          if not previous_destination_MS_Name and not previous_destination_field_name:
+            previous_destination_MS_Name    = destination_MS_Name
+            previous_destination_field_name = destination_field_name 
+            context['Filter_keep_'+destination_full+'_field_values'] = {}
+
+          if  destination_MS_Name != previous_destination_MS_Name or destination_field_name != previous_destination_field_name:
+            #we are using now one other destination MS and fieldname, we should clean the previous MS values
+            #Remove old unsed values :
+            fields = previous_destination_field_name.split('.0.')
+            remove_bad_values_recursif(previous_destination_field_name, fields, context[previous_destination_MS_Name+'_values'], context['Filter_keep_'+previous_destination_MS_Name+'_'+previous_destination_field_name+'_field_values']);
+
+            previous_destination_MS_Name    = destination_MS_Name
+            previous_destination_field_name = destination_field_name 
+            context['Filter_keep_'+destination_full+'_field_values'] = {}
+
           if  context.get(orig_MS_Name+'_values') and context.get(destination_MS_Name+'_values'):
             context['MS_to_filter'][destination_MS_Name] = 1
             context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
-            context['Filter_'+orig_field_name+'_field_values'] = {}
             ## Find all source values
+
             data_find_migrate_recursive(orig_field_name, fields,context[orig_MS_Name+'_values'])
+
           else:
-            if not context.get(orig_MS_Name+'_values'):
-              context['Filter_'+orig_field_name+'_field_values'] = {}
+            #if not context.get(orig_MS_Name+'_values'):
+            #  context['Filter_keep_'+destination_full+'_field_values'] = {}
             if not context.get(destination_MS_Name+'_values'):
               context[destination_MS_Name+'_values'] = {}           
-              context['Filter_'+orig_field_name+'_field_values'] = {}
 
-          fields = destination_field_name.split('.0.')
-          remove_bad_values_recursif(destination_field_name, fields, context[destination_MS_Name+'_values'], context['Filter_'+orig_field_name+'_field_values']);
+
+  if destination_MS_Name and destination_field_name:
+    #Remove old unsed values :
+    destination_full = destination_MS_Name + '_' + destination_field_name
+    fields = destination_field_name.split('.0.')
+
+    remove_bad_values_recursif(destination_field_name, fields, context[destination_MS_Name+'_values'], context['Filter_keep_'+destination_full+'_field_values']);
             
    
 msg = 'DONE: filter all microservices (' + ';'.join(context['MS_to_filter']) + ') values from ' + context['data_filter_file']

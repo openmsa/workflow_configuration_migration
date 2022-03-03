@@ -1,5 +1,7 @@
-#This  file contains the list of variable to import from the WF into the MS
+# The file import_WF_parameters_into_MS.txt  contains the list of variable to import from the WF into the MS
+#
 #WF_variable|MS_Name|MS_field_name
+#
 # Fill xconnect microservice
 interfaces.0.xconnect_group|xconnect|object_id
 interfaces.0.destination|xconnect|groups.0.interface

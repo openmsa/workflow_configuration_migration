@@ -52,6 +52,7 @@ def change_interfaces_names_recursive(source_field, fields, ms_newvalues, new_in
 
   return 'not found'
 
+MS_list_string        = context['MS_list']  
 
 ############# Get new interfaces name from context['interfaces']
 source_interfaces_name_list = []
@@ -86,6 +87,7 @@ if os.path.isfile(file):
   change_interface = data_filter.split('\n')
   change_interface = [i for i in change_interface if i] #remove empty element
 else:
+  MSA_API.task_error('Can not open file "' + file + '"', context, True)
   change_interface = ''    
   
 context['change_interfaces_names'] = change_interface

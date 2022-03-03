@@ -19,7 +19,7 @@ dev_var = Variables()
 
 context = Variables.task_call(dev_var)
  
- 
+
 MS_list_string        = context['MS_list']  
     
     
@@ -35,6 +35,7 @@ if os.path.isfile(file):
   ip_data_filter_list = [i for i in ip_data_filter_list if i] #remove empty element
     
 else:
+  MSA_API.task_error('Can not open file "' + file + '"', context, True)
   ip_data_filter_list = ''    
   
 context['IP_data_filter'] = ip_data_filter_list
@@ -61,7 +62,7 @@ if context.get('interface_values'):
           for key, address in addresses.items():
             ipv4_address = address["ipv4_address"]
             ipv4_mask    = address["ipv4_mask"]          
-            interfaces_IP_available = find_all_ip_in_subnet(interface_full_name+'_'+key, ipv4_address, ipv4_mask, interfaces_IP_available)
+            interfaces_IP_available = find_all_ip_in_subnet_ipv4(interface_full_name+'_'+key, ipv4_address, ipv4_mask, interfaces_IP_available)
 
 context['interfaces_IP_available'] = interfaces_IP_available      
 

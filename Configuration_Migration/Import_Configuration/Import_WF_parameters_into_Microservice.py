@@ -34,6 +34,7 @@ if os.path.isfile(file):
   import_liste_list = import_liste.split('\n')
   import_liste_list = [i for i in import_liste_list if i] #remove empty element
 else:
+  MSA_API.task_error('Can not open file "' + file + '"', context, True)
   import_liste_list = ''    
   
 context['import_liste'] = import_liste_list
