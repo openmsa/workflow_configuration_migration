@@ -1,6 +1,7 @@
 import json
 import typing
 import os
+import os.path
 import pandas as Pandas
 from pathlib import Path
 from msa_sdk import constants
@@ -24,7 +25,10 @@ subtenant_ref = context["UBIQUBEID"]
 subtenant_id = context["UBIQUBEID"][4:]
 
 context['real_or_simul_device'] = 'real'
-DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
+DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
+#check if the folder  DIRECTORY exist, else create it
+if not os.path.isdir(DIRECTORY):
+ os.mkdir(DIRECTORY)
 
 timeout = 3600
 
@@ -230,7 +234,7 @@ now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%Hh%M")
     
 #Create the global config file :
-generate_file = DIRECTORIE+ "/" + "ALL_SOURCE_STATUS_"  + day + '.txt'
+generate_file = DIRECTORY+ "/" + "ALL_SOURCE_STATUS_"  + day + '.txt'
 context['generate_status_file'] = generate_file
 
 f = open(generate_file, "w")

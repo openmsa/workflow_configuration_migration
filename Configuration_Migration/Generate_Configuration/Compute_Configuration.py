@@ -2,6 +2,7 @@ import json
 import copy
 import typing
 import os
+import os.path
 from msa_sdk import constants
 from msa_sdk.order import Order
 from msa_sdk.variables import Variables
@@ -18,6 +19,9 @@ dev_var = Variables()
 context = Variables.task_call(dev_var)
 
 DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
+#check if the folder  DIRECTORY exist, else create it
+if not os.path.isdir(DIRECTORY):
+ os.mkdir(DIRECTORY)
 
 ########### LOOP ON ALL GIVEN MS #############
 MS_list        = context['MS_list']  
@@ -80,11 +84,6 @@ if MS_list:
 
 
 context['generate_file'] = DIRECTORY+ "/" + "ALL_MS_"  + day + '.txt'
-
-#check if the folder  DIRECTORY exist, else create it
-if not os.path.isdir(DIRECTORY):
- os.mkdir(DIRECTORY)
-
 
 MSA_API.task_success('DONE: update the interfaces names and compute data from '+ context['data_conversion_pattern_file'], context, True)
 

@@ -17,6 +17,9 @@ dev_var = Variables()
 
 context = Variables.task_call(dev_var)
 DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
+#check if the folder  DIRECTORY exist, else create it
+if not os.path.isdir(DIRECTORY):
+ os.mkdir(DIRECTORY)
 
 timeout = 3600
 
@@ -180,7 +183,6 @@ if MS_list:
 context['link'] = links 
 
 #Create the global config file :
-
 f = open(context['generate_file'], "w")
 f.write(full_message)
 f.close()
