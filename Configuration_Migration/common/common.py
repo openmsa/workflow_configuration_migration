@@ -59,57 +59,6 @@ def printTable(myDict):
   return df.to_string()
 
 #########################################################
-# Function: Parse all MS values recursively for the given field
-def data_find_migrate_recursive(orig_field_name, fields, ms_newvalues):
-  if isinstance(fields, typing.List) and fields:
-    field = fields[0]
-    fields.pop(0)
-  else:
-    field = fields  #string
-  if field:
-    if isinstance(ms_newvalues, dict):
-      for  key, value1 in ms_newvalues.items():
-        if isinstance(value1, dict):
-          if value1.get(field):
-             value = value1[field]
-             if isinstance(value, dict):
-               data_find_migrate_recursive(orig_field_name, copy.deepcopy(fields), value1[field]) 
-             else:
-               if value :
-                 context['Filter_'+orig_field_name+'_field_values'][value] = ''
-  return 'not found'
-
-#########################################################
-# Function: Parse all MS values recursivly for the given field
-def change_interfaces_names_recursif(source_field, fields, ms_newvalues, new_interfaces_names, new_interfaces_names_clean):
-  if isinstance(fields, typing.List) and fields:
-    field = fields[0]
-    fields.pop(0)
-  else:
-    field = fields  #string
-    
-  if field:
-    if isinstance(ms_newvalues, dict):
-      if field == 'KEY':
-        for old_interface_name, new_interface_name in new_interfaces_names_clean.items():
-          if ms_newvalues.get(old_interface_name):
-            ms_newvalues[new_interface_name] = ms_newvalues[old_interface_name]
-            del ms_newvalues[old_interface_name] 
-      else: 
-        for  key, value1 in ms_newvalues.items():
-          if isinstance(value1, dict):
-            if value1.get(field):
-               value = value1[field]
-               if isinstance(value, dict):
-                 change_interfaces_names_recursif(source_field, copy.deepcopy(fields), value1[field], new_interfaces_names, new_interfaces_names_clean) 
-               else:
-                 if value :
-                   if new_interfaces_names.get(value):
-                     ms_newvalues[key][field] = new_interfaces_names[value]
-
-  return 'not found'
-
-#########################################################
 # Function: Parse all MS values recursivly for the given field
 def find_all_ip_in_subnet(interface_name, ipv4_address, ipv4_mask, interfaces_IP_available):
   if ipv4_address and ipv4_mask:
