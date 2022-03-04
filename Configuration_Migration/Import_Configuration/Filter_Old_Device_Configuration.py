@@ -39,9 +39,7 @@ def data_find_migrate_recursif(destination_full, fields, ms_newvalues):
           if value1.get(field):
              value = value1[field]
              if isinstance(value, dict):
-
                data_find_migrate_recursif(destination_full, copy.deepcopy(fields), value1[field]) 
-
              else:
                if value :
                  if not context.get('Filter_keep_'+destination_full+'_field_values'):
@@ -158,7 +156,6 @@ if MS_list_string:
             #  context['Filter_keep_'+destination_full+'_field_values'] = {}
             if not context.get(destination_MS_Name+'_values'):
               context[destination_MS_Name+'_values'] = {}           
-
 
   if destination_MS_Name and destination_field_name:
     #Remove old unsed values :

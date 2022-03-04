@@ -20,10 +20,7 @@ context = Variables.task_call(dev_var)
 subtenant_ref = context["UBIQUBEID"]
 subtenant_id = context["UBIQUBEID"][4:]
 
-
 timeout = 10800
-
-
 
 device_id_full = context['source_device_id_full']
 device_id      = device_id_full[3:]

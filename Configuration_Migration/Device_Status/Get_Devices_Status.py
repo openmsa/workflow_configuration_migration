@@ -1,7 +1,6 @@
 import json
 import typing
 import os
-import time
 
 import os.path
 
@@ -40,12 +39,10 @@ timeout = 3600
 
 #########################################################
 # Function: Run the MS import and store the result
-
 def run_microservice_import():
   global ms_to_run, previous_ms_to_run, MS_list_run, previous_ms_data, full_message, params, timeout, parameter1_to_give_to_ms, object_id,MS_list_not_run, nb_ms_to_run, device_id_full, dest
 
   nb_ms_to_run = nb_ms_to_run + 1 
-
 
   if ms_to_run != previous_ms_to_run :
     previous_ms_to_run = ms_to_run
@@ -77,16 +74,9 @@ def run_microservice_import():
       if 'An update is already running' in wo_newparams:
         MSA_API.task_error('SMS ERROR: on device '+device_id_full+' can not run MS '+ ms_to_run + ' : '+ str(wo_newparams) , context, True)
     MS_list_not_run[ms_to_run]=1
-       
-start_sec  = time.time()            
-nb_ms_to_run = 0   
-         
-
  
 start_sec  = time.time()            
 nb_ms_to_run = 0   
-         
-
 
 #read import_WF_parameters_into_MS.txt file
 wf_path = os.path.dirname(__file__)
@@ -163,7 +153,6 @@ for  dest, device_id_full in devices.items():
   MS_list_run = {}
   MS_list_not_run = {}
 
-
   if all_ms_attached:
     for full_ms, MS in all_ms_attached.items():
       if Path(full_ms).stem:
@@ -236,7 +225,6 @@ for  dest, device_id_full in devices.items():
                          values_to_send[field1_value] = new_value
                          
               # values_to_send: { {  "object_id": "TRIBUNAL-JUSTICA",  "ip_bgp_neighbor": "187.93.7.58" },{"object_id": "TRIBUNAL-JUSTICA"...
-
               #context['Status_'+full_source_field+'_field_values333'] = values_to_send              
 
 
@@ -252,15 +240,11 @@ for  dest, device_id_full in devices.items():
                 params            = {}
                 params[ms_to_run] = obj 
                 # Run the MS import and store the result
-
                 run_microservice_import()
-
-
 
             elif ms_source == 'None' and ms_to_run:
               #Run IMPORT for the give MS to update the DB
               ms_input = {}
-
               #ms_input['test'] = 'test'
               obj = {"":ms_input}  
               #obj['test'] = ms_input  
@@ -284,7 +268,7 @@ for  dest, device_id_full in devices.items():
   else:
     MS_list_not_run = ''  
       
-      
+
 now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%Hh%M")
     
@@ -301,10 +285,7 @@ end_sec  = time.time()
 exec_sec = int(end_sec - start_sec) 
    
 if MS_list_not_run:    
-
-
   MSA_API.task_success('DONE in '+str(exec_sec)+' sec: for devices status for ' + ' and '.join(devices.keys()) + ', but can not get status for (' + MS_list_not_run + ') but get the status for ('+MS_list_run+') run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
-
 else:
   MSA_API.task_success('DONE in '+str(exec_sec)+' sec: Get Status for ' + ' and '.join(devices.keys()) + '  ('+MS_list_run+'), run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
 

@@ -109,7 +109,6 @@ if MS_To_Run:
 
         #obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
         obmf.command_call(command, 0, params, timeout)  #mode=2 :  Apply to device and in DB
-   
         response = json.loads(obmf.content)
         #context[ MS + '_rollback_generate_response'] = response
         # bgp_vrf_generate_response": {
@@ -141,7 +140,6 @@ if MS_To_Run:
              MSA_API.task_error('Can not run '+command+' on MS: '+ MS + ', response='+ str(response) , context, True)
     else:
       ms_not_attached_destination_device.append(MS)
-    
 
 #Create the global rollback generate file :
 now = datetime.now() # current date and time
@@ -157,6 +155,3 @@ if ms_not_attached_destination_device:
   MSA_API.task_success('Warning , some MS ('+';'.join(ms_not_attached_destination_device)+') was not found for destination device :'+context['destination_device_id']+', other MS run delete part successfully ('+';'.join(MS_rollback)+') cf '+file, context, True)
 else:
   MSA_API.task_success('Good, all MS ('+', '.join(MS_To_Run)+') run delete part for DeviceId:'+context['destination_device_id']+' successfully cf '+file , context, True)
-
-
-
