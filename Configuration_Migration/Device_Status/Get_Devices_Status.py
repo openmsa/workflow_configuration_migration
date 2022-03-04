@@ -128,7 +128,7 @@ for  dest, device_id_full in devices.items():
   all_ms_attached = json.loads(all_ms_attached)
   if all_ms_attached.get("microserviceUris"):
     all_ms_attached = all_ms_attached["microserviceUris"] 
-  context['MS_attached source device_id' + device_id + ' : '] = all_ms_attached
+  #context['MS_attached source device_id' + device_id + ' : '] = all_ms_attached
   #all_ms_attached = {"id" : 44, ..."microserviceUris" : { "CommandDefinition/LINUX/CISCO_IOS_emu  },  "CommandDefinition/LINUX/CISCO_IOS_emulation/bgp_vrf.xml" : {  "name" : "bgp_vrf",   "groups" : [ "EMULATION", "CISCO", "IOS" ].....
   MS_list = []
   MS_list_run = {}

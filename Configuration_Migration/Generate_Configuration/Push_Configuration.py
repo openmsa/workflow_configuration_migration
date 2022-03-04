@@ -61,7 +61,7 @@ MS_list_destination_order = {}
 all_order = {}
 if all_ms_attached.get("microserviceUris"):
   all_ms_attached = all_ms_attached["microserviceUris"] 
-  context[ 'MS_attached destination device_id' + device_id + ' : '] = all_ms_attached
+  #context[ 'MS_attached destination device_id' + device_id + ' : '] = all_ms_attached
   # all_ms_attached = {        "CommandDefinition/LINUX/CISCO_IOS_XR_emulation/address_family.xml": {"name": "address_family","groups": ["EMULATION","CISCO", "IOS"],"order": 0,"importRank": 10},
   
   if all_ms_attached:
