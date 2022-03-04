@@ -13,7 +13,7 @@ dev_var = Variables()
 dev_var.add('rollback_generate_file')
 context = Variables.task_call(dev_var)
 
-DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
+DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
 
 timeout = 3600
 
@@ -146,7 +146,7 @@ if MS_To_Run:
 #Create the global rollback generate file :
 now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%Hh%M")
-file =   DIRECTORIE + "/RollBack_generate_"  + day + '.txt'
+file =   DIRECTORY + "/RollBack_generate_"  + day + '.txt'
 context['rollback_generate_file'] = file
 f = open(file, "w")
 f.write(full_message)
