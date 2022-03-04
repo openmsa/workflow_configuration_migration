@@ -7,5 +7,12 @@ dev_var.add('push_to_device')
 
 context = Variables.task_call(dev_var)
 
+push_to_device = context['push_to_device']
+
+if push_to_device == "false":
+  MSA_API.task_error('You should first valide the configuration file by clicking on previous checkbox (Are you shure to push on Cisco device, simulation file is verifed ?) for device  '+context['destination_device_id'], context, True)
+
+context['push_to_device'] = "false"
+
 MSA_API.task_success('DONE', context, True)
 print(ret)

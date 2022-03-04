@@ -2,6 +2,7 @@ import json
 import typing
 import os
 import copy
+import sys
 
 from pathlib import Path
 from msa_sdk import constants
@@ -9,16 +10,21 @@ from msa_sdk.order import Order
 from msa_sdk.conf_profile import ConfProfile
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
-dev_var = Variables()
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from common.common import *
 
 dev_var = Variables()
 
 context = Variables.task_call(dev_var)
+device_id_full = context['source_device_id_full']
 
+MS_list_string        = context['MS_list']  
 
 #########################################################
 # Function: Parse all MS values recursivly for the given field
-def change_interfaces_names_recursif(source_field, fields, ms_newvalues, new_interfaces_names, new_interfaces_names_clean):
+def change_interfaces_names_recursive(source_field, fields, ms_newvalues, new_interfaces_names, new_interfaces_names_clean):
   if isinstance(fields, typing.List) and fields:
     field = fields[0]
     fields.pop(0)
@@ -38,15 +44,14 @@ def change_interfaces_names_recursif(source_field, fields, ms_newvalues, new_int
             if value1.get(field):
                value = value1[field]
                if isinstance(value, dict):
-                 change_interfaces_names_recursif(source_field, copy.deepcopy(fields), value1[field], new_interfaces_names, new_interfaces_names_clean) 
+                 change_interfaces_names_recursive(source_field, copy.deepcopy(fields), value1[field], new_interfaces_names, new_interfaces_names_clean) 
                else:
                  if value :
                    if new_interfaces_names.get(value):
                      ms_newvalues[key][field] = new_interfaces_names[value]
 
   return 'not found'
-  
-  
+
 MS_list_string        = context['MS_list']  
 
 ############# Get new interfaces name from context['interfaces']
@@ -104,7 +109,7 @@ if MS_list_string:
             fields = orig_field_name.split('.0.')
             context['Filter_'+orig_field_name+'_field_values'] = {}
             ## Find all source values
-            change_interfaces_names_recursif(orig_MS_Name+'_'+orig_field_name,fields, context[orig_MS_Name+'_values'], new_interfaces_names, new_interfaces_names_clean) 
+            change_interfaces_names_recursive(orig_MS_Name+'_'+orig_field_name,fields, context[orig_MS_Name+'_values'], new_interfaces_names, new_interfaces_names_clean) 
             
           else:
             if not context.get(orig_MS_Name+'_values'):

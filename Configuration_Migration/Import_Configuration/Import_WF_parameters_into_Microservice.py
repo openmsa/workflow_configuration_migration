@@ -73,7 +73,7 @@ if import_liste_list:
           wf_fields[key]['destination_MS_Name'] = destination_MS_Name
           wf_fields[key]['destination_field_name'].append(destination_field_name)
 
-context['import_wf_fields'] =  wf_fields
+#context['import_wf_fields'] =  wf_fields
 
 '''     "import_wf_fields": {
         "interfaces|xconnect": {
@@ -139,7 +139,7 @@ for source_key,item  in wf_fields.items():
     if context.get(first_wf_field) and context[first_wf_field]:
       if item['second_level']:
         for context_val in context[first_wf_field]:
-          context['import_wf_'+first_wf_field+'_count'+str(count)] = context_val
+          #context['import_wf_'+first_wf_field+'_count'+str(count)] = context_val
           ''' context_val =>
               "import_wf_interfaces_count0": {
               "source": "Serial2/3/0.1/3/6/2:0",

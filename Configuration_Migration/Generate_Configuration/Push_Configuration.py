@@ -7,23 +7,27 @@ from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 from msa_sdk.conf_profile import ConfProfile
 from pathlib import Path
+import sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from common.common import *
 
 dev_var = Variables()
 
 context = Variables.task_call(dev_var)
 
-DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
-
+DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
+#check if the folder  DIRECTORY exist, else create it
+if not os.path.isdir(DIRECTORY):
+ os.mkdir(DIRECTORY)
+ 
 timeout = 3600
 
-push_to_device = context['push_to_device']
-
-if push_to_device == "false":
-  MSA_API.task_error('You should first valide the configuration file by clicking on previous checkbox (Are you shure to push on Cisco device, simulation file is verifed ?) for device  '+context['destination_device_id'], context, True)
-
-context['push_to_device'] = "false"
-
+subtenant_ref = context["UBIQUBEID"]
+subtenant_id = context["UBIQUBEID"][4:]
 #get device_id from context
+device_id_full = context['destination_device_id']
 device_id = context['destination_device_id'][3:]
 # instantiate device object
 obmf  = Order(device_id=device_id)
@@ -44,7 +48,9 @@ deployment_settings_id = obmf.command_get_deployment_settings_id()
 context['destination_deployment_settings_id'] = deployment_settings_id
 
 if not deployment_settings_id:
-  MSA_API.task_error('There is no deployement setting for the Cisco device '+context['destination_device_id'], context, True)
+  msg = 'ERROR: There is no deployement setting for the Cisco device '+device_id_full
+  create_event(device_id_full, "1", "MIGRATION", "CONFIG",  subtenant_ref, subtenant_id, msg)
+  MSA_API.task_error(msg, context, True)
 
 #Get all microservices attached to this deployment setting.
 confprofile  = ConfProfile(deployment_settings_id)
@@ -55,7 +61,7 @@ MS_list_destination_order = {}
 all_order = {}
 if all_ms_attached.get("microserviceUris"):
   all_ms_attached = all_ms_attached["microserviceUris"] 
-  context[ 'MS_attached destination device_id' + device_id + ' : '] = all_ms_attached
+  #context[ 'MS_attached destination device_id' + device_id + ' : '] = all_ms_attached
   # all_ms_attached = {        "CommandDefinition/LINUX/CISCO_IOS_XR_emulation/address_family.xml": {"name": "address_family","groups": ["EMULATION","CISCO", "IOS"],"order": 0,"importRank": 10},
   
   if all_ms_attached:
@@ -153,19 +159,25 @@ if MS_list:
                    
                 
             #Add MS import Skip result link:
-            MS_file = DIRECTORIE + '/' + MS + '.log'
+            MS_file = DIRECTORY + '/' + MS + '.log'
             link={}
             link['MicroService'] = MS + '_Import_parse'
             link['file_link']    = MS_file       
             links.append(link)
 
           else:
-            MSA_API.task_error('Can not run create on MS: '+ MS + ', response='+ str(response) , context, True)
+            msg = 'ERROR: Can not run create on microservice: '+ MS + ', response='+ str(response)
+            create_event(device_id_full, "1", "MIGRATION", "CONFIG",  subtenant_ref, subtenant_id, msg)
+            MSA_API.task_error(msg , context, True)
         else: 
           if 'wo_newparams' in response:
-            MSA_API.task_error('Can not run create on MS: '+ MS + ', response='+ str(response.get('wo_newparams')), context, True)
+            msg = 'ERROR: Can not run create on microservice: '+ MS + ', response='+ str(response.get('wo_newparams'))
+            create_event(device_id_full, "1", "MIGRATION", "CONFIG",  subtenant_ref, subtenant_id, msg)
+            MSA_API.task_error(msg, context, True)
           else:
-             MSA_API.task_error('Can not run create on MS: '+ MS + ', response='+ str(response) , context, True)
+             msg = 'ERROR: Can not run create on microservice: '+ MS + ', response='+ str(response)
+             create_event(device_id_full, "1", "MIGRATION", "CONFIG", subtenant_ref, subtenant_id, msg)
+             MSA_API.task_error(msg , context, True)
     else:
       ms_not_attached_destination_device.append(MS)
     
@@ -178,9 +190,9 @@ f.write(full_message)
 f.close()
 
 if ms_not_attached_destination_device:
-  MSA_API.task_success('Warning , some MS ('+';'.join(ms_not_attached_destination_device)+') was not found for destination device :'+context['destination_device_id']+', other MS imported successfully ('+';'.join(MS_imported)+')', context, True)
+  MSA_API.task_success('WARNING , some MS ('+';'.join(ms_not_attached_destination_device)+') was not found for destination device :'+context['destination_device_id']+', other MS imported successfully ('+';'.join(MS_imported)+')', context, True)
 else:
-  MSA_API.task_success('Good, all MS ('+MS_list+') imported for DeviceId:'+context['destination_device_id'], context, True)
+  MSA_API.task_success('DONE, all MS ('+MS_list+') imported for DeviceId:'+context['destination_device_id'], context, True)
 
 
 

@@ -38,7 +38,7 @@ if os.path.isfile(file):
   data_list = import_liste.split('\n')
   data_list = [i for i in data_list if i] #remove empty element
   MS_To_Run = []
-  context['test_import'] = data_list
+
   if data_list:
     for line in data_list:
       if (not line.startswith('#')) and line.strip():
@@ -49,7 +49,7 @@ else:
 
 command = 'DELETE'
  
-links =[]
+
 MS_source_path = context['MS_source_path']
 MS_rollback =[]
 
@@ -70,7 +70,8 @@ MS_To_Run_destination_order = {}
 all_order = {}
 if all_ms_attached.get("microserviceUris"):
   all_ms_attached = all_ms_attached["microserviceUris"] 
-  context[ 'MS_attached destination device_id' + device_id + ' : '] = all_ms_attached
+  #context[ 'MS_attached destination device_id' + device_id + ' : '] = all_ms_attached
+
   # all_ms_attached = {        "CommandDefinition/LINUX/CISCO_IOS_XR_emulation/address_family.xml": {"name": "address_family","groups": ["EMULATION","CISCO", "IOS"],"order": 0,"importRank": 10},
   
   if all_ms_attached:
@@ -104,12 +105,13 @@ if MS_To_Run:
       if config:
         params = dict()
         params[MS] = config
-        context[MS + '_rollback__export_params'] = params
+         #context[MS + '_rollback__export_params'] = params
+
         #obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
         obmf.command_call(command, 0, params, timeout)  #mode=2 :  Apply to device and in DB
    
         response = json.loads(obmf.content)
-        context[ MS + '_rollback_generate_response'] = response
+        #context[ MS + '_rollback_generate_response'] = response
         # bgp_vrf_generate_response": {
           # "entity": {
               # "commandId": 0,
@@ -140,7 +142,6 @@ if MS_To_Run:
     else:
       ms_not_attached_destination_device.append(MS)
     
-context['link'] = links 
 
 #Create the global rollback generate file :
 now = datetime.now() # current date and time
