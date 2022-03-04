@@ -53,7 +53,7 @@ def run_microservice_import():
     full_message = full_message + '\n\n############# For '+ dest + ' device,  MS '+ ms_to_run +  ' ############# \n'
   obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
   response = json.loads(obmf.content)
-  context['ms_status_import_response_'+ms_to_run] = response #   "message ="{\"arp_summary\":{\"274f9f441f0dd0bc3ab2af14ef7bc6d5\":{\"total\":\"7\",\"incomplete\":\"0\"}}}",
+  #context['ms_status_import_response_'+ms_to_run] = response #   "message ="{\"arp_summary\":{\"274f9f441f0dd0bc3ab2af14ef7bc6d5\":{\"total\":\"7\",\"incomplete\":\"0\"}}}",
 
   if (response.get("status") and response["status"] == "OK") or (response.get("wo_status") and response["wo_status"] == "OK"):
      if response.get("status"):
@@ -227,7 +227,7 @@ for  dest, device_id_full in devices.items():
                          values_to_send[field1_value] = new_value
                          
               # values_to_send: { {  "object_id": "TRIBUNAL-JUSTICA",  "ip_bgp_neighbor": "187.93.7.58" },{"object_id": "TRIBUNAL-JUSTICA"...
-              context['Status_'+full_source_field+'_field_values333'] = values_to_send              
+              #context['Status_'+full_source_field+'_field_values333'] = values_to_send              
 
               for key1, values in values_to_send.items():
                 ms_input = {}

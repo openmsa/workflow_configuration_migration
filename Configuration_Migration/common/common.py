@@ -59,13 +59,26 @@ def printTable(myDict):
   return df.to_string()
 
 #########################################################
-# Function: Parse all MS values recursivly for the given field
-def find_all_ip_in_subnet(interface_name, ipv4_address, ipv4_mask, interfaces_IP_available):
+# Function: Parse all MS values recursivly for subnet ipv4
+def find_all_ip_in_subnet_ipv4(interface_name, ipv4_address, ipv4_mask, interfaces_IP_available):
   if ipv4_address and ipv4_mask:
     # convert ipv4 subnet mask to cidr notation 
     len = ipaddress.IPv4Network('0.0.0.0/'+ipv4_mask).prefixlen  #24 
     cidr = ipv4_address+'/'+str(len)
     context['cidr_'+ipv4_address+'/'+ipv4_mask ] =  cidr    # "cidr_": "200.207.251.229/30"
+    ips = ipaddress.ip_network(cidr, strict=False)
+    ip_list = [str(ip) for ip in ips]    
+    for ip in ip_list:
+      interfaces_IP_available[str(ip)] = interface_name
+    
+  return interfaces_IP_available
+  
+#########################################################
+# Function: Parse all MS values recursivly for given subnet ipv6
+def find_all_ip_in_subnet_ipv6(interface_name, ipv6_address, ipv6_prefix, interfaces_IP_available):
+  if ipv6_address and ipv6_prefix:
+    cidr = ipv6_address+'/'+str(ipv6_prefix)
+    context['cidr_'+ipv6_address+'/'+ipv6_prefix ] =  cidr    # "cidr_": "200.207.251.229/30"
     ips = ipaddress.ip_network(cidr, strict=False)
     ip_list = [str(ip) for ip in ips]    
     for ip in ip_list:

@@ -48,7 +48,6 @@ else:
 
 command = 'DELETE'
  
-links =[]
 MS_source_path = context['MS_source_path']
 MS_rollback =[]
 
@@ -103,12 +102,12 @@ if MS_To_Run:
       if config:
         params = dict()
         params[MS] = config
-        context[MS + '_rollback__export_params'] = params
+        #context[MS + '_rollback__export_params'] = params
         #obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
         obmf.command_call(command, 0, params, timeout)  #mode=2 :  Apply to device and in DB
    
         response = json.loads(obmf.content)
-        context[ MS + '_rollback_generate_response'] = response
+        #context[ MS + '_rollback_generate_response'] = response
         # bgp_vrf_generate_response": {
           # "entity": {
               # "commandId": 0,
@@ -139,7 +138,6 @@ if MS_To_Run:
     else:
       ms_not_attached_destination_device.append(MS)
     
-context['link'] = links 
 
 #Create the global rollback generate file :
 now = datetime.now() # current date and time
