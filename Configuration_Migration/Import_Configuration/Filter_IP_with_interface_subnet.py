@@ -18,11 +18,9 @@ from common.common import *
 dev_var = Variables()
 
 context = Variables.task_call(dev_var)
- 
 
 MS_list_string        = context['MS_list']  
-    
-    
+
 #read filter file
 wf_path = os.path.dirname(__file__)
 file =  wf_path+'/../'  + context['data_filter_ip_file']   # filter_interface_ip.txt
@@ -69,7 +67,6 @@ if context.get('interface_values'):
             ipv6_address = interface_value["ipv6_address"]
             ipv6_prefix = interface_value["ipv6_prefix"]
             interfaces_IP_available = find_all_ip_in_subnet_ipv6(interface_full_name+'_'+key, ipv6_address, ipv6_prefix, interfaces_IP_available)
-            
 
 context['interfaces_IP_available'] = interfaces_IP_available      
 

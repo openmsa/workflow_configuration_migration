@@ -37,9 +37,7 @@ def data_find_migrate_recursive(orig_field_name, fields, ms_newvalues):
           if value1.get(field):
              value = value1[field]
              if isinstance(value, dict):
-
-               data_find_migrate_recursive(orig_field_name, copy.deepcopy(fields), value1[field]) 
-
+               data_find_migrate_recursif(destination_full, copy.deepcopy(fields), value1[field]) 
              else:
                if value :
                  if not context.get('Filter_keep_'+destination_full+'_field_values'):
@@ -107,6 +105,8 @@ context['MS_to_filter'] = {}
 ######### IT WILL put migrate to 1 to all destination fields values 
 # example for "interface|vrf_name|ip_vrf|object_id"  we keep all MS values for ip_vrf where the object_id is equal to vrf_name in interface MS  and we remove all other MS values
 
+previous_destination_MS_Name    = ''
+previous_destination_field_name = ''
 
 previous_destination_MS_Name    = ''
 previous_destination_field_name = ''
@@ -147,15 +147,12 @@ if MS_list_string:
             context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
             ## Find all source values
-
             data_find_migrate_recursive(orig_field_name, fields,context[orig_MS_Name+'_values'])
-
           else:
             #if not context.get(orig_MS_Name+'_values'):
             #  context['Filter_keep_'+destination_full+'_field_values'] = {}
             if not context.get(destination_MS_Name+'_values'):
               context[destination_MS_Name+'_values'] = {}           
-
 
   if destination_MS_Name and destination_field_name:
     #Remove old unsed values :

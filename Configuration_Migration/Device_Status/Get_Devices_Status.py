@@ -77,7 +77,6 @@ def run_microservice_import():
  
 start_sec  = time.time()            
 nb_ms_to_run = 0   
-         
 
 #read import_WF_parameters_into_MS.txt file
 wf_path = os.path.dirname(__file__)
@@ -154,7 +153,6 @@ for  dest, device_id_full in devices.items():
   MS_list_run = {}
   MS_list_not_run = {}
 
-
   if all_ms_attached:
     for full_ms, MS in all_ms_attached.items():
       if Path(full_ms).stem:
@@ -229,6 +227,7 @@ for  dest, device_id_full in devices.items():
               # values_to_send: { {  "object_id": "TRIBUNAL-JUSTICA",  "ip_bgp_neighbor": "187.93.7.58" },{"object_id": "TRIBUNAL-JUSTICA"...
               #context['Status_'+full_source_field+'_field_values333'] = values_to_send              
 
+
               for key1, values in values_to_send.items():
                 ms_input = {}
                 object_id =''
@@ -241,9 +240,7 @@ for  dest, device_id_full in devices.items():
                 params            = {}
                 params[ms_to_run] = obj 
                 # Run the MS import and store the result
-
                 run_microservice_import()
-
 
             elif ms_source == 'None' and ms_to_run:
               #Run IMPORT for the give MS to update the DB
@@ -271,7 +268,7 @@ for  dest, device_id_full in devices.items():
   else:
     MS_list_not_run = ''  
       
-      
+
 now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%Hh%M")
     
@@ -288,9 +285,7 @@ end_sec  = time.time()
 exec_sec = int(end_sec - start_sec) 
    
 if MS_list_not_run:    
-
   MSA_API.task_success('DONE in '+str(exec_sec)+' sec: for devices status for ' + ' and '.join(devices.keys()) + ', but can not get status for (' + MS_list_not_run + ') but get the status for ('+MS_list_run+') run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
-
 else:
   MSA_API.task_success('DONE in '+str(exec_sec)+' sec: Get Status for ' + ' and '.join(devices.keys()) + '  ('+MS_list_run+'), run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
 

@@ -39,7 +39,6 @@ if os.path.isfile(file):
   file1.close()
   data_conversion_list = data_conversion.split('\n')
   data_conversion_list = [i for i in data_conversion_list if i] #remove empty element
-
 else:
   MSA_API.task_error('Can not open file "' + file + '"', context, True)
   data_conversion_list = ''    

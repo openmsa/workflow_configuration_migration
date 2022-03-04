@@ -50,7 +50,6 @@ if not deployment_settings_id:
   msg = 'ERROR: There is no deployement setting for the managed entity '+device_id_full
   create_event(device_id_full, "1", "MIGRATION", "GEN_CONFIG",  subtenant_ref, subtenant_id, msg)
   MSA_API.task_error(msg, context, True)
-
   
 #Get all microservices attached to this deployment setting.
 confprofile  = ConfProfile(deployment_settings_id)
