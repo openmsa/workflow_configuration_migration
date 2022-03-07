@@ -17,7 +17,6 @@ dev_var = Variables()
 
 context = Variables.task_call(dev_var)
 
-DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
 #check if the folder  DIRECTORY exist, else create it
 if not os.path.isdir(DIRECTORY):
  os.mkdir(DIRECTORY)

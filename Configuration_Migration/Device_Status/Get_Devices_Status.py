@@ -29,7 +29,7 @@ subtenant_ref = context["UBIQUBEID"]
 subtenant_id = context["UBIQUBEID"][4:]
 
 context['real_or_simul_device'] = 'real'
-DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
+
 #check if the folder  DIRECTORY exist, else create it
 if not os.path.isdir(DIRECTORY):
  os.mkdir(DIRECTORY)
