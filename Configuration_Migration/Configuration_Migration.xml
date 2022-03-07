@@ -259,7 +259,7 @@
     </task>
   </process>
   <process name="Import_Simulation_Configuration">
-    <displayName>Re-import Configuration from Emulated Device</displayName>
+    <displayName>Re-import Configuration from Emulated Device and Re-generate</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
@@ -299,17 +299,7 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Insert workflow parameters into microservices</displayName>
     </task>
-  </process>
-  <process name="Generate_Configuration">
-    <displayName>Generate Configuration</displayName>
-    <type>UPDATE</type>
-    <visibility>5</visibility>
-    <allowSchedule/>
-    <task name="Get_Generate_Configuration_Parameters.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
-      <displayName>Get Parameter</displayName>
-    </task>
-    <task name="Compute_Configuration.py">
+        <task name="Compute_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
       <displayName>Compute Configuration</displayName>
     </task>

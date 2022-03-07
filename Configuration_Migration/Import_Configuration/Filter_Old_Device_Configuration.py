@@ -23,8 +23,10 @@ device_id_full = context['source_device_id_full']
 
 
 #########################################################
-# Function: Parse all MS values recursively for the given field
-def data_find_migrate_recursive(orig_field_name, fields, ms_newvalues):
+
+# Function: Parse all MS values recursivly for the given field
+def data_find_migrate_recursif(destination_full, fields, ms_newvalues):
+
   if isinstance(fields, typing.List) and fields:
     field = fields[0]
     fields.pop(0)
@@ -105,8 +107,6 @@ context['MS_to_filter'] = {}
 ######### IT WILL put migrate to 1 to all destination fields values 
 # example for "interface|vrf_name|ip_vrf|object_id"  we keep all MS values for ip_vrf where the object_id is equal to vrf_name in interface MS  and we remove all other MS values
 
-previous_destination_MS_Name    = ''
-previous_destination_field_name = ''
 
 previous_destination_MS_Name    = ''
 previous_destination_field_name = ''
@@ -147,7 +147,10 @@ if MS_list_string:
             context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
             ## Find all source values
-            data_find_migrate_recursive(orig_field_name, fields,context[orig_MS_Name+'_values'])
+
+            data_find_migrate_recursif(destination_full, fields,context[orig_MS_Name+'_values'])
+
+
           else:
             #if not context.get(orig_MS_Name+'_values'):
             #  context['Filter_keep_'+destination_full+'_field_values'] = {}

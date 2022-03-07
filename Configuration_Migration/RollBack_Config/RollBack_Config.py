@@ -13,7 +13,7 @@ dev_var = Variables()
 dev_var.add('rollback_generate_file')
 context = Variables.task_call(dev_var)
 
-DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
+DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
 
 timeout = 3600
 
@@ -49,7 +49,7 @@ else:
 
 command = 'DELETE'
  
-links =[]
+
 MS_source_path = context['MS_source_path']
 MS_rollback =[]
 
@@ -70,7 +70,8 @@ MS_To_Run_destination_order = {}
 all_order = {}
 if all_ms_attached.get("microserviceUris"):
   all_ms_attached = all_ms_attached["microserviceUris"] 
-  context[ 'MS_attached destination device_id' + device_id + ' : '] = all_ms_attached
+  #context[ 'MS_attached destination device_id' + device_id + ' : '] = all_ms_attached
+
   # all_ms_attached = {        "CommandDefinition/LINUX/CISCO_IOS_XR_emulation/address_family.xml": {"name": "address_family","groups": ["EMULATION","CISCO", "IOS"],"order": 0,"importRank": 10},
   
   if all_ms_attached:
@@ -104,9 +105,12 @@ if MS_To_Run:
       if config:
         params = dict()
         params[MS] = config
+         #context[MS + '_rollback__export_params'] = params
+
         #obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
         obmf.command_call(command, 0, params, timeout)  #mode=2 :  Apply to device and in DB
         response = json.loads(obmf.content)
+        #context[ MS + '_rollback_generate_response'] = response
         # bgp_vrf_generate_response": {
           # "entity": {
               # "commandId": 0,
@@ -140,7 +144,7 @@ if MS_To_Run:
 #Create the global rollback generate file :
 now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%Hh%M")
-file =   DIRECTORIE + "/RollBack_generate_"  + day + '.txt'
+file =   DIRECTORY + "/RollBack_generate_"  + day + '.txt'
 context['rollback_generate_file'] = file
 f = open(file, "w")
 f.write(full_message)
