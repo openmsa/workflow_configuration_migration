@@ -15,6 +15,10 @@ import pandas as Pandas
 dev_var = Variables()
 context = Variables.task_call(dev_var)
 
+#Directory where the migration results files are stored:
+DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
+
+
 subtenant_ref = context["UBIQUBEID"]
 subtenant_id = context["UBIQUBEID"][4:]
 

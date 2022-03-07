@@ -8,12 +8,16 @@ from msa_sdk.msa_api import MSA_API
 from msa_sdk.conf_profile import ConfProfile
 from pathlib import Path
 from datetime import datetime
+import sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from common.common import *
 
 dev_var = Variables()
 dev_var.add('rollback_generate_file')
 context = Variables.task_call(dev_var)
 
-DIRECTORY = '/opt/fmc_repository/Datafiles/Migration_result'
 
 timeout = 3600
 
