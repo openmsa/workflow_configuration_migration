@@ -18,10 +18,9 @@ dev_var = Variables()
 context = Variables.task_call(dev_var)
 
 if not context.get('push_to_device'):
-  context['push_to_device'] = "false"
+  context['push_to_device'] = 'false'
 
 push_to_device = context['push_to_device']
-context['push_to_device'] = "false"        #reset value
 
 
 #check if the folder  DIRECTORY exist, else create it
@@ -38,6 +37,13 @@ device_id = device_id_full[3:]
 # instantiate device object
 obmf  = Order(device_id=device_id)
 
+if (context['real_device_source'] == 'false' or context['real_device_source'] == False) and (context['push_to_device']== 'true' or context['push_to_device']== True):
+  msg = 'ERROR: Before to push the configuration to real device '+device_id_full+', you should Import first the configuration from real device '+context['source_device_id']
+  create_event(device_id_full, "1", "MIGRATION", "GEN_CONFIG",  subtenant_ref, subtenant_id, msg)
+  context['push_to_device'] = 'false'        #reset value
+  MSA_API.task_error(msg, context, True)
+
+context['push_to_device'] = 'false'        #reset value
 
 MS_list        = context['MS_list']  
 MS_list        = MS_list.replace(' ;',';')     
@@ -93,7 +99,7 @@ context['MS_list_destination']  = MS_list_destination
 ms_not_attached_destination_device = []
 full_message = ''
 
-if push_to_device == "true" or push_to_device == True :
+if (push_to_device == 'true' or push_to_device == True):
   mode = 2  #mode=2 : Apply to device and in DB
 else:
   mode = 1  #mode=1 : Apply only in hte DB, not applied on the device
@@ -201,12 +207,12 @@ f.write(full_message)
 f.close()
 
 if ms_not_attached_destination_device:
-  if push_to_device == "true" or push_to_device == True :
+  if (push_to_device == 'true' or push_to_device == True):
     MSA_API.task_success('Applied to device, WARNING, some microservices ('+';'.join(ms_not_attached_destination_device)+') not found for destination device :'+device_id_full+', other microservice imported successfully ('+';'.join(MS_imported)+')', context, True)
   else:
     MSA_API.task_success('SIMULATED, WARNING , some microservices ('+';'.join(ms_not_attached_destination_device)+') not found for destination device :'+device_id_full+', other microservice imported successfully ('+';'.join(MS_imported)+')', context, True)
 else:
-  if push_to_device == "true" or push_to_device == True :
+  if (push_to_device == 'true' or push_to_device == True):
     MSA_API.task_success('Applied to device DONE, microservices ('+MS_list+') imported for managed entity: '+device_id_full, context, True)
   else:
     MSA_API.task_success('SIMULATED, DONE, microservices ('+MS_list+') imported for managed entity: '+device_id_full, context, True)

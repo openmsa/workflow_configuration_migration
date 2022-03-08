@@ -19,7 +19,7 @@ dev_var.add('rollback_generate_file')
 context = Variables.task_call(dev_var)
 
 push_to_device = context['push_to_device']
-context['push_to_device'] = "false"  #reset values
+context['push_to_device'] = 'false'  #reset values
 
 timeout = 3600
 
@@ -103,7 +103,7 @@ context['MS_To_Run_destination_RollBack']  = MS_To_Run_destination
 ms_not_attached_destination_device = []
 full_message = '############# ROLLBACK PART ############# \n'
 
-if push_to_device == "true" or push_to_device == True :
+if (push_to_device == 'true' or push_to_device == True):
   mode = 2  #mode=2 : Apply to device and in DB
 else:
   mode = 0  #mode=0 : not applied to device, no added to db
@@ -161,13 +161,13 @@ f.close()
 
 
 if ms_not_attached_destination_device:
-  if push_to_device == "true" or push_to_device == True :
+  if (push_to_device == 'true' or push_to_device == True):
     MSA_API.task_success('Applied to device, Warning , some MS ('+';'.join(ms_not_attached_destination_device)+') was not found for destination device :'+context['destination_device_id']+', other MS run delete part successfully ('+';'.join(MS_rollback)+') cf '+file, context, True)
   else:
     MSA_API.task_success('SIMULATED Warning , some MS ('+';'.join(ms_not_attached_destination_device)+') was not found for destination device :'+context['destination_device_id']+', other MS may run delete part successfully ('+';'.join(MS_rollback)+') cf '+file, context, True)
 
 else:
-  if push_to_device == "true" or push_to_device == True :
+  if (push_to_device == 'true' or push_to_device == True):
     MSA_API.task_success('Applied to device, Good, all MS ('+', '.join(MS_To_Run)+') run delete part for DeviceId:'+context['destination_device_id']+' successfully cf '+file , context, True)
   else:
     MSA_API.task_success('SIMULATED, Good, all MS ('+', '.join(MS_To_Run)+') run delete part for DeviceId:'+context['destination_device_id']+' successfully, new rollback generated file : '+file , context, True)
