@@ -16,6 +16,7 @@ dev_var.add('interfaces.0.pseudowire_class')
 dev_var.add('interfaces.0.gil')
 
 dev_var.add('enable_filter')
+dev_var.add('real_device_source')
 
 context = Variables.task_call(dev_var)
 
