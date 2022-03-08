@@ -11,6 +11,8 @@ from datetime import datetime
 dev_var = Variables()
 
 dev_var.add('destination_device_id')
+dev_var.add('push_to_device')
+
 
 context = Variables.task_call(dev_var)
 

@@ -253,7 +253,7 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
       <displayName>Compute Configuration</displayName>
     </task>
-    <task name="Generate_Configuration.py">
+    <task name="Push_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
       <displayName>Generate Configuration</displayName>
     </task>
@@ -299,11 +299,11 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Insert workflow parameters into microservices</displayName>
     </task>
-        <task name="Compute_Configuration.py">
+    <task name="Compute_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
       <displayName>Compute Configuration</displayName>
     </task>
-    <task name="Generate_Configuration.py">
+    <task name="Push_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
       <displayName>Generate Configuration</displayName>
     </task>
