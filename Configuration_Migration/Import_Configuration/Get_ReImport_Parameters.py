@@ -3,7 +3,7 @@ from msa_sdk.msa_api import MSA_API
 
 dev_var = Variables()
 
-dev_var.add('destination_device_id')
+#dev_var.add('destination_device_id')
 
 dev_var.add('interfaces.0.source')
 dev_var.add('interfaces.0.destination')
