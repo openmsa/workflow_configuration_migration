@@ -28,8 +28,6 @@ context = Variables.task_call(dev_var)
 subtenant_ref = context["UBIQUBEID"]
 subtenant_id = context["UBIQUBEID"][4:]
 
-context['real_or_simul_device'] = 'real'
-
 #check if the folder  DIRECTORY exist, else create it
 if not os.path.isdir(DIRECTORY):
  os.mkdir(DIRECTORY)
