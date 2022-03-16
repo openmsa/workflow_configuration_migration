@@ -9,62 +9,18 @@ from msa_sdk.order import Order
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 from datetime import datetime
+import sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from common.common import *
 
 dev_var = Variables()
 
 context = Variables.task_call(dev_var)
- 
- 
 
-#########################################################
-# Function: Parse all MS values recursivly for the given field
-def find_all_ip_in_subnet_ipv4(interface_name, ipv4_address, ipv4_mask, interfaces_IP_available):
-  if ipv4_address and ipv4_mask:
-    # convert ipv4 subnet mask to cidr notation 
-    len = ipaddress.IPv4Network('0.0.0.0/'+ipv4_mask).prefixlen  #24 
-    cidr = ipv4_address+'/'+str(len)
-    context['cidr_'+ipv4_address+'/'+ipv4_mask ] =  cidr    # "cidr_": "200.207.251.229/30"
-    ips = ipaddress.ip_network(cidr, strict=False)
-    ip_list = [str(ip) for ip in ips]    
-    for ip in ip_list:
-      interfaces_IP_available[str(ip)] = interface_name
-    
-  return interfaces_IP_available
- 
-#########################################################
-# Function: Parse all MS values recursivly for the given field
-def remove_bad_ip_values_recursif(orig_field_name, fields, ms_newvalues, interfaces_IP_available):
-  if isinstance(fields, typing.List) and fields:
-    field = fields[0]
-    fields.pop(0)
-  else:
-    field = fields  #string
-  if field:
-    if isinstance(ms_newvalues, dict):
-      ms_newvalues2 = copy.deepcopy(ms_newvalues) 
-      # We can not remove one element while iterating over it, so itirating on one copy ms_newvalues2
-      for  key, value1 in ms_newvalues2.items():
-      
-        if isinstance(value1, dict):
-          if value1.get(field):
-             value = value1[field]
-             if isinstance(value, dict):
-               remove_bad_ip_values_recursif(orig_field_name, copy.deepcopy(fields), ms_newvalues[key][field], interfaces_IP_available) 
-             else:
-               if value:
-                 match = re.match(r"^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$", value)
-                 if bool(match) and value not in interfaces_IP_available:
-                   #ms_newvalues[key][field]  = 'IP_TO_REMOVE for '+orig_field_name+ ', value='+value
-                   ms_newvalues.pop(key)  #remove parent value
-                 #else: 
-                   #ms_newvalues[key][field]  = 'OK TO KEEP for '+orig_field_name+ ', value='+value
-                 
-  return 'not found'
-    
- 
 MS_list_string        = context['MS_list']  
-    
-    
+
 #read filter file
 wf_path = os.path.dirname(__file__)
 file =  wf_path+'/../'  + context['data_filter_ip_file']   # filter_interface_ip.txt
@@ -77,6 +33,7 @@ if os.path.isfile(file):
   ip_data_filter_list = [i for i in ip_data_filter_list if i] #remove empty element
     
 else:
+  MSA_API.task_error('Can not open file "' + file + '"', context, True)
   ip_data_filter_list = ''    
   
 context['IP_data_filter'] = ip_data_filter_list
@@ -100,10 +57,16 @@ if context.get('interface_values'):
       if interface_full_name in source_interfaces_name_list:
         if interface_value.get("addresses"):
           addresses = interface_value["addresses"]
+          #IPV4 part :
           for key, address in addresses.items():
             ipv4_address = address["ipv4_address"]
             ipv4_mask    = address["ipv4_mask"]          
             interfaces_IP_available = find_all_ip_in_subnet_ipv4(interface_full_name+'_'+key, ipv4_address, ipv4_mask, interfaces_IP_available)
+          #IPV6 part :
+          if interface_value.get("ipv6_address") and interface_value.get("ipv6_prefix"):
+            ipv6_address = interface_value["ipv6_address"]
+            ipv6_prefix = interface_value["ipv6_prefix"]
+            interfaces_IP_available = find_all_ip_in_subnet_ipv6(interface_full_name+'_'+key, ipv6_address, ipv6_prefix, interfaces_IP_available)
 
 context['interfaces_IP_available'] = interfaces_IP_available      
 
@@ -116,7 +79,7 @@ if MS_list_string:
   if ip_data_filter_list:
     for line in ip_data_filter_list:
       if (not line.startswith('#')) and line.strip():
-        context['data_ip_filter_line'] = line
+        #context['data_ip_filter_line'] = line
         list = line.split('|')  # #MS_Name|field_name
         if len(list) > 1:
           MS_Name     = list[0]

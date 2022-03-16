@@ -1,6 +1,7 @@
+# This file get_devices_status.txt contains the list of MS to run to get the Device Status for the source device and for the destination device
 #
-# This  file contains the list of element where we should change the interface name
-# device source or destination|ms_source|ms_source_field1|ms_source_field2|MS_to_run|parameter1_to_give_to_MS|parameter2_to_give_to_MS
+#device source or destination|ms_source|ms_source_field1|ms_source_field2|MS_to_run|parameter1_to_give_to_MS|parameter2_to_give_to_MS
+#
 Source|interface|orig_object_id|None|interface_status|object_id|None
 Source|interface|subslot_num|interface_num|interface_power|subslot_num|interface_num
 Source|None|None|None|arp_summary|None|None

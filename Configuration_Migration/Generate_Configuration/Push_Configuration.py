@@ -7,27 +7,43 @@ from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 from msa_sdk.conf_profile import ConfProfile
 from pathlib import Path
+import sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from common.common import *
 
 dev_var = Variables()
 
 context = Variables.task_call(dev_var)
 
-DIRECTORIE = '/opt/fmc_repository/Datafiles/Migration_result'
-
-timeout = 3600
+if not context.get('push_to_device'):
+  context['push_to_device'] = 'false'
 
 push_to_device = context['push_to_device']
 
-if push_to_device == "false":
-  MSA_API.task_error('You should first valide the configuration file by clicking on previous checkbox (Are you shure to push on Cisco device, simulation file is verifed ?) for device  '+context['destination_device_id'], context, True)
 
-context['push_to_device'] = "false"
+#check if the folder  DIRECTORY exist, else create it
+if not os.path.isdir(DIRECTORY):
+ os.mkdir(DIRECTORY)
+ 
+timeout = 3600
 
+subtenant_ref = context["UBIQUBEID"]
+subtenant_id = context["UBIQUBEID"][4:]
 #get device_id from context
-device_id = context['destination_device_id'][3:]
+device_id_full = context['destination_device_id']
+device_id = device_id_full[3:]
 # instantiate device object
 obmf  = Order(device_id=device_id)
 
+if (context['real_device_source'] == 'false' or context['real_device_source'] == False) and (context['push_to_device']== 'true' or context['push_to_device']== True):
+  msg = 'ERROR: Before to push the configuration to real device '+device_id_full+', you should Import first the configuration from real device '+context['source_device_id']
+  create_event(device_id_full, "1", "MIGRATION", "GEN_CONFIG",  subtenant_ref, subtenant_id, msg)
+  context['push_to_device'] = 'false'        #reset value
+  MSA_API.task_error(msg, context, True)
+
+context['push_to_device'] = 'false'        #reset value
 
 MS_list        = context['MS_list']  
 MS_list        = MS_list.replace(' ;',';')     
@@ -44,8 +60,10 @@ deployment_settings_id = obmf.command_get_deployment_settings_id()
 context['destination_deployment_settings_id'] = deployment_settings_id
 
 if not deployment_settings_id:
-  MSA_API.task_error('There is no deployement setting for the Cisco device '+context['destination_device_id'], context, True)
-
+  msg = 'ERROR: There is no deployement setting for the managed entity '+device_id_full
+  create_event(device_id_full, "1", "MIGRATION", "GEN_CONFIG",  subtenant_ref, subtenant_id, msg)
+  MSA_API.task_error(msg, context, True)
+  
 #Get all microservices attached to this deployment setting.
 confprofile  = ConfProfile(deployment_settings_id)
 all_ms_attached = confprofile.read()
@@ -55,7 +73,7 @@ MS_list_destination_order = {}
 all_order = {}
 if all_ms_attached.get("microserviceUris"):
   all_ms_attached = all_ms_attached["microserviceUris"] 
-  context[ 'MS_attached destination device_id' + device_id + ' : '] = all_ms_attached
+  #context[ 'MS_attached destination device_id' + device_id + ' : '] = all_ms_attached
   # all_ms_attached = {        "CommandDefinition/LINUX/CISCO_IOS_XR_emulation/address_family.xml": {"name": "address_family","groups": ["EMULATION","CISCO", "IOS"],"order": 0,"importRank": 10},
   
   if all_ms_attached:
@@ -81,6 +99,11 @@ context['MS_list_destination']  = MS_list_destination
 ms_not_attached_destination_device = []
 full_message = ''
 
+if (push_to_device == 'true' or push_to_device == True):
+  mode = 2  #mode=2 : Apply to device and in DB
+else:
+  mode = 1  #mode=1 : Apply only in hte DB, not applied on the device
+          
 if MS_list:
   for MS in  MS_list_destination:
     if MS and MS in MS_list.split(';'):
@@ -88,12 +111,12 @@ if MS_list:
       if config:
         params = dict()
         params[MS] = config
-        context[MS + '_export_params'] = params
-        #obmf.command_execute(command, params, timeout) #execute the MS ADD static route operation
-        obmf.command_call(command, 2, params, timeout)  #mode=2 :  Apply to device and in DB
+        #context[MS + '_export_params'] = params
+          
+        obmf.command_call(command, mode, params, timeout) 
    
         response = json.loads(obmf.content)
-        context[ MS + '_generate_response'] = response
+        #context[ MS + '_generate_response'] = response
         # bgp_vrf_generate_response": {
           # "entity": {
               # "commandId": 0,
@@ -102,7 +125,7 @@ if MS_list:
           # },
           
         if response.get("entity"):
-          if response.get("entity").get("status") == "OK":
+          if response.get("entity").get("status") and response["entity"]["status"] == "OK":
            if response.get("entity").get("message"):
             # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
             message =  response.get("entity").get("message") 
@@ -153,19 +176,25 @@ if MS_list:
                    
                 
             #Add MS import Skip result link:
-            MS_file = DIRECTORIE + '/' + MS + '.log'
+            MS_file = DIRECTORY + '/' + MS + '.log'
             link={}
             link['MicroService'] = MS + '_Import_parse'
             link['file_link']    = MS_file       
             links.append(link)
 
           else:
-            MSA_API.task_error('Can not run create on MS: '+ MS + ', response='+ str(response) , context, True)
+            msg = 'ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response)
+            create_event(device_id_full, "1",  "MIGRATION", "GEN_CONFIG",  subtenant_ref, subtenant_id, msg)
+            MSA_API.task_error(msg , context, True)
         else: 
           if 'wo_newparams' in response:
-            MSA_API.task_error('Can not run create on MS: '+ MS + ', response='+ str(response.get('wo_newparams')), context, True)
+            msg = 'ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response.get('wo_newparams'))
+            create_event(device_id_full, "1", "MIGRATION", "GEN_CONFIG", subtenant_ref, subtenant_id, msg)
+            MSA_API.task_error(msg, context, True)
           else:
-             MSA_API.task_error('Can not run create on MS: '+ MS + ', response='+ str(response) , context, True)
+            msg = 'ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response)
+            create_event(device_id_full, "1", "MIGRATION", "GEN_CONFIG", subtenant_ref, subtenant_id, msg)
+            MSA_API.task_error(msg , context, True)
     else:
       ms_not_attached_destination_device.append(MS)
     
@@ -178,9 +207,16 @@ f.write(full_message)
 f.close()
 
 if ms_not_attached_destination_device:
-  MSA_API.task_success('Warning , some MS ('+';'.join(ms_not_attached_destination_device)+') was not found for destination device :'+context['destination_device_id']+', other MS imported successfully ('+';'.join(MS_imported)+')', context, True)
+  if (push_to_device == 'true' or push_to_device == True):
+    MSA_API.task_success('Applied to device, WARNING, some microservices ('+';'.join(ms_not_attached_destination_device)+') not found for destination device :'+device_id_full+', other microservice imported successfully ('+';'.join(MS_imported)+')', context, True)
+  else:
+    MSA_API.task_success('SIMULATED, WARNING , some microservices ('+';'.join(ms_not_attached_destination_device)+') not found for destination device :'+device_id_full+', other microservice imported successfully ('+';'.join(MS_imported)+')', context, True)
 else:
-  MSA_API.task_success('Good, all MS ('+MS_list+') imported for DeviceId:'+context['destination_device_id'], context, True)
+  if (push_to_device == 'true' or push_to_device == True):
+    MSA_API.task_success('Applied to device DONE, microservices ('+MS_list+') imported for managed entity: '+device_id_full, context, True)
+  else:
+    MSA_API.task_success('SIMULATED, DONE, microservices ('+MS_list+') imported for managed entity: '+device_id_full, context, True)
+  
 
 
 

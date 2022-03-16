@@ -3,10 +3,7 @@ from msa_sdk.msa_api import MSA_API
 
 dev_var = Variables()
 
-#dev_var.add('real_or_simul_device')
-#dev_var.add('source_device_id')
-#dev_var.add('source_simul_device_id')
-dev_var.add('destination_device_id')
+#dev_var.add('destination_device_id')
 
 dev_var.add('interfaces.0.source')
 dev_var.add('interfaces.0.destination')
@@ -19,6 +16,7 @@ dev_var.add('interfaces.0.pseudowire_class')
 dev_var.add('interfaces.0.gil')
 
 dev_var.add('enable_filter')
+dev_var.add('real_device_source')
 
 context = Variables.task_call(dev_var)
 
