@@ -3,13 +3,12 @@
 #WF_variable|MS_Name|MS_field_name
 #
 # Fill xconnect microservice
-interfaces.0.xconnect_group|xconnect|object_id
-interfaces.0.destination|xconnect|groups.0.interface
-interfaces.0.pseudowire_id|xconnect|groups.0.pseudowire_id
-interfaces.0.pseudowire_ip|xconnect|groups.0.pseudowire_ip
-interfaces.0.pseudowire_class|xconnect|groups.0.pseudowire_class
-interfaces.0.gil|xconnect|groups.0.gil
-customer_id|xconnect|groups.0.p2p
+interfaces.0.source|xconnect|object_id
+interfaces.0.xconnect_group|xconnect|xconnect_group
+interfaces.0.destination|xconnect|interface
+interfaces.0.pseudowire_class|xconnect|pseudowire_class
+interfaces.0.p2p|xconnect|p2p
+#customer_id|xconnect|groups.0.p2p
 # Fill interface microservice
 interfaces.0.destination|interface|object_id
 interfaces.0.dot1q|interface|encapsulation_dot1q
