@@ -1,3 +1,4 @@
+#
 # This file filter_cisco_IOS_to_XR.txt contains the definition of the dependency between Microservices
 # It will filter out some destinations values when they are not in the source values list
 # The order in this file is important, because the filtering is done from the top (filtering after each change of destination Microservice Name or destination variable name)
@@ -27,6 +28,7 @@ bgp_vrf|bgp_vrf_redistrib_static_policy|route_policy|object_id
 route_policy|statements.0.destination.0.val|ipv4_prefix_list|object_id
 address_family|neighbors.0.bgp_route_map_in|ipv4_prefix_list|object_id
 address_family|neighbors.0.bgp_route_map_out|ipv4_prefix_list|object_id
+route_policy|statements.0.as_path.0.val|as_path_set|object_id
 route_policy|statements.0.destination.0.val|ip_access_list|object_id
 route_policy|statements.0.destination.0.val|prefix_set|object_id
 route_policy|statements.0.destination.0.val|prefix_set|name
