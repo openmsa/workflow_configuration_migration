@@ -45,5 +45,5 @@ if context.get('interfaces'):
   context['interfaces'] = new_interfaces    
     
 
-MSA_API.task_success('DONE', context, True)
+MSA_API.task_success('DONE: user parameters OK', context, True)
 print(ret)
