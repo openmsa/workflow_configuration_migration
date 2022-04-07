@@ -90,7 +90,7 @@ else:
     
     
     
-msg = 'DONE: all MS attached to the managed entity: '+ device_id_full + ' imported ('+MS_list+')'
+msg = 'DONE: all MS attached to the managed entity: '+ device_id_full + ' imported'
 create_event(device_id_full, "5", "MIGRATION", "SYNCHRONIZE", subtenant_ref, subtenant_id, msg)
 MSA_API.task_success(msg, context, True)
 
