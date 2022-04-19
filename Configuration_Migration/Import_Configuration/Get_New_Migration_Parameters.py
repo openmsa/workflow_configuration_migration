@@ -32,7 +32,7 @@ context = Variables.task_call(dev_var)
 
 
 #When the interfaces contains 'dot1q' and 'second_dot1q' we add it into the interface name
-if context['batch_load'] == 'false':
+if not context['batch_load'] :
     if context.get('interfaces'):
       new_interfaces = []
       interfaces = context['interfaces']
