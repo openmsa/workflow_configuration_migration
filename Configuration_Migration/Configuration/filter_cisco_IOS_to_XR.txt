@@ -29,6 +29,8 @@ ip_vrf|import_route_map|route_policy|object_id
 ip_vrf|address_family.0.export_route_map|route_policy|object_id
 ip_vrf|address_family.0.import_route_map|route_policy|object_id
 bgp_vrf|bgp_vrf_redistrib_static_policy|route_policy|object_id
+bgp_vrf|address_family.0.import_route_map|route_policy|object_id
+bgp_vrf|address_family.0.export_route_map|route_policy|object_id
 address_family|redistribute.0.bgp_redistribute_target|route_policy|object_id
 address_family|neighbors.0.bgp_route_map_in|route_policy|object_id
 address_family|neighbors.0.bgp_route_map_out|route_policy|object_id
