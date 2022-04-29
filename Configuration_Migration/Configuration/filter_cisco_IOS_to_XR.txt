@@ -1,4 +1,3 @@
-#
 # This file filter_cisco_IOS_to_XR.txt contains the definition of the dependency between Microservices
 # It will filter out some destinations values when they are not in the source values list
 # The order in this file is important, because the filtering is done from the top (filtering after each change of destination Microservice Name or destination variable name)
@@ -13,34 +12,24 @@ interface|vrf_name|multicast_routing|object_id
 interface|object_id|ip_route|interface
 interface|vrf_name|router_static|vrf_routes.0.vrf_name
 interface|object_id|router_static|vrf_routes.0.routes.0.interface
-interface|object_id|router_static|vrf_routes.0.routes6.0.interface
 interface|object_id|router_static|routes.0.interface
-interface|object_id|router_static|routes6.0.interface
 interface|object_id|router_isis|interfaces.0.interface
 interface|object_id|xconnect|object_id
 interface|service_policy_out|policy_map|object_id
 interface|service_policy_in|policy_map|object_id
-policy_map|pmap_class.0.service_policy|policy_map|object_id
-interface|isis.0.isis_auth_key|key_chain|object_id
-interface|object_id|router_isis|interfaces.0.interface
 policy_map|pmap_class.0.class_name|class_map|object_id
 ip_vrf|export_route_map|route_policy|object_id
 ip_vrf|import_route_map|route_policy|object_id
 ip_vrf|address_family.0.export_route_map|route_policy|object_id
 ip_vrf|address_family.0.import_route_map|route_policy|object_id
-bgp_vrf|bgp_vrf_redistrib_static_policy|route_policy|object_id
-bgp_vrf|address_family.0.import_route_map|route_policy|object_id
-bgp_vrf|address_family.0.export_route_map|route_policy|object_id
 address_family|redistribute.0.bgp_redistribute_target|route_policy|object_id
-address_family|neighbors.0.bgp_route_map_in|route_policy|object_id
-address_family|neighbors.0.bgp_route_map_out|route_policy|object_id
+bgp_vrf|bgp_vrf_redistrib_static_policy|route_policy|object_id
+route_policy|statements.0.destination.0.val|ipv4_prefix_list|object_id
 address_family|neighbors.0.bgp_route_map_in|ipv4_prefix_list|object_id
 address_family|neighbors.0.bgp_route_map_out|ipv4_prefix_list|object_id
-address_family|neighbors.0.bgp_route_map_in|ip_prefix_list|name
-address_family|neighbors.0.bgp_route_map_out|ip_prefix_list|name
-route_policy|statements.0.destination.0.val|ipv4_prefix_list|object_id
-route_policy|statements.0.as_path.0.val|as_path_set|object_id
 route_policy|statements.0.destination.0.val|ip_access_list|object_id
 route_policy|statements.0.destination.0.val|prefix_set|object_id
+route_policy|statements.0.destination.0.val|prefix_set|name
 route_policy|statements.0.communities.0.val|community_set|object_id
-route_policy|statements.0.extcommunities.0.val|extcommunity_set|object_id
+address_family|neighbors.0.bgp_route_map_in|ip_prefix_list|name
+address_family|neighbors.0.bgp_route_map_out|ip_prefix_list|name

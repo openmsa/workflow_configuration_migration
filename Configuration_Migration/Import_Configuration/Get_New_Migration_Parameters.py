@@ -11,11 +11,13 @@ dev_var.add('customer_id')
 
 dev_var.add('interfaces.0.source')
 dev_var.add('interfaces.0.destination')
+dev_var.add('interfaces.0.xconnect_group')
 dev_var.add('interfaces.0.dot1q')
 dev_var.add('interfaces.0.second_dot1q')
-dev_var.add('interfaces.0.xconnect_group')
+dev_var.add('interfaces.0.pseudowire_id')
+dev_var.add('interfaces.0.pseudowire_ip')
 dev_var.add('interfaces.0.pseudowire_class')
-dev_var.add('interfaces.0.p2p')
+dev_var.add('interfaces.0.gil')
 
 dev_var.add('data_filter')
 dev_var.add('enable_filter')
@@ -45,5 +47,5 @@ if context.get('interfaces'):
   context['interfaces'] = new_interfaces    
     
 
-MSA_API.task_success('DONE: user parameters OK', context, True)
+MSA_API.task_success('DONE', context, True)
 print(ret)

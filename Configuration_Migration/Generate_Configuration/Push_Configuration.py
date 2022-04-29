@@ -111,7 +111,7 @@ if MS_list:
       if config:
         params = dict()
         params[MS] = config
-        #context[MS + '_export_params'] = params
+        context[MS + '_export_params'] = params
           
         obmf.command_call(command, mode, params, timeout) 
    

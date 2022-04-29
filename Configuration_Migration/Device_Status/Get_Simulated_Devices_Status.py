@@ -43,11 +43,14 @@ def run_microservice_import():
   nb_ms_to_run = nb_ms_to_run + 1 
 
   if ms_to_run != previous_ms_to_run :
-    previous_ms_to_run = ms_to_run
     MS_list_run[ms_to_run] = 1
     if previous_ms_data:
-      full_message = full_message +  printTable(previous_ms_data)
+      if previous_ms_to_run == 'bgp_neighbor_status':
+        full_message = full_message +  str(previous_ms_data)
+      else:
+        full_message = full_message +  printTable(previous_ms_data)    
       previous_ms_data = []
+    previous_ms_to_run = ms_to_run
     full_message = full_message + '\n\n############# For '+ dest + ' device,  MS '+ ms_to_run +  ' ############# \n'
   obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
   response = json.loads(obmf.content)
@@ -61,6 +64,7 @@ def run_microservice_import():
      message = json.loads(message)
      if message.get(ms_to_run):
        message = message[ms_to_run]
+       #context['ms_status_import_response2_'+ms_to_run] = message
        if isinstance(message, dict):
          for key2,val2 in message.items():
            previous_ms_data.append(val2)
@@ -97,8 +101,8 @@ wf_fields = {}
 warning = ""
 
 devices = {}
-devices['Source'] = context['source_device_id']
-devices['Destination'] = context['destination_device_id']
+devices['Source'] = context['source_simul_device_id']
+devices['Destination'] = context['destination_simul_device_id']
 full_message = ''
 
 for  dest, device_id_full in devices.items(): 
@@ -108,7 +112,7 @@ for  dest, device_id_full in devices.items():
   if full_message:
     full_message = full_message + '\n\n\n\n\n'
   full_message = full_message +  '\n#####################################################################################################\n'
-  full_message = full_message +  '  For '+ dest + ' device ('+device_id_full +')\n'
+  full_message = full_message +  '  For Simulated '+ dest + ' device ('+device_id_full +')\n'
   full_message = full_message +  '#####################################################################################################\n\n'
 
 
@@ -226,6 +230,7 @@ for  dest, device_id_full in devices.items():
               #context['Status_'+full_source_field+'_field_values333'] = values_to_send              
 
 
+              '''
               for key1, values in values_to_send.items():
                 ms_input = {}
                 object_id =''
@@ -239,13 +244,21 @@ for  dest, device_id_full in devices.items():
                 params[ms_to_run] = obj 
                 # Run the MS import and store the result
                 run_microservice_import()
+              '''
+              
+              #Run IMPORT for the give MS to update the DB
+              ms_input = {}
+              obj = {"":ms_input}  
+              obj[''] = ms_input  
+              params = {}
+              params[ms_to_run] = obj 
+              # Run the MS import and store the result
+              run_microservice_import()
 
             elif ms_source == 'None' and ms_to_run:
               #Run IMPORT for the give MS to update the DB
               ms_input = {}
-              #ms_input['test'] = 'test'
               obj = {"":ms_input}  
-              #obj['test'] = ms_input  
               obj[''] = ms_input  
               params = {}
               params[ms_to_run] = obj 
@@ -271,8 +284,8 @@ now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%Hh%M")
     
 #Create the global config file :
-generate_file = DIRECTORY+ "/" + "ALL_SOURCE_STATUS_"  + day + '.txt'
-context['generate_status_file'] = generate_file
+generate_file = DIRECTORY+ "/" + "ALL_EMULATED_SOURCE_STATUS_"  + day + '.txt'
+context['generate_simulated_status_file'] = generate_file
 
 f = open(generate_file, "w")
 f.write(full_message)

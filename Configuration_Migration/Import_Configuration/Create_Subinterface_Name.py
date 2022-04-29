@@ -22,5 +22,5 @@ if context.get('interfaces'):
   context['interfaces'] = new_interfaces    
     
 
-MSA_API.task_success('DONE: subinterface name processed', context, True)
+MSA_API.task_success('DONE', context, True)
 print(ret)
