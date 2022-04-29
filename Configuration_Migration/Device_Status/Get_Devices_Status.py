@@ -70,7 +70,9 @@ def run_microservice_import():
     if response.get("wo_newparams"):
       wo_newparams =  response["wo_newparams"]
       if 'An update is already running' in wo_newparams:
-        MSA_API.task_error('SMS ERROR: on device '+device_id_full+' can not run MS '+ ms_to_run + ' : '+ str(wo_newparams) , context, True)
+        msg = 'SMS ERROR: on device '+device_id_full+' can not run MS '+ ms_to_run + ' : '+ str(wo_newparams)
+        create_event(device_id_full, "1", "MIGRATION", "STATUS",  subtenant_ref, subtenant_id, msg)
+        MSA_API.task_error(msg , context, True)
     MS_list_not_run[ms_to_run]=1
  
 start_sec  = time.time()            
@@ -87,7 +89,9 @@ if os.path.isfile(file):
   data_list = import_liste.split('\n')
   data_list = [i for i in data_list if i] #remove empty element
 else:
-  MSA_API.task_error('Can not open file "' + file + '"', context, True)
+  msg = 'Can not open file "' + file + '"'
+  create_event(device_id_full, "1", "MIGRATION", "STATUS",  subtenant_ref, subtenant_id, msg)
+  MSA_API.task_error(msg, context, True)
   data_list = ''    
   
 context['status_liste'] = data_list
