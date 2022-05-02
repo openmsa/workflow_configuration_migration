@@ -100,7 +100,22 @@
         <sections>generated configuration</sections>
       </sections>
     </variable>
-    <variable displayName="Generated devices status file" name="params.generate_status_file" startIncrement="0" type="Link" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" maxLength="100" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isCompositeKey="false" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+    <variable displayName="Generated devices source status file before migration" name="params.generate_source_before_status_file" startIncrement="0" type="Link" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" maxLength="100" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isCompositeKey="false" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <sections>
+        <sections>generated configuration</sections>
+      </sections>
+    </variable>
+    <variable displayName="Generated devices destination status file before migration" name="params.generate_destination_before_status_file" startIncrement="0" type="Link" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" maxLength="100" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isCompositeKey="false" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <sections>
+        <sections>generated configuration</sections>
+      </sections>
+    </variable>
+    <variable displayName="Generated devices source status file after migration" name="params.generate_source_after_status_file" startIncrement="0" type="Link" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" maxLength="100" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isCompositeKey="false" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <sections>
+        <sections>generated configuration</sections>
+      </sections>
+    </variable>
+    <variable displayName="Generated devices destination status file after migration" name="params.generate_destination_after_status_file" startIncrement="0" type="Link" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" maxLength="100" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isCompositeKey="false" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
         <sections>generated configuration</sections>
       </sections>

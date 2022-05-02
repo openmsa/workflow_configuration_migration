@@ -208,11 +208,13 @@ f.close()
 
 if ms_not_attached_destination_device:
   if (push_to_device == 'true' or push_to_device == True):
+    context['pushed_to_destination_device'] = 'true'    
     MSA_API.task_success('Applied to device, WARNING, some microservices ('+';'.join(ms_not_attached_destination_device)+') not found for destination device :'+device_id_full+', other microservice imported successfully ('+';'.join(MS_imported)+')', context, True)
   else:
     MSA_API.task_success('SIMULATED, WARNING , some microservices ('+';'.join(ms_not_attached_destination_device)+') not found for destination device :'+device_id_full+', other microservice imported successfully ('+';'.join(MS_imported)+')', context, True)
 else:
   if (push_to_device == 'true' or push_to_device == True):
+    context['pushed_to_destination_device'] = 'true'    
     MSA_API.task_success('Applied to device DONE, microservices ('+MS_list+') imported for managed entity: '+device_id_full, context, True)
   else:
     MSA_API.task_success('SIMULATED, DONE, microservices ('+MS_list+') imported for managed entity: '+device_id_full, context, True)

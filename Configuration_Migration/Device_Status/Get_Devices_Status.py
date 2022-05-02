@@ -103,16 +103,18 @@ warning = ""
 devices = {}
 devices['Source'] = context['source_device_id']
 devices['Destination'] = context['destination_device_id']
-full_message = ''
+
+if not context.get('pushed_to_destination_device') or context['pushed_to_destination_device'] != 'true':
+ migrate = 'before'
+else:
+ migrate = 'after'
 
 for  dest, device_id_full in devices.items(): 
 
   device_id = device_id_full[3:]
   
-  if full_message:
-    full_message = full_message + '\n\n\n\n\n'
-  full_message = full_message +  '\n#####################################################################################################\n'
-  full_message = full_message +  '  For '+ dest + ' device ('+device_id_full +')\n'
+  full_message = '\n#####################################################################################################\n'
+  full_message = full_message +  '  For '+ dest + ' device ('+device_id_full +') ' + migrate + ' migration\n'
   full_message = full_message +  '#####################################################################################################\n\n'
 
 
@@ -271,16 +273,16 @@ for  dest, device_id_full in devices.items():
     MS_list_not_run = ''  
       
 
-now = datetime.now() # current date and time
-day = now.strftime("%m-%d-%Y-%Hh%M")
-    
-#Create the global config file :
-generate_file = DIRECTORY+ "/" + "ALL_SOURCE_STATUS_"  + day + '.txt'
-context['generate_status_file'] = generate_file
+  now = datetime.now() # current date and time
+  day = now.strftime("%m-%d-%Y-%Hh%M")
+  
+  #Create the global config file :
+  generate_file = DIRECTORY+ "/" + "ALL_SOURCE_STATUS_"  + dest.lower() +'_' + migrate + '_' + day + '.txt'
+  context['generate_'+dest.lower() +'_' + migrate + '_status_file'] = generate_file
 
-f = open(generate_file, "w")
-f.write(full_message)
-f.close()
+  f = open(generate_file, "w")
+  f.write(full_message)
+  f.close()
     
 end_sec  = time.time()   
          
