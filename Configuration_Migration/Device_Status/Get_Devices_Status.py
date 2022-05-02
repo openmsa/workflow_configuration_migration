@@ -104,10 +104,10 @@ devices = {}
 devices['Source'] = context['source_device_id']
 devices['Destination'] = context['destination_device_id']
 
-if not context.get('pushed_to_destination_device') or context['pushed_to_destination_device'] != 'true':
- migrate = 'before'
-else:
+if context.get('pushed_to_destination_device') and context['pushed_to_destination_device'] == 'true':
  migrate = 'after'
+else:
+ migrate = 'before'
 
 for  dest, device_id_full in devices.items(): 
 
@@ -289,9 +289,9 @@ end_sec  = time.time()
 exec_sec = int(end_sec - start_sec) 
    
 if MS_list_not_run:    
-  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: for devices status for ' + ' and '.join(devices.keys()) + ', but can not get status for (' + MS_list_not_run + ') but get the status for ('+MS_list_run+') run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
+  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: for devices status for ' + ' and '.join(devices.keys()) + ' '+ migrate+ ' migration, but can not get status for (' + MS_list_not_run + ') but get the status for ('+MS_list_run+') run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
 else:
-  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: Get Status for ' + ' and '.join(devices.keys()) + '  ('+MS_list_run+'), run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
+  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: Get Status for ' + ' and '.join(devices.keys()) + ' '+ migrate+ ' migration,' + ' ('+MS_list_run+'), run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
 
 
 
