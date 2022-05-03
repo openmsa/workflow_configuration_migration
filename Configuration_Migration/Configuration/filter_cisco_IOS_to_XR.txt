@@ -22,6 +22,11 @@ interface|service_policy_out|policy_map|object_id
 interface|service_policy_in|policy_map|object_id
 policy_map|pmap_class.0.service_policy|policy_map|object_id
 interface|isis.0.isis_auth_key|key_chain|object_id
+# next 3 lines: on purpose duplication to re-filter the policy_map without reference
+interface|service_policy_out|policy_map|object_id
+interface|service_policy_in|policy_map|object_id
+policy_map|pmap_class.0.service_policy|policy_map|object_id
+
 interface|object_id|router_isis|interfaces.0.interface
 policy_map|pmap_class.0.class_name|class_map|object_id
 ip_vrf|export_route_map|route_policy|object_id
