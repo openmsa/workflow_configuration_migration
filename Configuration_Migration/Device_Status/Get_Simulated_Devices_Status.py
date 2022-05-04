@@ -61,6 +61,7 @@ def run_microservice_import():
      message = json.loads(message)
      if message.get(ms_to_run):
        message = message[ms_to_run]
+       #context['ms_status_import_response2_'+ms_to_run] = message
        if isinstance(message, dict):
          for key2,val2 in message.items():
            previous_ms_data.append(val2)
@@ -101,20 +102,16 @@ wf_fields = {}
 warning = ""
 
 devices = {}
-devices['Source'] = context['source_device_id']
-devices['Destination'] = context['destination_device_id']
+devices['Source'] = context['source_simul_device_id']
+devices['Destination'] = context['destination_simul_device_id']
 
-if context.get('pushed_to_destination_device') and context['pushed_to_destination_device'] == 'true':
- migrate = 'after'
-else:
- migrate = 'before'
 
 for  dest, device_id_full in devices.items(): 
 
   device_id = device_id_full[3:]
   
   full_message = '\n#####################################################################################################\n'
-  full_message = full_message +  '  For '+ dest + ' device ('+device_id_full +') ' + migrate + ' migration\n'
+  full_message = full_message +  '  For Simulated '+ dest + ' device ('+device_id_full +') \n'
   full_message = full_message +  '#####################################################################################################\n\n'
 
 
@@ -231,6 +228,7 @@ for  dest, device_id_full in devices.items():
                           if value1.get(ms_source_field2):
                             new_value[parameter2_to_give_to_ms] = value1[ms_source_field2] 
                             values_to_send[parameter1_to_give_to_ms] = new_value
+                          
                        else:
                          values_to_send[field1_value] = new_value
                          
@@ -282,8 +280,8 @@ for  dest, device_id_full in devices.items():
   day = now.strftime("%m-%d-%Y-%Hh%M")
   
   #Create the global config file :
-  generate_file = DIRECTORY+ "/" + "ALL_SOURCE_STATUS_"  + dest.lower() +'_' + migrate + '_' + day + '.txt'
-  context['generate_'+dest.lower() +'_' + migrate + '_status_file'] = generate_file
+  generate_file = DIRECTORY+ "/" + "ALL_SOURCE_STATUS_"  + dest.lower() + '_simulated_' + day + '.txt'
+  context['generate_'+dest.lower()  + '_simulated_status_file'] = generate_file
 
   f = open(generate_file, "w")
   f.write(full_message)
@@ -294,9 +292,9 @@ end_sec  = time.time()
 exec_sec = int(end_sec - start_sec) 
    
 if MS_list_not_run:    
-  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: for devices status for ' + ' and '.join(devices.keys()) + ' '+ migrate+ ' migration, but can not get status for (' + MS_list_not_run + ') but get the status for ('+MS_list_run+') run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
+  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: for devices status for ' + ' and '.join(devices.keys()) + ', but can not get status for (' + MS_list_not_run + ') but get the status for ('+MS_list_run+') run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
 else:
-  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: Get Status for ' + ' and '.join(devices.keys()) + ' '+ migrate+ ' migration,' + ' ('+MS_list_run+'), run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
+  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: Get Status for ' + ' and '.join(devices.keys()) + '  ('+MS_list_run+'), run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
 
 
 
