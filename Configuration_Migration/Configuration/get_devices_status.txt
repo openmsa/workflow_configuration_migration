@@ -3,7 +3,7 @@
 #device source or destination|ms_source|ms_source_field1|ms_source_field2|MS_to_run|parameter1_to_give_to_MS|parameter2_to_give_to_MS
 #
 Source|interface|orig_object_id|None|interface_status|object_id|None
-Source|interface|subslot_num|interface_num|interface_power|subslot_num|interface_num
+Source|interface|subslot_num|interface_num|interface_power|subslot_num|transceiver
 Source|None|None|None|arp_summary|None|None
 Source|None|None|None|bgp_neighbor_status|object_id|ip_bgp_neighbor
 Source|bgp_vrf|object_id|None|bgp_vrf_summary|object_id|None
@@ -16,7 +16,7 @@ Source|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_advertised_routes|o
 Source|bgp_vrf|object_id|None|vrf_route_summary|object_id|None
 
 Destination|interface|object_id|None|interface_status|object_id|None
-Destination|interface|subslot_num|interface_num|interface_power|subslot_num|interface_num
+Destination|interface|subslot_num|interface_num|interface_power|subslot_num|transceiver
 Destination|None|None|None|arp_interface|None|None
 Destination|None|None|None|bgp_neighbor_status|object_id|ip_bgp_neighbor
 Destination|bgp_vrf|object_id|None|bgp_vrf_summary|object_id|None

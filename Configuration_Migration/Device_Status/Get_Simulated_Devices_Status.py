@@ -221,7 +221,14 @@ for  dest, device_id_full in devices.items():
                                    values_to_send[key] = new_value
                                    new_value                   = {}
                                    new_value[parameter1_to_give_to_ms] = field1_value
-
+                             else:
+                               new_value = value_lev1
+                         else:
+                          
+                          if value1.get(ms_source_field2):
+                            new_value[parameter2_to_give_to_ms] = value1[ms_source_field2] 
+                            values_to_send[parameter1_to_give_to_ms] = new_value
+                          
                        else:
                          values_to_send[field1_value] = new_value
                          
@@ -246,10 +253,9 @@ for  dest, device_id_full in devices.items():
             elif ms_source == 'None' and ms_to_run:
               #Run IMPORT for the give MS to update the DB
               ms_input = {}
-              #ms_input['test'] = 'test'
-              obj = {"":ms_input}  
-              #obj['test'] = ms_input  
-              obj[''] = ms_input  
+              ms_input['object_id'] = 'need_for_import'
+              obj = {}  
+              obj['need_for_import'] = ms_input  # need at leat one value for the import
               params = {}
               params[ms_to_run] = obj 
               # Run the MS import and store the result
