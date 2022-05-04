@@ -16,6 +16,14 @@
         <sdTypes manId="14020601" modId="29112021"/>
       </sdTypes>
     </variable>
+    <variable displayName="Emulated Destination Device" name="params.destination_simul_device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" maxLength="100" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isCompositeKey="false" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <sections>
+        <sections>emulated device</sections>
+      </sections>
+      <sdTypes>
+        <sdTypes manId="14020601" modId="28112021"/>
+      </sdTypes>
+    </variable>
     <variable displayName="Real Source Device" name="params.source_device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" maxLength="100" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isCompositeKey="false" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
         <sections>actual router</sections>
@@ -96,6 +104,16 @@
       </values>
     </variable>
     <variable displayName="Global Generated file" name="params.generate_file" startIncrement="0" type="Link" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" maxLength="100" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isCompositeKey="false" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <sections>
+        <sections>generated configuration</sections>
+      </sections>
+    </variable>
+    <variable displayName="Generated source emulated devices status file" name="params.generate_source_simulated_status_file" startIncrement="0" type="Link" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" maxLength="100" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isCompositeKey="false" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <sections>
+        <sections>generated configuration</sections>
+      </sections>
+    </variable>
+    <variable displayName="Generated destination emulated devices status file" name="params.generate_destination_simulated_status_file" startIncrement="0" type="Link" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" maxLength="100" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isCompositeKey="false" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
         <sections>generated configuration</sections>
       </sections>
@@ -268,13 +286,27 @@
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
-    <task name="Get_Devices_Status_Parameters.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Device_Status</processPath>
+    <task name="Process/workflow_configuration_migration/Configuration_Migration/Device_Status/Get_Devices_Status_Parameters.py">
+      <processPath></processPath>
       <displayName>Get Parameters</displayName>
     </task>
     <task name="Get_Devices_Status.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Device_Status</processPath>
       <displayName>Get Devices Status</displayName>
+    </task>
+  </process>
+  <process name="Get_Simulated_Devices_Status">
+    <displayName>Get Simulated Devices Status</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Process/workflow_configuration_migration/Configuration_Migration/Device_Status/Get_Simulated_Devices_Status_Parameters.py">
+      <processPath></processPath>
+      <displayName>Get Parameters</displayName>
+    </task>
+    <task name="Get_Simulated_Devices_Status.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Device_Status</processPath>
+      <displayName>Get Simulated Devices Status</displayName>
     </task>
   </process>
   <process name="Push_Configuration">
