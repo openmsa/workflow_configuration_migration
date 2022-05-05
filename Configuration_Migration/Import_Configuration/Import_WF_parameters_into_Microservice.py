@@ -16,9 +16,9 @@ dev_var.add('interfaces.0.xconnect_group' )
 dev_var.add('interfaces.0.dot1q' )
 dev_var.add('interfaces.0.second_dot1q' )
 dev_var.add('interfaces.0.pseudowire_id' )
-dev_var.add('interfaces.0.pseudowire_ip' )
+#dev_var.add('interfaces.0.pseudowire_ip' )
 dev_var.add('interfaces.0.pseudowire_class' )
-dev_var.add('interfaces.0.gil' )
+#dev_var.add('interfaces.0.gil' )
 
 context = Variables.task_call(dev_var)
 
@@ -81,17 +81,13 @@ if import_liste_list:
                 "xconnect_group",
                 "destination",
                 "pseudowire_id",
-                "pseudowire_ip",
                 "pseudowire_class",
-                "gil"
             ],
             "destination_field_name": [
                 "object_id",
                 "groups.0.interface",
                 "groups.0.pseudowire_id",
-                "groups.0.pseudowire_ip",
                 "groups.0.pseudowire_class",
-                "groups.0.gil"
             ],
             "destination_MS_Name": "xconnect"
         },
@@ -148,9 +144,7 @@ for source_key,item  in wf_fields.items():
               "dot1q": "LOLOdout1",
               "second_dot1q": "LOLOdot1Sec",
               "pseudowire_id": "1700",
-              "pseudowire_ip": "177.61.178.254",
               "pseudowire_class": "pseudowire_class1",
-              "gil": "gil-PWHE-TEF"
           '''
           for idx, second_field in enumerate(item['second_level']) :
             if context_val.get(second_field) and item['destination_field_name'][idx]:
@@ -168,7 +162,7 @@ for source_key,item  in wf_fields.items():
                   current_object_id = object_id
                   value['object_id'] = object_id
               else:
-                fields = destination_field_name.split('.0.')  # groups.0.pseudowire_ip
+                fields = destination_field_name.split('.0.')  # groups.0.pseudowire_id
                 if isinstance(fields, typing.List) and fields and (len(fields) > 1):
                   first  = fields[0]
                   second = fields[1]
