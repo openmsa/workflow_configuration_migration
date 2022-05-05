@@ -101,20 +101,26 @@ wf_fields = {}
 warning = ""
 
 devices = {}
-devices['Source'] = context['source_device_id']
-devices['Destination'] = context['destination_device_id']
+devices['source'] = context['source_device_id_full']
+devices['destination'] = context['destination_device_id_full']
 
-if context.get('pushed_to_destination_device') and context['pushed_to_destination_device'] == 'true':
- migrate = 'after'
-else:
- migrate = 'before'
+
 
 for  dest, device_id_full in devices.items(): 
 
   device_id = device_id_full[3:]
   
   full_message = '\n#####################################################################################################\n'
-  full_message = full_message +  '  For '+ dest + ' device ('+device_id_full +') ' + migrate + ' migration\n'
+  if context.get('destination_device_type') and context['destination_device_type']:
+    migrate = 'simulated'
+    full_message = full_message +  '  For '+ context['destination_device_type'] + ' ' + dest + ' device ('+device_id_full +')\n'
+  else:
+    if context.get('pushed_to_destination_device') and context['pushed_to_destination_device'] == 'true':
+      migrate = 'after'
+    else:
+      migrate = 'before'
+    full_message = full_message +  '  For ' + dest + ' device ('+device_id_full +') ' + migrate + ' migration\n'
+     
   full_message = full_message +  '#####################################################################################################\n\n'
 
 
@@ -174,7 +180,7 @@ for  dest, device_id_full in devices.items():
         #  interface|object_id|None|interface_status|object_id|None
         #  bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_neighbor_status|object_id|ip_bgp_neighbor          
         if len(list) > 6:
-          device_src_dest          = list[0]
+          device_src_dest          = list[0].lower()
           ms_source                = list[1]
           ms_source_field1         = list[2]
           ms_source_field2         = list[3]
@@ -293,10 +299,15 @@ end_sec  = time.time()
          
 exec_sec = int(end_sec - start_sec) 
    
-if MS_list_not_run:    
-  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: for devices status for ' + ' and '.join(devices.keys()) + ' '+ migrate+ ' migration, but can not get status for (' + MS_list_not_run + ') but get the status for ('+MS_list_run+') run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
+if context.get('destination_device_type') and context['destination_device_type']:
+  message = migrate
 else:
-  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: Get Status for ' + ' and '.join(devices.keys()) + ' '+ migrate+ ' migration,' + ' ('+MS_list_run+'), run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
+  message = migrate + ' migration,'
+
+if MS_list_not_run:    
+  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: for devices status for ' + ' and '.join(devices.keys()) + ' '+ message + ' devices but can not get status for (' + MS_list_not_run + ') but get the status for ('+MS_list_run+') run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
+else:
+  MSA_API.task_success('DONE in '+str(exec_sec)+' sec: Get Status for ' + ' and '.join(devices.keys()) + ' '+ message + ' devices ('+MS_list_run+'), run '+str(nb_ms_to_run)+ ' MS with differents parameters', context, True)
 
 
 

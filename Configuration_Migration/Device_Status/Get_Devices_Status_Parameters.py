@@ -10,8 +10,12 @@ from datetime import datetime
 
 dev_var = Variables()
 
+dev_var.add('source_simul_device_id')
+dev_var.add('destination_simul_device_id')
+
 dev_var.add('source_device_id')
 dev_var.add('destination_device_id')
+dev_var.add('real_device_source')
 
 context = Variables.task_call(dev_var)
 
