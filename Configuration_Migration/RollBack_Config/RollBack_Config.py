@@ -101,7 +101,7 @@ if all_ms_attached.get("microserviceUris"):
 context['MS_To_Run_destination_RollBack']  = MS_To_Run_destination
 
 ms_not_attached_destination_device = []
-full_message = '############# ROLLBACK PART ############# \n'
+full_message = '!############# ROLLBACK PART ############# \n'
 
 if (push_to_device == 'true' or push_to_device == True):
   mode = 2  #mode=2 : Apply to device and in DB
@@ -135,7 +135,7 @@ if MS_To_Run:
             message = re.sub('\s+\n', '\n', message, flags=re.UNICODE)  #remove blank lines
             message = re.sub('  \s+', '  ', message, flags=re.UNICODE)      #remove more than 2 blank space, but  \s+ remove also newline
   
-            full_message = full_message + '\n\n############# from MS ' + MS+  ' ############# '  + message
+            full_message = full_message + '\n\n!############# from MS ' + MS+  ' ############# '  + message
 
             MS_rollback.append(MS)
             
