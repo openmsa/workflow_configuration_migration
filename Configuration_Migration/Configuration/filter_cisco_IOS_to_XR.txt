@@ -37,6 +37,9 @@ policy_map|pmap_class.0.service_policy|policy_map|object_id
 interface|object_id|router_isis|interfaces.0.interface
 policy_map|pmap_class.0.class_name|class_map|object_id
 
+class_map|matches.0.match_access_group_value|ip_access_list|object_id
+route_policy|statements.0.destination.0.val|ip_access_list|object_id
+
 ## START match for route_policy
 ip_vrf|address_family.0.export_route_map|route_policy|object_id
 ip_vrf|address_family.0.import_route_map|route_policy|object_id
@@ -54,7 +57,7 @@ address_family|neighbors.0.bgp_route_map_in|ipv4_prefix_list|object_id
 address_family|neighbors.0.bgp_route_map_out|ipv4_prefix_list|object_id
 route_policy|statements.0.destination.0.val|ipv4_prefix_list|object_id
 route_policy|statements.0.as_path.0.val|as_path_set|object_id
-route_policy|statements.0.destination.0.val|ip_access_list|object_id
+#route_policy|statements.0.destination.0.val|ip_access_list|object_id
 route_policy|statements.0.destination.0.val|prefix_set|object_id
 address_family|neighbors.0.bgp_route_map_in|ip_prefix_list|name
 address_family|neighbors.0.bgp_route_map_out|ip_prefix_list|name
