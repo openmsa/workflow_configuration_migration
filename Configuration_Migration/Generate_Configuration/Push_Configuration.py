@@ -136,7 +136,7 @@ if MS_list:
             f = open(file_link, "w")
             f.write(message)
             f.close()
-            full_message = full_message + '\n\n############# from MS ' + MS+  ' ############# '  + message
+            full_message = full_message + '\n\n!############# from MS ' + MS+  ' ############# \n'  + message
             link={}
             link['MicroService'] = MS
             link['file_link']    = file_link

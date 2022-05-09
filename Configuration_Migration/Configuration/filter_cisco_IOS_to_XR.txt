@@ -60,3 +60,4 @@ address_family|neighbors.0.bgp_route_map_in|ip_prefix_list|name
 address_family|neighbors.0.bgp_route_map_out|ip_prefix_list|name
 route_policy|statements.0.communities.0.val|community_set|object_id
 route_policy|statements.0.extcommunities.0.val|extcommunity_set|object_id
+
