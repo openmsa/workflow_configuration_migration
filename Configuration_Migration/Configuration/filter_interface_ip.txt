@@ -2,11 +2,10 @@
 #
 # Microservice Name | Microservice variable
 #
-address_family|neighbors.0.bgp_neighbor
-ip_route|gateway
-router_bgp|neighbors.0.bgp_neighbor
 router_static|routes.0.gateway
 router_static|routes6.0.gateway
 router_static|vrf_routes.0.routes.0.gateway
 router_static|vrf_routes6.0.routes.0.gateway
+router_bgp|neighbors.0.bgp_neighbor
+address_family|neighbors.0.bgp_neighbor
 bgp_vrf|neighbor.0.bgp_vrf_neighbor
