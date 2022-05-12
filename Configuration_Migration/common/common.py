@@ -111,8 +111,8 @@ def remove_bad_ip_values_recursif(orig_field_name, fields, ms_newvalues, interfa
                remove_bad_ip_values_recursif(orig_field_name, copy.deepcopy(fields), ms_newvalues[key][field], interfaces_IP_available) 
              else:
                if value:
-                 match = re.match(r"^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$", value)
-                 if bool(match) and value not in interfaces_IP_available:
+                 # Check if the IP is in the list of available IP (IPv4 and IPv6)
+                 if value not in interfaces_IP_available:
                    #ms_newvalues[key][field]  = 'IP_TO_REMOVE for '+orig_field_name+ ', value='+value
                    ms_newvalues.pop(key)  #remove parent value
                  #else: 
