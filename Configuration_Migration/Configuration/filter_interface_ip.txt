@@ -2,7 +2,7 @@
 #
 # Microservice Name | Microservice variable
 #
-address_family|neighbor.0.bgp_neighbor
+address_family|neighbors.0.bgp_neighbor
 ip_route|gateway
 router_bgp|neighbors.0.bgp_neighbor
 router_static|routes.0.gateway
