@@ -7,6 +7,7 @@ dev_var = Variables()
 dev_var.add('source_device_id')
 dev_var.add('source_simul_device_id')
 dev_var.add('destination_device_id')
+dev_var.add('destination_simul_device_id')
 
 dev_var.add('customer_id')
 
