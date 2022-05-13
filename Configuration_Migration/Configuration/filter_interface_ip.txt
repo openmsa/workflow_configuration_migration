@@ -1,11 +1,21 @@
-# This file filter_interface_ip.txt contains the list of element to filter based on the interface subnet.
+
+# This file filter_interface_ip.txt contains the list of element to filter based on the interface subnet and other.
 #
-# Microservice Name | Microservice variable
-#
-router_static|routes.0.gateway
-router_static|routes6.0.gateway
-router_static|vrf_routes.0.routes.0.gateway
-router_static|vrf_routes6.0.routes.0.gateway
-router_bgp|neighbors.0.bgp_neighbor
-address_family|neighbors.0.bgp_neighbor
-bgp_vrf|neighbor.0.bgp_vrf_neighbor
+# Source Microservice Name|source variable name IP|source variable name mask|destination Microservice Name|destination variable name
+# The order is important, When the "destination Microservice Name" is the same on 2 or more following lines, it will cumulated all source IP before to run the filter on the "destination Microservice Name" MS.
+  
+interface|addresses.0.ipv4_address|addresses.0.ipv4_mask|router_static|routes.0.gateway
+interface|addresses.0.ipv6_address|addresses.0.ipv6_prefix|router_static|routes6.0.gateway
+interface|addresses.0.ipv4_address|addresses.0.ipv4_mask|router_static|vrf_routes.0.routes.0.gateway
+interface|addresses.0.ipv6_address|addresses.0.ipv6_prefix|router_static|vrf_routes6.0.routes.0.gateway
+
+interface|addresses.0.ipv4_address|addresses.0.ipv4_mask|router_bgp|neighbors.0.bgp_neighbor
+interface|addresses.0.ipv6_address|addresses.0.ipv6_prefix|router_bgp|neighbors.0.bgp_neighbor
+router_static|routes.0.ipv4_address|255.255.255.255|router_bgp|neighbors.0.bgp_neighbor
+router_static|routes6.0.ipv6_address|128|router_bgp|neighbors.0.bgp_neighbor
+
+interface|addresses.0.ipv4_address|addresses.0.ipv4_mask|address_family|neighbors.0.bgp_neighbor
+interface|addresses.0.ipv6_address|addresses.0.ipv6_prefix|address_family|neighbors.0.bgp_neighbor
+
+interface|addresses.0.ipv4_address|addresses.0.ipv4_mask|bgp_vrf|neighbor.0.bgp_vrf_neighbor
+interface|addresses.0.ipv6_address|addresses.0.ipv6_prefix|bgp_vrf|neighbor.0.bgp_vrf_neighbor
