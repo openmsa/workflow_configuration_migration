@@ -86,7 +86,7 @@ def find_all_ip_in_subnet_ipv6(interface_name, ipv6_address, ipv6_prefix, interf
     ips = ipaddress.ip_network(cidr, strict=False)
     ip_list = [str(ip) for ip in ips]    
     for ip in ip_list:
-      interfaces_IP_available[str(ip)] = interface_name
+      interfaces_IP_available[str(ip).lower()] = interface_name
     
   return interfaces_IP_available
  
@@ -111,6 +111,7 @@ def remove_bad_ip_values_recursif(orig_field_name, fields, ms_newvalues, interfa
                remove_bad_ip_values_recursif(orig_field_name, copy.deepcopy(fields), ms_newvalues[key][field], interfaces_IP_available) 
              else:
                if value:
+                 value = value.lower()
                  # Check if the IP is in the list of available IP (IPv4 and IPv6)
                  if value not in interfaces_IP_available:
                    #ms_newvalues[key][field]  = 'IP_TO_REMOVE for '+orig_field_name+ ', value='+value
