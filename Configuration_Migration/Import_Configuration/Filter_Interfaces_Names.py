@@ -8,6 +8,7 @@ from msa_sdk.order import Order
 from msa_sdk.variables import Variables
 from msa_sdk.msa_api import MSA_API
 from datetime import datetime
+from re import search
 import sys
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
@@ -52,7 +53,8 @@ if context.get(INTERFACE+'_values'):
     if val.get('object_id'):
       interface_orig = val["object_id"] #we get the object_id where the interface name is original (the '.' is not replace with '_' in interface name) ex GigabitEthernet0/0/1.1561501
       interfaces_MS_found.append(interface_orig)
-      if interface_orig in source_interfaces_name_list:
+      #if interface_orig in source_interfaces_name_list or search("Loopback\d+", interface_orig) :
+      if interface_orig in source_interfaces_name_list :
         #We used this interface
         interfaces_found.append(interface_orig)
         interfaces_newvalues[interface]['migrate'] = 1 
