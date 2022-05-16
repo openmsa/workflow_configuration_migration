@@ -51,7 +51,7 @@ interfaces_IP_available = {}
 #############################################
 #Get all filter to apply from given file
 #############################################
-previous_ms                     =''
+previous_destination_MS_Name                     =''
 previous_destination_field_name = ''
 if ip_data_filter_list:
   for line in ip_data_filter_list:
@@ -66,16 +66,16 @@ if ip_data_filter_list:
         destination_MS_Name     = list[3]
         destination_field_name  = list[4]    
        
-        if previous_ms and previous_destination_field_name and previous_ms != destination_MS_Name and destination_field_name !=previous_destination_field_name:
+        if previous_destination_MS_Name and previous_destination_field_name and (previous_destination_MS_Name != destination_MS_Name or destination_field_name != previous_destination_field_name):
           #############################################
           # remove unwanted data for previous filter MS line 
           #############################################
-          context['MS_IP_filter'][previous_ms] = 1
-          if context.get(previous_ms+'_values'):             
+          context['MS_IP_filter'][previous_destination_MS_Name] = 1
+          if context.get(previous_destination_MS_Name+'_values'):             
             fields = previous_destination_field_name.split('.0.')
-            remove_bad_ip_values_recursif(previous_destination_field_name, fields, context[previous_ms+'_values'], context[IP_available_title+previous_ms]);
+            remove_bad_ip_values_recursif(previous_destination_field_name, fields, context[previous_destination_MS_Name+'_values'], context[IP_available_title+previous_destination_MS_Name]);
 
-        previous_ms = destination_MS_Name
+        previous_destination_MS_Name = destination_MS_Name
         previous_destination_field_name = destination_field_name
         
         #############################################
@@ -160,14 +160,14 @@ if ip_data_filter_list:
 #############################################
 # remove unwanted data for last filter MS line 
 #############################################
-if previous_ms and previous_destination_field_name:
+if previous_destination_MS_Name and previous_destination_field_name:
   #############################################
   # remove unwanted data for previous filter MS line 
   #############################################
-  context['MS_IP_filter'][previous_ms] = 1
-  if context.get(previous_ms+'_values'):             
+  context['MS_IP_filter'][previous_destination_MS_Name] = 1
+  if context.get(previous_destination_MS_Name+'_values'):             
     fields = previous_destination_field_name.split('.0.')
-    remove_bad_ip_values_recursif(previous_destination_field_name, fields, context[previous_ms+'_values'], context[IP_available_title+previous_ms]);
+    remove_bad_ip_values_recursif(previous_destination_field_name, fields, context[previous_destination_MS_Name+'_values'], context[IP_available_title+previous_destination_MS_Name]);
                      
    
 if context['MS_IP_filter']:
