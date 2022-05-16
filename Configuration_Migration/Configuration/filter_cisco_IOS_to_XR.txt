@@ -58,6 +58,8 @@ address_family|neighbors.0.bgp_route_map_in|ipv4_prefix_list|object_id
 address_family|neighbors.0.bgp_route_map_out|ipv4_prefix_list|object_id
 route_policy|statements.0.destination_pfx.0.val|ipv4_prefix_list|object_id
 route_policy|statements.0.destination_acl.0.val|prefix_set|object_id
+
+router_bgp|neighbors.0.bgp_source_interface|interface_loopback|object_id
 route_policy|statements.0.destination_itf.0.val|interface_loopback|object_id
 route_policy|statements.0.as_path.0.val|as_path_set|object_id
 route_policy|statements.0.communities.0.val|community_set|object_id

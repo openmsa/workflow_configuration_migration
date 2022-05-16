@@ -9,8 +9,8 @@ interface|ipv6_address|ipv6_prefix|router_static|routes6.0.gateway
 interface|addresses.0.ipv4_address|addresses.0.ipv4_mask|router_static|vrf_routes.0.routes.0.gateway
 interface|ipv6_address|ipv6_prefix|router_static|vrf_routes6.0.routes.0.gateway
 
-interface|addresses.0.ipv4_address|addresses.0.ipv4_mask|router_bgp|neighbors.0.bgp_neighbor
-interface|ipv6_address|ipv6_prefix|router_bgp|neighbors.0.bgp_neighbor
+#interface|addresses.0.ipv4_address|addresses.0.ipv4_mask|router_bgp|neighbors.0.bgp_neighbor
+#interface|ipv6_address|ipv6_prefix|router_bgp|neighbors.0.bgp_neighbor
 router_static|routes.0.ipv4_address|255.255.255.255|router_bgp|neighbors.0.bgp_neighbor
 router_static|routes6.0.ipv6_address|128|router_bgp|neighbors.0.bgp_neighbor
 
