@@ -66,7 +66,7 @@ if ip_data_filter_list:
         destination_MS_Name     = list[3]
         destination_field_name  = list[4]    
        
-        if previous_ms and previous_destination_field_name and previous_ms != destination_MS_Name:
+        if previous_ms and previous_destination_field_name and previous_ms != destination_MS_Name and destination_field_name !=previous_destination_field_name:
           #############################################
           # remove unwanted data for previous filter MS line 
           #############################################
