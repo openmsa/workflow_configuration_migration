@@ -26,7 +26,7 @@ else:
   MSA_API.task_error('Can not open file "' + file + '"', context, True)
   import_liste_list = ''    
   
-context['import_liste'] = import_liste_list
+#context['import_liste'] = import_liste_list
 context['import_liste_file_full'] = file 
 
 wf_fields = {}

@@ -43,7 +43,7 @@ else:
   MSA_API.task_error('Can not open file "' + file + '"', context, True)
   ip_data_filter_list = ''    
   
-context['IP_data_filter'] = ip_data_filter_list
+#context['IP_data_filter'] = ip_data_filter_list
 
 source_interfaces_name_list = context['source_interfaces_name_list']
 interfaces_IP_available = {}
@@ -74,7 +74,7 @@ if ip_data_filter_list:
           if context.get(previous_destination_MS_Name+'_values_serialized'):             
             fields = previous_destination_field_name.split('.0.')
             ms_values = json.loads(context[previous_destination_MS_Name+'_values_serialized'])
-            remove_bad_ip_values_recursif(previous_destination_field_name, fields, ms_values, context[IP_available_title+previous_destination_MS_Name]);
+            remove_bad_ip_values_recursif(previous_destination_field_name, fields, ms_values, json.loads(context[IP_available_title+previous_destination_MS_Name]));
             context[previous_destination_MS_Name+'_values_serialized'] = json.dumps( ms_values )
 
         previous_destination_MS_Name = destination_MS_Name
@@ -87,7 +87,7 @@ if ip_data_filter_list:
          
         if context.get(IP_available_title+destination_MS_Name):
           #cumul with previous line
-          interfaces_IP_available  = context[IP_available_title+destination_MS_Name]
+          interfaces_IP_available  = json.loads(context[IP_available_title+destination_MS_Name])
         else:
           interfaces_IP_available  = {}
         
@@ -155,7 +155,7 @@ if ip_data_filter_list:
                   interfaces_IP_available = find_all_ip_in_subnet_ipv6(interface_full_name+'_', ipv6_address, ipv6_prefix, interfaces_IP_available) 
                 
               
-        context[IP_available_title+destination_MS_Name] = interfaces_IP_available      
+        context[IP_available_title+destination_MS_Name] = json.dumps(interfaces_IP_available)      
 
       context['MS_IP_filter'] = {}
 
@@ -170,7 +170,7 @@ if previous_destination_MS_Name and previous_destination_field_name:
   if context.get(previous_destination_MS_Name+'_values_serialized'):             
     fields = previous_destination_field_name.split('.0.')
     ms_values = json.loads(context[previous_destination_MS_Name+'_values_serialized'])
-    remove_bad_ip_values_recursif(previous_destination_field_name, fields, ms_values, context[IP_available_title+previous_destination_MS_Name]);
+    remove_bad_ip_values_recursif(previous_destination_field_name, fields, ms_values, json.loads(context[IP_available_title+previous_destination_MS_Name]));
     context[previous_destination_MS_Name+'_values_serialized'] = json.dumps( ms_values )
 
    

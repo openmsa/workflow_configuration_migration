@@ -107,7 +107,7 @@ else:
 if MS_list:
   for MS in  MS_list_destination:
     if MS and MS in MS_list.split(';'):
-      if context.get( MS + '_values_serialized'):
+      if context.get( MS + '_values_serialized') and context[MS + '_values_serialized'] != '{}':
         config = json.loads(context.get( MS + '_values_serialized')) 
         params = dict()
         params[MS] = config
@@ -157,7 +157,7 @@ if MS_list:
 
                 if match:
                   source_MS_file = match.group(1)
-                  context['source_MS_file'] = source_MS_file
+                  context['source_MS_file'] = json.dumps(source_MS_file)
                   if '/opt/fmc_repository/Datafiles/' not in source_MS_file:
                     source_MS_file = '/opt/fmc_repository/Datafiles/' + source_MS_file
                   

@@ -90,7 +90,7 @@ else:
   MSA_API.task_error('Can not open file "' + file + '"', context, True)
   change_interface = ''    
   
-context['change_interfaces_names'] = change_interface
+#context['change_interfaces_names'] = change_interface
 context['change_interfaces_names_file_full'] = file 
 
 if MS_list_string:

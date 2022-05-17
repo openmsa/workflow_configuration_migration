@@ -26,7 +26,7 @@ device_id_full = context['source_device_id_full']
 
 # Function: Parse all MS values recursivly for the given field
 def data_find_migrate_recursif(destination_full, fields, ms_newvalues):
-
+  global filter_keep_field_values
   if isinstance(fields, typing.List) and fields:
     field = fields[0]
     fields.pop(0)
@@ -42,9 +42,9 @@ def data_find_migrate_recursif(destination_full, fields, ms_newvalues):
                data_find_migrate_recursif(destination_full, copy.deepcopy(fields), value1[field]) 
              else:
                if value :
-                 if not context.get('Filter_keep_'+destination_full+'_field_values'):
-                   context['Filter_keep_'+destination_full+'_field_values'] = {}
-                 context['Filter_keep_'+destination_full+'_field_values'][value] = ''
+                 if not filter_keep_field_values.get('Filter_keep_'+destination_full+'_field_values'):
+                   filter_keep_field_values['Filter_keep_'+destination_full+'_field_values'] = {}
+                 filter_keep_field_values['Filter_keep_'+destination_full+'_field_values'][value] = ''
   return 'not found'
 
 #########################################################
@@ -100,7 +100,7 @@ else:
   MSA_API.task_error('Can not open file "' + file + '"', context, True)
   data_filter_list = ''    
   
-context['data_filter'] = data_filter_list
+#context['data_filter'] = data_filter_list
 context['data_filter_file_full'] = file 
 context['MS_to_filter'] = {}
 
@@ -110,7 +110,7 @@ context['MS_to_filter'] = {}
 
 previous_destination_MS_Name    = ''
 previous_destination_field_name = ''
-
+filter_keep_field_values        = {}
 
 if MS_list_string:
   MS_list = MS_list_string.split('\s*;\s*')
@@ -130,19 +130,19 @@ if MS_list_string:
           if not previous_destination_MS_Name and not previous_destination_field_name:
             previous_destination_MS_Name    = destination_MS_Name
             previous_destination_field_name = destination_field_name 
-            context['Filter_keep_'+destination_full+'_field_values'] = {}
+            filter_keep_field_values['Filter_keep_'+destination_full+'_field_values'] = {}
 
           if  destination_MS_Name != previous_destination_MS_Name or destination_field_name != previous_destination_field_name:
             #we are using now one other destination MS and fieldname, we should clean the previous MS values
             #Remove old unsed values :
             fields = previous_destination_field_name.split('.0.')
             ms_values = json.loads(context[previous_destination_MS_Name+'_values_serialized'])
-            remove_bad_values_recursif(previous_destination_field_name, fields, ms_values, context['Filter_keep_'+previous_destination_MS_Name+'_'+previous_destination_field_name+'_field_values']);
+            remove_bad_values_recursif(previous_destination_field_name, fields, ms_values, filter_keep_field_values['Filter_keep_'+previous_destination_MS_Name+'_'+previous_destination_field_name+'_field_values']);
             context[previous_destination_MS_Name+'_values_serialized'] = json.dumps( ms_values )
 
             previous_destination_MS_Name    = destination_MS_Name
             previous_destination_field_name = destination_field_name 
-            context['Filter_keep_'+destination_full+'_field_values'] = {}
+            filter_keep_field_values['Filter_keep_'+destination_full+'_field_values'] = {}
 
           if  context.get(orig_MS_Name+'_values_serialized') and context.get(destination_MS_Name+'_values_serialized'):
             context['MS_to_filter'][destination_MS_Name] = 1
@@ -156,8 +156,6 @@ if MS_list_string:
 
 
           else:
-            #if not context.get(orig_MS_Name+'_values_serialized'):
-            #  context['Filter_keep_'+destination_full+'_field_values'] = {}
             if not context.get(destination_MS_Name+'_values_serialized'):
               context[destination_MS_Name+'_values_serialized'] = json.dumps({})          
 
@@ -167,9 +165,9 @@ if MS_list_string:
     fields = destination_field_name.split('.0.')
 
     ms_values = json.loads(context[destination_MS_Name+'_values_serialized'])
-    remove_bad_values_recursif(destination_field_name, fields, ms_values, context['Filter_keep_'+destination_full+'_field_values']);
+    remove_bad_values_recursif(destination_field_name, fields, ms_values, filter_keep_field_values['Filter_keep_'+destination_full+'_field_values']);
     context[destination_MS_Name+'_values_serialized'] = json.dumps( ms_values )
-    #TODO context['Filter_keep_'+destination_full+'_field_values'] = ''
+
 msg = 'DONE: filter all microservices (' + ';'.join(context['MS_to_filter']) + ') values from ' + context['data_filter_file']
 #create_event(device_id_full, "1", "1", subtenant_ref, subtenant_id, msg)
 MSA_API.task_success(msg, context, True)

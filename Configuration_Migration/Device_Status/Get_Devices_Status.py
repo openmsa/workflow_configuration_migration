@@ -189,7 +189,7 @@ for  dest, device_id_full in devices.items():
           parameter2_to_give_to_ms = list[6]
 
           if device_src_dest == dest:
-            if ms_source != 'None' and context.get(ms_source+'_values') and context[ms_source+'_values'] :
+            if ms_source != 'None' and context.get(ms_source+'_values_serialized') and context[ms_source+'_values_serialized'] :
               '''  "bgp_vrf_values": {
                  "TRIBUNAL-JUSTICA": {
                         "object_id": "TRIBUNAL-JUSTICA",
@@ -207,7 +207,7 @@ for  dest, device_id_full in devices.items():
               context['Status_'+full_source_field+'_list'] = list
               values_to_send = {}
               ## Find all source values
-              ms_values = context[ms_source+'_values']
+              ms_values = json.loads(context[ms_source+'_values_serialized'])
               if isinstance(ms_values, dict):
                 for  key, value1 in ms_values.items():
                   if isinstance(value1, dict):
