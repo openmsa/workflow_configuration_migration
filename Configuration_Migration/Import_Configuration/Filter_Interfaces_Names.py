@@ -46,8 +46,8 @@ nb_interfaces_found = 0
 interfaces_found    = []
 interfaces_MS_found = []
 
-if context.get(INTERFACE+'_values'):
-  interfaces_newvalues = context[INTERFACE+'_values']
+if context.get(INTERFACE+'_values_serialized'):
+  interfaces_newvalues = json.loads(context[INTERFACE+'_values_serialized'])
   #interfaces_newvalues: { "Multilink45": { "object_id": "Multilink45", "migrate": "0",....
   for interface, val in interfaces_newvalues.items():
     if val.get('object_id'):
@@ -59,17 +59,21 @@ if context.get(INTERFACE+'_values'):
         interfaces_found.append(interface_orig)
         interfaces_newvalues[interface]['migrate'] = 1 
         nb_interfaces_found=nb_interfaces_found+1
-      
+  context[INTERFACE+'_values_serialized'] = json.dumps( interfaces_newvalues )
+    
    
 context['interfaces_found from MS'] = interfaces_found  
  
 if nb_interfaces_found:   
-  if context.get(INTERFACE+'_values') and context[INTERFACE+'_values']:
-    ms_newvalues = copy.deepcopy(context[INTERFACE+'_values']) # We can not remove one element while iterating over it, so itirating on one ms_newvalues
+  if context.get(INTERFACE+'_values_serialized') and context[INTERFACE+'_values_serialized']:
+    ms_values = json.loads(context[INTERFACE+'_values_serialized'])
+    ms_newvalues = copy.deepcopy(ms_values) # We can not remove one element while iterating over it, so itirating on one ms_newvalues
     for  object_id, value in ms_newvalues.items():
       if not value.get('migrate') or value['migrate'] == 0:
-        context[INTERFACE+'_values'].pop(object_id)  #remove value
-        
+        ms_values.pop(object_id)  #remove value
+    context[INTERFACE+'_values_serialized'] = json.dumps( ms_values )
+
+    
   MSA_API.task_success('DONE: found '+str(nb_interfaces_found)+' interfaces (' + ', '.join(interfaces_found) + ')', context, True)
   
 else:

@@ -63,17 +63,14 @@ if MS_list:
               convert_pattern_destination = list[4]
               convert_comment = list[5]
 
-              if convert_MS == MS and context.get(MS+'_values'):
-                #if  not context.get(MS+'_values_orig'):
-                #  context[MS+'_values_orig'] = copy.deepcopy(context[MS+'_values'])
-                ms_newvalues = context[MS+'_values']
+              if convert_MS == MS and context.get(MS+'_values_serialized'):
+                ms_newvalues = json.loads(context[MS+'_values_serialized'])
                 fields = convert_field.split('.0.')
                 data_conversion_recursif_compute_conf(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination)
                      
             
       #########################################################
       # ADD THE DOWNLOAD FILE LINK FOR EACH VALUES
-      config = context.get( MS + '_values')
       link =      DIRECTORY + "/" + MS + '_'  + day + '.txt'
       link_orig = DIRECTORY + "/" + MS + '_'  + day + '_orig.txt'
       

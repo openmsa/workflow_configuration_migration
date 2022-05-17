@@ -107,8 +107,8 @@ else:
 if MS_list:
   for MS in  MS_list_destination:
     if MS and MS in MS_list.split(';'):
-      config = context.get( MS + '_values') 
-      if config:
+      if context.get( MS + '_values_serialized'):
+        config = json.loads(context.get( MS + '_values_serialized')) 
         params = dict()
         params[MS] = config
         #context[MS + '_export_params'] = params

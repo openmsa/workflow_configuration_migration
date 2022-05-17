@@ -3,11 +3,11 @@
     <map>
         <entry>
             <key>DISPLAYNAME</key>
-            <value>Set_Simulator_Source_Device.py</value>
+            <value>Set_Source_Device.py</value>
         </entry>
         <entry>
             <key>DATE_MODIFICATION</key>
-            <value>1646218097622</value>
+            <value>1652777114386</value>
         </entry>
         <entry>
             <key>REPOSITORY</key>
@@ -15,7 +15,7 @@
         </entry>
         <entry>
             <key>DATE_CREATION</key>
-            <value>1646218097618</value>
+            <value>1652777114184</value>
         </entry>
         <entry>
             <key>TAG</key>

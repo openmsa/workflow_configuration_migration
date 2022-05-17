@@ -71,9 +71,11 @@ if ip_data_filter_list:
           # remove unwanted data for previous filter MS line 
           #############################################
           context['MS_IP_filter'][previous_destination_MS_Name] = 1
-          if context.get(previous_destination_MS_Name+'_values'):             
+          if context.get(previous_destination_MS_Name+'_values_serialized'):             
             fields = previous_destination_field_name.split('.0.')
-            remove_bad_ip_values_recursif(previous_destination_field_name, fields, context[previous_destination_MS_Name+'_values'], context[IP_available_title+previous_destination_MS_Name]);
+            ms_values = json.loads(context[previous_destination_MS_Name+'_values_serialized'])
+            remove_bad_ip_values_recursif(previous_destination_field_name, fields, ms_values, context[IP_available_title+previous_destination_MS_Name]);
+            context[previous_destination_MS_Name+'_values_serialized'] = json.dumps( ms_values )
 
         previous_destination_MS_Name = destination_MS_Name
         previous_destination_field_name = destination_field_name
@@ -89,8 +91,8 @@ if ip_data_filter_list:
         else:
           interfaces_IP_available  = {}
         
-        if context.get(source_MS_Name+'_values'):
-          sources_values = context[source_MS_Name+'_values']
+        if context.get(source_MS_Name+'_values_serialized'):
+          sources_values = json.loads(context[source_MS_Name+'_values_serialized'])
           #interfaces_newvalues: { "Serial1/0/0_1/3/1/1:0": { "object_id": "Serial1/0/0.1/3/1/1:0", "addresses": { "0": { "ipv4_address": "186.239.124.197", "ipv4_mask": "255.255.255.252" }
 
           for interface, interface_value in sources_values.items():
@@ -165,10 +167,12 @@ if previous_destination_MS_Name and previous_destination_field_name:
   # remove unwanted data for previous filter MS line 
   #############################################
   context['MS_IP_filter'][previous_destination_MS_Name] = 1
-  if context.get(previous_destination_MS_Name+'_values'):             
+  if context.get(previous_destination_MS_Name+'_values_serialized'):             
     fields = previous_destination_field_name.split('.0.')
-    remove_bad_ip_values_recursif(previous_destination_field_name, fields, context[previous_destination_MS_Name+'_values'], context[IP_available_title+previous_destination_MS_Name]);
-                     
+    ms_values = json.loads(context[previous_destination_MS_Name+'_values_serialized'])
+    remove_bad_ip_values_recursif(previous_destination_field_name, fields, ms_values, context[IP_available_title+previous_destination_MS_Name]);
+    context[previous_destination_MS_Name+'_values_serialized'] = json.dumps( ms_values )
+
    
 if context['MS_IP_filter']:
   MSA_API.task_success('DONE, filter IP on all microservices (' + ';'.join(context['MS_IP_filter'].keys()) + ') values from '+ context['data_filter_ip_file']+ ', found '+ str(len(interfaces_IP_available)) +' IP availables for the selected interfaces', context, True)

@@ -142,9 +142,11 @@ for source_key,item  in wf_fields.items():
                 object_id = context_val[second_field]
                 object_id_without_point = object_id.replace('.','_')
                 if current_object_id != object_id:
-                  destMS = item['destination_MS_Name']+'_values'
-                  if context.get(destMS) and context[destMS] and context[destMS].get(object_id_without_point):
-                    value = context[destMS][object_id_without_point]
+                  destMS = item['destination_MS_Name']+'_values_serialized'
+                  if context.get(destMS) and context[destMS]:
+                    ms_values = json.loads( context[destMS] )
+                    if ms_values.get(object_id_without_point):
+                      value = ms_values[object_id_without_point]
                   else:
                     value = {}
                   count = 0
@@ -167,13 +169,13 @@ for source_key,item  in wf_fields.items():
                   value[destination_field_name] =  context_val[second_field]
               
               #value[item['destination_field_name'][idx]] = context_val[second_field] 
-          if context.get(item['destination_MS_Name']+'_values'):
-            newvalue = context[item['destination_MS_Name']+'_values']
+          if context.get(item['destination_MS_Name']+'_values_serialized'):
+            newvalue = json.loads(context[item['destination_MS_Name']+'_values_serialized'])
           else:
             newvalue = {}
           if value and object_id:
             newvalue[object_id_without_point] = value
-          context[item['destination_MS_Name']+'_values'] = newvalue
+          context[item['destination_MS_Name']+'_values_serialized'] = json.dumps(newvalue)
           count = count +1
       else:
         #get value directly from the context to add new value to all current values
@@ -190,8 +192,8 @@ for source_key,item  in wf_fields.items():
             newval = newval+ context[fields[1]]        
         else:
           newval = context[first_wf_field] #get value directly from the context
-        if context.get(item['destination_MS_Name']+'_values'):
-          destination_MS_context = context[item['destination_MS_Name']+'_values']
+        if context.get(item['destination_MS_Name']+'_values_serialized'):
+          destination_MS_context = json.loads(context[item['destination_MS_Name']+'_values_serialized'])
         else:
           destination_MS_context = {}
         fields = item['destination_field_name'][0].split('.0.')  # groups.0.p2p

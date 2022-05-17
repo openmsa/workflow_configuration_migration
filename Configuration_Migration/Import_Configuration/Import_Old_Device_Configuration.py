@@ -59,9 +59,9 @@ if isinstance(responses, typing.List):
         for MS in response_message:
           if response_message.get(MS):
             #MS_list.append(MS)
-            context[ MS + '_values'] = response_message.get(MS)
+            context[ MS + '_values_serialized'] = json.dumps(response_message.get(MS))
           else:
-            context[ MS + '_values'] = response_message
+            context[ MS + '_values_serialized'] = json.dumps(response_message)
             
             
   # Get deployment settings ID for the device.
