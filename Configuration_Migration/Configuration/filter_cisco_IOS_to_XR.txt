@@ -18,6 +18,8 @@ interface|object_id|router_static|routes.0.interface
 interface|object_id|router_static|routes6.0.interface
 interface|object_id|router_isis|interfaces.0.interface
 interface|object_id|xconnect|object_id
+interface|object_id|mpls|object_id
+
 
 ## START match for policy_map
 interface|service_policy_out|policy_map|object_id
