@@ -5,15 +5,21 @@
 interface|KEY
 interface|object_id
 #controller|interface
-router_static|routes.0.interface
 ip_route|interface
 route_map|matches.0.interface
 route_policy|statements.0.interface
 router_bgp|neighbors.0.bgp_source_interface
 router_isis|interfaces.0.interface
-router_static|routes.0.interface                
+router_static|routes.0.interface
 router_static|vrf_routes.0.routes.0.interface
+router_static|routes6.0.interface
+router_static|vrf_routes.0.routes6.0.interfacee
+
 route_map|sorted_matches.0.interface
-xconnect|groups.0.interface
+xconnect|KEY
+xconnect|object_id
+xconnect|interface
+mpls|KEY
+mpls|object_id
 
 
