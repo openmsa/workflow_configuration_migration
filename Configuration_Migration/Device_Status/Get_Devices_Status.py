@@ -288,7 +288,7 @@ for  dest, device_id_full in devices.items():
   day = now.strftime("%m-%d-%Y-%Hh%M")
   
   #Create the global config file :
-  generate_file = DIRECTORY+ "/" + "ALL_SOURCE_STATUS_"  + dest.lower() +'_' + migrate + '_' + day + '.txt'
+  generate_file = DIRECTORY+ "/" + "ALL_SOURCE_STATUS_" + context['SERVICEINSTANCEID'] + "_"  + dest.lower() +'_' + migrate + '_' + day + '.txt'
   context['generate_'+dest.lower() +'_' + migrate + '_status_file'] = generate_file
 
   f = open(generate_file, "w")

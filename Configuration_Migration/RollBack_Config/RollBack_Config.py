@@ -153,7 +153,7 @@ if MS_To_Run:
 #Create the global rollback generate file :
 now = datetime.now() # current date and time
 day = now.strftime("%m-%d-%Y-%Hh%M")
-file =   DIRECTORY + "/RollBack_generate_"  + day + '.txt'
+file =   DIRECTORY + "/RollBack_generate_" + context['SERVICEINSTANCEID'] + "_"  + day + '.txt'
 context['rollback_generate_file'] = file
 f = open(file, "w")
 f.write(full_message)
