@@ -31,6 +31,8 @@ dev_var.add('link.0.file_link')
 
 context = Variables.task_call(dev_var)
 
+context['customer_id_instance_id'] =  context['customer_id'] + '_#' +context['SERVICEINSTANCEID']
+
 
 #When the interfaces contains 'dot1q' and 'second_dot1q' we add it into the interface name
 if not context['batch_load'] :
