@@ -71,8 +71,8 @@ if MS_list:
             
       #########################################################
       # ADD THE DOWNLOAD FILE LINK FOR EACH VALUES
-      link =      DIRECTORY + "/" + MS + context['SERVICEINSTANCEID'] + '_'  + day + '.txt'
-      link_orig = DIRECTORY + "/" + MS + context['SERVICEINSTANCEID'] + '_'  + day + '_orig.txt'
+      link =      DIRECTORY + "/" + MS + '_' + context['SERVICEINSTANCEID'] + '_'  + day + '.txt'
+      link_orig = DIRECTORY + "/" + MS + '_' + context['SERVICEINSTANCEID'] + '_'  + day + '_orig.txt'
       
       context[MS + '_link'] = link
       context[MS + '_link_orig'] = link_orig
