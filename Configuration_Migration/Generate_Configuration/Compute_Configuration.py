@@ -71,15 +71,15 @@ if MS_list:
             
       #########################################################
       # ADD THE DOWNLOAD FILE LINK FOR EACH VALUES
-      link =      DIRECTORY + "/" + MS + '_'  + day + '.txt'
-      link_orig = DIRECTORY + "/" + MS + '_'  + day + '_orig.txt'
+      link =      DIRECTORY + "/" + MS + context['SERVICEINSTANCEID'] + '_'  + day + '.txt'
+      link_orig = DIRECTORY + "/" + MS + context['SERVICEINSTANCEID'] + '_'  + day + '_orig.txt'
       
       context[MS + '_link'] = link
       context[MS + '_link_orig'] = link_orig
 
 
 
-context['generate_file'] = DIRECTORY+ "/" + "ALL_MS_"  + day + '.txt'
+context['generate_file'] = DIRECTORY+ "/" + "ALL_MS_" + context['SERVICEINSTANCEID'] + "_" + day + '.txt'
 
 MSA_API.task_success('DONE: update the interfaces names and compute data from '+ context['data_conversion_pattern_file'], context, True)
 
