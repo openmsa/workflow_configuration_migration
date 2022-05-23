@@ -70,8 +70,6 @@ else:
             interface['pseudowire_class'] = itemArray[5]
             interface['p2p'] = itemArray[6]
             new_interfaces.append(interface)
-        else:
-          MSA_API.task_error('ERROR: invalid batch load format. Requires semicolomn CSV', context, True)
     context['interfaces'] = new_interfaces
 
 MSA_API.task_success('DONE: user parameters OK', context, True)
