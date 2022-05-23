@@ -14,6 +14,9 @@ dev_var.add('customer_id')
 dev_var.add('batch_load')
 dev_var.add('batchloadfile')
 
+dev_var.add('interface_list')
+
+
 dev_var.add('interfaces.0.source')
 dev_var.add('interfaces.0.destination')
 dev_var.add('interfaces.0.dot1q')
