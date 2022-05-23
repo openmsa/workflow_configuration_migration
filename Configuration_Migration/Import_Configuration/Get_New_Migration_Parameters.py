@@ -55,12 +55,13 @@ if not context['batch_load'] :
     
       context['interfaces'] = new_interfaces    
 else:
-    interfacesMapFile = requests.get(context['batchloadfile'])
-    textString = interfacesMapFile.text
+    #interfacesMapFile = requests.get(context['batchloadfile'])
+    #textString = interfacesMapFile.text
+    textString = context['interface_list'];
     interfacesMap = textString.replace("\r\n","\n").split('\n')
     new_interfaces = []
     for item in interfacesMap:
-        itemArray = item.split('|')
+        itemArray = item.split(';')
         if len(itemArray) == 6: 
             interface = {}
             interface['source'] = itemArray[1]
@@ -73,6 +74,4 @@ else:
             new_interfaces.append(interface)
     context['interfaces'] = new_interfaces
 
-
 MSA_API.task_success('DONE: user parameters OK', context, True)
-print(ret)
