@@ -38,7 +38,7 @@ device_id = device_id_full[3:]
 obmf  = Order(device_id=device_id)
 
 if (context['real_device_source'] == 'false' or context['real_device_source'] == False) and (context['push_to_device']== 'true' or context['push_to_device']== True):
-  msg = 'ERROR: Before to push the configuration to real device '+device_id_full+', you should Import first the configuration from real device '+context['source_device_id']
+  msg = 'ERROR: Before to push the configuration to real device '+str(device_id_full)+', you should Import first the configuration from real device '+str(context['source_device_id'])
   create_event(device_id_full, "1", "MIGRATION", "GEN_CONFIG",  subtenant_ref, subtenant_id, msg)
   context['push_to_device'] = 'false'        #reset value
   MSA_API.task_error(msg, context, True)
