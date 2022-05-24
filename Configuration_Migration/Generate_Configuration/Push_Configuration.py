@@ -50,7 +50,6 @@ MS_list        = MS_list.replace(' ;',';')
 MS_list        = MS_list.replace('; ',';')     
 command = 'CREATE'
  
-links =[]
 MS_source_path = context['MS_source_path']
 MS_imported =[]
 
@@ -129,58 +128,10 @@ if MS_list:
            if response.get("entity").get("message"):
             # response =    "message": "\nip vrf  V4815:Sabesp_Intragov\n  description  \n  rd  \n\n    route-target export 10429:11048 \n     route-target import 10429:102 \n     route-target import 10429:11048 \n \n\n  export map  \n"
             message =  response.get("entity").get("message") 
-            file_link = context[MS + '_link']
             message = re.sub('\s+\n', '\n', message, flags=re.UNICODE)  #remove blank lines
-            message = re.sub('  \s+', '  ', message, flags=re.UNICODE)      #remove more than 2 blank space, but  \s+ remove also newline
-            #message = '<pre> \n' + message + '\n </pre>'
-            f = open(file_link, "w")
-            f.write(message)
-            f.close()
-            full_message = full_message + '\n\n!############# from MS ' + MS+  ' ############# \n'  + message
-            link={}
-            link['MicroService'] = MS
-            link['file_link']    = file_link
-            links.append(link)
-            MS_imported.append(MS)
-            
-            #Add original file link:
-            source_MS_file = ''
-            if MS_source_path:
-              MS_file = '/opt/fmc_repository/'+ MS_source_path +'/' + MS + '.xml'
-              if os.path.isfile(MS_file):
-                file1 = open(MS_file, "r")
-                # read file content
-                readfile = file1.read()
-                file1.close()
-                #find <operation><![CDATA[cat /config/cisco_ios/sample-config.ios.V4815.txt]]></operation>
-                match = re.search('cat (.+)]]', readfile)
+            message = re.sub('  \s+', '  ', message, flags=re.UNICODE)  #remove more than 2 blank space, but  \s+ remove also newline
 
-                if match:
-                  source_MS_file = match.group(1)
-                  context['source_MS_file'] = json.dumps(source_MS_file)
-                  if '/opt/fmc_repository/Datafiles/' not in source_MS_file:
-                    source_MS_file = '/opt/fmc_repository/Datafiles/' + source_MS_file
-                  
-                  if os.path.isfile(source_MS_file):
-                    file1 = open(source_MS_file, "r")
-                    # read file content
-                    readfile = file1.read()
-                    file1.close()
-                    f = open(context[MS + '_link_orig'], "w")
-                    f.write( '<pre> \n' + readfile + '\n </pre>')
-                    f.close()
-                    link={}
-                    link['MicroService'] = MS + '_original'
-                    link['file_link']    = context[MS + '_link_orig']
-                    links.append(link)
-                   
-                
-            #Add MS import Skip result link:
-            MS_file = DIRECTORY + '/' + MS + '.log'
-            link={}
-            link['MicroService'] = MS + '_Import_parse'
-            link['file_link']    = MS_file       
-            links.append(link)
+            full_message = full_message + '\n\n!############# from MS ' + MS+  ' ############# \n'  + message
 
           else:
             msg = 'ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response)
@@ -198,10 +149,7 @@ if MS_list:
     else:
       ms_not_attached_destination_device.append(MS)
     
-context['link'] = links 
-
 #Create the global config file :
-
 f = open(context['generate_file'], "w")
 f.write(full_message)
 f.close()

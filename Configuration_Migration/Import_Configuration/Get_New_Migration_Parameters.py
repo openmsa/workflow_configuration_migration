@@ -26,9 +26,6 @@ dev_var.add('interfaces.0.p2p')
 dev_var.add('data_filter')
 dev_var.add('enable_filter')
 
-#dev_var.add('generate_file')
-dev_var.add('link.0.MicroService')
-dev_var.add('link.0.file_link')
 
 context = Variables.task_call(dev_var)
 

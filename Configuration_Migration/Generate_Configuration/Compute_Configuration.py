@@ -43,6 +43,7 @@ else:
   data_conversion_list = ''    
 context['data_conversion'] = data_conversion_list
 
+full_message=''
 
 if MS_list:
   for MS in  MS_list.split(';'):
@@ -67,17 +68,17 @@ if MS_list:
                 ms_newvalues = json.loads(context[MS+'_values_serialized'])
                 fields = convert_field.split('.0.')
                 data_conversion_recursif_compute_conf(ms_newvalues, fields, convert_condition, convert_pattern_source, convert_pattern_destination)
-                     
-            
-      #########################################################
-      # ADD THE DOWNLOAD FILE LINK FOR EACH VALUES
-      link =      DIRECTORY + "/" + MS + '_' + context['SERVICEINSTANCEID'] + '_'  + day + '.txt'
-      link_orig = DIRECTORY + "/" + MS + '_' + context['SERVICEINSTANCEID'] + '_'  + day + '_orig.txt'
-      
-      context[MS + '_link'] = link
-      context[MS + '_link_orig'] = link_orig
+  
+      if context.get(MS+'_values_serialized'):
+        ms_newvalues = json.loads(context[MS+'_values_serialized'])
+        full_message = full_message + '\n\n!############# from source MS ' + MS+ ' and after filters ############# \n'  + str(ms_newvalues)
 
+context['source_generate_file'] = DIRECTORY+ "/" + "source_generate_file_" + context['SERVICEINSTANCEID'] + "_" + day + '.txt'
 
+#Create the global source_generate_file file :
+f = open(context['source_generate_file'], "w")
+f.write(full_message)
+f.close()
 
 context['generate_file'] = DIRECTORY+ "/" + "ALL_MS_" + context['SERVICEINSTANCEID'] + "_" + day + '.txt'
 
