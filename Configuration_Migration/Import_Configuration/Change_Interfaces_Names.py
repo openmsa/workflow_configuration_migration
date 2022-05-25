@@ -105,16 +105,16 @@ if MS_list_string:
           orig_MS_Name            = list[0]
           orig_field_name         = list[1]
           if  context.get(orig_MS_Name+'_values_serialized'):
-            context[orig_field_name+'_field_values'] = {}
+            #context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
-            context['Filter_'+orig_field_name+'_field_values'] = {}
+            #context['Filter_'+orig_field_name+'_field_values'] = {}
             ## Find all source values
             ms_values = json.loads(context[orig_MS_Name+'_values_serialized'])
             change_interfaces_names_recursive(orig_MS_Name+'_'+orig_field_name,fields, ms_values, new_interfaces_names, new_interfaces_names_clean) 
             context[orig_MS_Name+'_values_serialized'] = json.dumps( ms_values )
-          else:
-            if not context.get(orig_MS_Name+'_values_serialized'):
-              context['Filter_'+orig_field_name+'_field_values'] = {}
+          #else:
+          #  if not context.get(orig_MS_Name+'_values_serialized'):
+          #    context['Filter_'+orig_field_name+'_field_values'] = {}
            
 MSA_API.task_success('DONE: update the interfaces names ', context, True)
 

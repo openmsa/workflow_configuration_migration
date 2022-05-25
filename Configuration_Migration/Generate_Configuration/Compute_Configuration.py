@@ -41,7 +41,7 @@ if os.path.isfile(file):
 else:
   MSA_API.task_error('Can not open file "' + file + '"', context, True)
   data_conversion_list = ''    
-context['data_conversion'] = data_conversion_list
+#context['data_conversion'] = data_conversion_list
 
 full_message=''
 
@@ -54,7 +54,7 @@ if MS_list:
       if data_conversion_list:
         for line in data_conversion_list:
           if (not line.startswith('#')) and line.strip():
-            context['data_conversion_line'] = line+';'
+            #context['data_conversion_line'] = line+';'
             list = line.split('|')  # MS|Field|Replace Pattern|comment
             if len(list) > 4:
               convert_MS             = list[0]

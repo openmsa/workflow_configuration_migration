@@ -142,7 +142,7 @@ if MS_list_string:
           previous_sources.append(orig_MS_Name+'|'+orig_field_name)
 
           if  context.get(orig_MS_Name+'_values_serialized') and context.get(destination_MS_Name+'_values_serialized'):
-            context[orig_field_name+'_field_values'] = {}
+            #context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
             ## Find all source values
             ms_values = json.loads(context[orig_MS_Name+'_values_serialized'])

@@ -146,7 +146,7 @@ if MS_list_string:
 
           if  context.get(orig_MS_Name+'_values_serialized') and context.get(destination_MS_Name+'_values_serialized'):
             context['MS_to_filter'][destination_MS_Name] = 1
-            context[orig_field_name+'_field_values'] = {}
+            #context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
             ## Find all source values
 
