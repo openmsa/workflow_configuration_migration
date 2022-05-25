@@ -90,29 +90,12 @@ else:
   MSA_API.task_error('Can not open file "' + file + '"', context, True)
   data_filter_list = ''    
   
-#context['data_filter'] = data_filter_list
-context['data_filter_file_full'] = file 
-context['MS_to_filter'] = {}
-
-######### IT WILL put migrate to 1 to all destination fields values 
-# example for "interface|vrf_name|ip_vrf|object_id"  we keep all MS values for ip_vrf where the object_id is equal to vrf_name in interface MS  and we remove all other MS values
-
 
 previous_destination_MS_Name    = ''
 previous_destination_field_name = ''
 filter_keep_field_values        = {}
-nb_error = 0
-
-#check if the folder  DIRECTORY exist, else create it
-if not os.path.isdir(DIRECTORY):
- os.mkdir(DIRECTORY)
-now = datetime.now() # current date and time
-day = now.strftime("%m-%d-%Y-%Hh%M")
+error_messages = {}
  
-context['consistency_checking_file'] = DIRECTORY+ "/" + "consistency_checking_" + context['SERVICEINSTANCEID'] + "_" + day + '.txt'
-f = open(context['consistency_checking_file'], "w")
-f.write('# Check consistency data \n')
-f.close()
         
 if MS_list_string:
   MS_list = MS_list_string.split('\s*;\s*')
@@ -147,10 +130,7 @@ if MS_list_string:
 
               for value in source_values:
                 if value and value not in destination_values:
-                  f = open(context['consistency_checking_file'], "a")
-                  f.write('MS "' + previous_destination_MS_Name+ '" ' + previous_destination_field_name + ' has missing definition value "'+value+'"\n')
-                  f.close()
-                  nb_error= nb_error +1
+                  error_messages[previous_destination_MS_Name+ '_' + previous_destination_field_name + '_' + str(value)] =   'MS "' + previous_destination_MS_Name+ '" ' + previous_destination_field_name + ' has missing definition value "'+value+'"'
             
      
             previous_destination_MS_Name    = destination_MS_Name
@@ -159,7 +139,6 @@ if MS_list_string:
             filter_keep_field_values['Filter_destination_'+destination_full+'_field_values'] = {}
 
           if  context.get(orig_MS_Name+'_values_serialized') and context.get(destination_MS_Name+'_values_serialized'):
-            context['MS_to_filter'][destination_MS_Name] = 1
             context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
             ## Find all source values
@@ -185,10 +164,25 @@ if MS_list_string:
 
       for value in source_values:
         if value and value not in destination_values:
-          f = open(context['consistency_checking_file'], "a")
-          f.write('MS "' + previous_destination_MS_Name+ '" ' + previous_destination_field_name + ' has missing definition value "'+value+'"\n')
-          f.close()
-          nb_error= nb_error +1
-        
+          error_messages[destination_MS_Name+ '_' + destination_field_name + '_' + str(value)] =   'MS "' + destination_MS_Name+ '" ' + destination_field_name + ' has missing definition value "'+value+'"'
+ 
+
+#check if the folder  DIRECTORY exist, else create it
+if not os.path.isdir(DIRECTORY):
+ os.mkdir(DIRECTORY)
+now = datetime.now() # current date and time
+day = now.strftime("%m-%d-%Y-%Hh%M")
+ 
+context['consistency_checking_file'] = DIRECTORY+ "/" + "consistency_checking_" + context['SERVICEINSTANCEID'] + "_" + day + '.txt'
+f = open(context['consistency_checking_file'], "w")
+f.write('# Check consistency data44\n')
+nb_error=0
+if error_messages:
+  for key,val in error_messages.items():
+    f.write(val + '\n')
+    nb_error=nb_error+1
+f.close()
+
+       
 msg = 'DONE: check consistency, found ' + str(nb_error) + ' warning, result in ' + context['consistency_checking_file']
 MSA_API.task_success(msg, context, True)

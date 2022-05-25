@@ -284,7 +284,7 @@
     </task>
     <task name="Check_Consistency_Data.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration/</processPath>
-      <displayName>CheckConsistency Data</displayName>
+      <displayName>Check Consistency Data</displayName>
     </task> 
     <task name="Compute_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
@@ -338,7 +338,7 @@
     </task>
     <task name="Check_Consistency_Data.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration/</processPath>
-      <displayName>CheckConsistency Data</displayName>
+      <displayName>Check Consistency Data</displayName>
     </task> 
     <task name="Compute_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
@@ -379,11 +379,7 @@
     <task name="Get_Push_Configuration_Parameters.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
       <displayName>Get Parameter</displayName>
-    </task>
-    <task name="Check_Consistency_Data.py">
-      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration/</processPath>
-      <displayName>CheckConsistency Data</displayName>
-    </task>    
+    </task>   
     <task name="Push_Configuration.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
       <displayName>Push Configuration</displayName>
