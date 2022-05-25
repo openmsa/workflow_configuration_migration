@@ -162,7 +162,7 @@ if MS_list_string:
       source_values = filter_keep_field_values['Filter_source_'+destination_full+'_field_values']
       find_destination_values_recursif(destination_full, fields, ms_values);
       destination_values = filter_keep_field_values['Filter_destination_'+destination_full+'_field_values']
-      context['filter_keep_field_values'] = filter_keep_field_values
+      #context['filter_keep_field_values'] = filter_keep_field_values
 
       for value in source_values:
         if value and value not in destination_values:
