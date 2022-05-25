@@ -95,7 +95,7 @@ previous_destination_MS_Name    = ''
 previous_destination_field_name = ''
 filter_keep_field_values        = {}
 error_messages = {}
- 
+previous_sources = []
         
 if MS_list_string:
   MS_list = MS_list_string.split('\s*;\s*')
@@ -130,19 +130,21 @@ if MS_list_string:
 
               for value in source_values:
                 if value and value not in destination_values:
-                  error_messages[previous_destination_MS_Name+ '_' + previous_destination_field_name + '_' + str(value)] =   'MS "' + previous_destination_MS_Name+ '" ' + previous_destination_field_name + ' has missing definition value "'+value+'"'
+                  error_messages[previous_destination_MS_Name+ '_' + previous_destination_field_name + '_' + str(value)] =   'MS "' + previous_destination_MS_Name+ '" ' + previous_destination_field_name + ' has missing definition value "'+value+'" from ('+' or '.join(previous_sources) +')'
             
      
             previous_destination_MS_Name    = destination_MS_Name
             previous_destination_field_name = destination_field_name 
+            previous_sources = []
             filter_keep_field_values['Filter_source_'+destination_full+'_field_values'] = {}
             filter_keep_field_values['Filter_destination_'+destination_full+'_field_values'] = {}
+          
+          previous_sources.append(orig_MS_Name+'|'+orig_field_name)
 
           if  context.get(orig_MS_Name+'_values_serialized') and context.get(destination_MS_Name+'_values_serialized'):
             context[orig_field_name+'_field_values'] = {}
             fields = orig_field_name.split('.0.')
             ## Find all source values
-
             ms_values = json.loads(context[orig_MS_Name+'_values_serialized'])
             find_source_values_recursif(destination_full, fields, ms_values)
 
@@ -164,7 +166,7 @@ if MS_list_string:
 
       for value in source_values:
         if value and value not in destination_values:
-          error_messages[destination_MS_Name+ '_' + destination_field_name + '_' + str(value)] =   'MS "' + destination_MS_Name+ '" ' + destination_field_name + ' has missing definition value "'+value+'"'
+          error_messages[destination_MS_Name+ '_' + destination_field_name + '_' + str(value)] =   'MS "' + destination_MS_Name+ '" ' + destination_field_name + ' has missing definition value "'+value+'" from ('+' or '.join(previous_sources) +')'
  
 
 #check if the folder  DIRECTORY exist, else create it
