@@ -58,7 +58,7 @@ class_map|matches.0.match_access_group_value|ip_access_list|object_id
 
 address_family|neighbors.0.bgp_route_map_in|ipv4_prefix_list|object_id
 address_family|neighbors.0.bgp_route_map_out|ipv4_prefix_list|object_id
-route_policy|statements.0.destination_pfx.0.val|ipv4_prefix_list|object_id
+#route_policy|statements.0.destination_pfx.0.val|ipv4_prefix_list|object_id
 route_policy|statements.0.destination_acl.0.val|prefix_set|object_id
 route_policy|statements.0.destination_pfx.0.val|prefix_set|object_id
 
