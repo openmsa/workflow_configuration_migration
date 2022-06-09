@@ -3,6 +3,7 @@
 # ms_source 
 #
 interface
+router_bgp
 bgp_vrf
-router_static
 address_family
+router_static
