@@ -1,7 +1,7 @@
 import json
 import typing
 import os
-
+import re
 import os.path
 
 import time
@@ -214,7 +214,11 @@ for  dest, device_id_full in devices.items():
                     if value1.get(ms_source_field1):
                        field1_value                = value1[ms_source_field1]
                        new_value                   = {}
-                       new_value[parameter1_to_give_to_ms] = field1_value
+                       if parameter1_to_give_to_ms == "object_id_filter":
+                         #for interface status, we should give th interface instead of subinterface name
+                         new_value["object_id"] = re.sub('\.\d+$', '', field1_value)
+                       else:
+                         new_value[parameter1_to_give_to_ms] = field1_value
                        if ms_source_field2 and ms_source_field2 != 'None':
                          fields = ms_source_field2.split('.0.')
                          if isinstance(fields, typing.List) and fields and len(fields) > 1:
@@ -229,14 +233,20 @@ for  dest, device_id_full in devices.items():
                                    key =  field1_value+'|'+value2[field_lev2] #used key to not get many times the same values                         
                                    values_to_send[key] = new_value
                                    new_value                   = {}
-                                   new_value[parameter1_to_give_to_ms] = field1_value
+                                   if parameter1_to_give_to_ms == "object_id_filter":
+                                     new_value["object_id"] = re.sub('\.\d+$', '', field1_value)
+                                   else:
+                                     new_value[parameter1_to_give_to_ms] = field1_value
                              else:
                                new_value = value_lev1
                          else:
                           
                           if value1.get(ms_source_field2):
-                            new_value[parameter2_to_give_to_ms] = value1[ms_source_field2] 
-                            values_to_send[parameter1_to_give_to_ms] = new_value
+                            new_value[parameter2_to_give_to_ms] = value1[ms_source_field2]
+                            if parameter1_to_give_to_ms == "object_id_filter":
+                              values_to_send["object_id"] = re.sub('\.\d+$', '', new_value)
+                            else:
+                              values_to_send[parameter1_to_give_to_ms] = new_value
                        else:
                          values_to_send[field1_value] = new_value
                          
