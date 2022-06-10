@@ -104,13 +104,14 @@ devices = {}
 devices['source'] = context['source_device_id_full']
 devices['destination'] = context['destination_device_id_full']
 
-
+customer=context['customer_id_instance_id']
 
 for  dest, device_id_full in devices.items(): 
 
   device_id = device_id_full[3:]
   
-  full_message = '\n#####################################################################################################\n'
+  full_message = '############# ' + customer +  ' ############# \n'
+  full_message = full_message + '\n#####################################################################################################\n'
   if context.get('destination_device_type') and context['destination_device_type']:
     migrate = 'simulated'
     full_message = full_message +  '  For '+ context['destination_device_type'] + ' ' + dest + ' device ('+device_id_full +')\n'

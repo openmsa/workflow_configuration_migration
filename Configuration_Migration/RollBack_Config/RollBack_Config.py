@@ -101,7 +101,11 @@ if all_ms_attached.get("microserviceUris"):
 context['MS_To_Run_destination_RollBack']  = MS_To_Run_destination
 
 ms_not_attached_destination_device = []
-full_message = '!############# ROLLBACK PART ############# \n'
+
+full_message = ''
+customer=context['customer_id_instance_id']
+full_message = full_message + '!############# ' + customer +  ' ############# \n'
+full_message = full_message + '!############# ROLLBACK PART ############# \n'
 
 if (push_to_device == 'true' or push_to_device == True):
   mode = 2  #mode=2 : Apply to device and in DB
