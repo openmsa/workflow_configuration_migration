@@ -177,7 +177,7 @@ day = now.strftime("%m-%d-%Y-%Hh%M")
  
 context['consistency_checking_file'] = DIRECTORY+ "/" + "consistency_checking_" + context['SERVICEINSTANCEID'] + "_" + day + '.txt'
 f = open(context['consistency_checking_file'], "w")
-f.write('# Check consistency data44\n')
+f.write('# Check consistency data: '+context['customer_id_instance_id']+'\n')
 nb_error=0
 if error_messages:
   for key,val in error_messages.items():
