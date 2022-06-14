@@ -297,7 +297,7 @@
     <displayName>Import</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
-    <allowSchedule/>
+    <allowSchedule>false</allowSchedule>
     <task name="Get_ReImport_Parameters.py">
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Import_Configuration</processPath>
       <displayName>Get Parameter</displayName>
@@ -405,7 +405,7 @@
   </process>
   <information>
     <icon/>
-    <description/>
+    <description>Workflow for router configuration migration</description>
     <displayField>customer_id_instance_id</displayField>
     <serviceTaskType>python</serviceTaskType>
     <order>10000</order>
