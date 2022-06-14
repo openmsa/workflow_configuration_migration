@@ -97,6 +97,8 @@ context['MS_list_destination']  = MS_list_destination
 
 ms_not_attached_destination_device = []
 full_message = ''
+customer=context['customer_id_instance_id']
+full_message = full_message + '!############# ' + customer +  ' ############# \n'
 
 if (push_to_device == 'true' or push_to_device == True):
   mode = 2  #mode=2 : Apply to device and in DB
@@ -131,7 +133,7 @@ if MS_list:
             message = re.sub('\s+\n', '\n', message, flags=re.UNICODE)  #remove blank lines
             message = re.sub('  \s+', '  ', message, flags=re.UNICODE)  #remove more than 2 blank space, but  \s+ remove also newline
 
-            full_message = full_message + '\n\n!############# from MS ' + MS+  ' ############# \n'  + message
+            full_message = full_message + '\n!############# MS ' + MS+  ' #############\n'  + message
 
           else:
             msg = 'ERROR: Cannot run CREATE on microservice: '+ MS + ', response='+ str(response)
