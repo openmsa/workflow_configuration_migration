@@ -1,29 +1,47 @@
 # This file get_devices_status.txt contains the list of MS to run to get the Device Status for the source device and for the destination device
 #
-#device source or destination|ms_source|ms_source_field1|ms_source_field2|MS_to_run|parameter1_to_give_to_MS|parameter2_to_give_to_MS
+#vrf_field|device source or destination|ms_source|ms_source_field1|ms_source_field2|MS_to_run|parameter1_to_give_to_MS|parameter2_to_give_to_MS
 #
-Source|interface|orig_object_id|None|interface_status|object_id_filter|None
-Source|interface|subslot_num|interface_num|interface_power|subslot_num|transceiver
-Source|None|None|None|arp_summary|None|None
-#too much times: Source|None|None|None|bgp_neighbor_status|object_id|ip_bgp_neighbor
-Source|bgp_vrf|object_id|None|bgp_vrf_summary|object_id|None
-Source|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|neighbor_vrf_icmp_status|object_id|neighbor
-Source|address_family|object_id|neighbor.0.bgp_neighbor|neighbor_ipv4_icmp_status|object_id|ip
-Source|None|None|None|ip_route_summary|None|None
-Source|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_neighbor_status|object_id|neighbor
-Source|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_received_routes|object_id|neighbor
-Source|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_advertised_routes|object_id|neighbor
-Source|bgp_vrf|object_id|None|vrf_route_summary|object_id|None
+#if existing interface vrf :
+need_vrf_value|Source|interface|orig_object_id|None|interface_status|object_id_physical_interface|None
+need_vrf_value|Source|interface|subslot_num|interface_num|interface_power|subslot_num|transceiver
+need_vrf_value|Source|interface|orig_object_id|vrf_name|ip_arp_vrf_interface|object_id|vrf_name
+#too much lines: Source|None|None|None|bgp_neighbor_status|object_id|ip_bgp_neighbor
+need_vrf_value|Source|bgp_vrf|object_id|None|bgp_vrf_summary|object_id|None
+need_vrf_value|Source|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|neighbor_vrf_icmp_status|object_id|neighbor
+need_vrf_value|Source|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_neighbor_status|object_id|neighbor
+need_vrf_value|Source|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_received_routes|object_id|neighbor
+need_vrf_value|Source|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_advertised_routes|object_id|neighbor
+need_vrf_value|Source|bgp_vrf|object_id|None|vrf_route_summary|object_id|None
 
-Destination|interface|object_id|None|interface_status|object_id_filter|None
-Destination|interface|subslot_num|interface_num|interface_power|subslot_num|transceiver
-Destination|None|None|None|arp_interface|None|None
+#with no vrf :
+no_vrf_value|Source|interface|orig_object_id|None|interface_status|object_id_physical_interface|None
+no_vrf_value|Source|interface|subslot_num|interface_num|interface_power|subslot_num|transceiver
+no_vrf_value|#Source|None|None|None|arp_summary|None|None
+no_vrf_value|Source|interface|orig_object_id|None|ip_arp_interface|object_id|None
+no_vrf_value|#too much times: Source|None|None|None|bgp_neighbor_status|object_id|ip_bgp_neighbor
+no_vrf_value|Source|None|None|None|ip_route_summary|None|None
+no_vrf_value|Source|address_family|object_id|neighbor.0.bgp_neighbor|neighbor_ipv4_icmp_status|object_id|neighbor
+no_vrf_value|Source|router_bgp|object_id|neighbors.0.bgp_neighbor|neighbor_ipv4_icmp_status|object_id|neighbor
+no_vrf_value|Source|address_family|object_id|neighbor.0.bgp_neighbor|bgp_received_routes|object_id|neighbor
+no_vrf_value|Source|router_bgp|object_id|neighbors.0.bgp_neighbor|bgp_received_routes|object_id|neighbor
+no_vrf_value|Source|address_family|object_id|neighbor.0.bgp_neighbor|bgp_advertised_routes|object_id|neighbor
+no_vrf_value|Source|router_bgp|object_id|neighbors.0.bgp_neighbor|bgp_advertised_routes|object_id|neighbor
+no_vrf_value|Source|address_family|object_id|neighbor.0.bgp_neighbor|bgp_neighbor_status|object_id|neighbor
+no_vrf_value|Source|router_bgp|object_id|neighbors.0.bgp_neighbor|bgp_neighbor_status|object_id|neighbor
+
+
+
+# For destination device
+All|Destination|interface|object_id|None|interface_status|object_id_physical_interface|None
+All|Destination|interface|subslot_num|interface_num|interface_power|subslot_num|transceiver
+All|Destination|None|None|None|arp_interface|None|None
 #too much times: Destination|None|None|None|bgp_neighbor_status|object_id|ip_bgp_neighbor
-Destination|bgp_vrf|object_id|None|bgp_vrf_summary|object_id|None
-Destination|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|neighbor_vrf_icmp_status|object_id|neighbor
-Destination|address_family|object_id|neighbor.0.bgp_neighbor|neighbor_ipv4_icmp_status|object_id|ip
-Destination|None|None|None|ip_route_summary|None|None
-Destination|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_neighbor_status|object_id|neighbor
-Destination|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_received_routes|object_id|neighbor
-Destination|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_advertised_routes|object_id|neighbor
-Destination|bgp_vrf|object_id|None|vrf_route_summary|object_id|None
+All|Destination|bgp_vrf|object_id|None|bgp_vrf_summary|object_id|None
+All|Destination|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|neighbor_vrf_icmp_status|object_id|neighbor
+All|Destination|address_family|object_id|neighbor.0.bgp_neighbor|neighbor_ipv4_icmp_status|object_id|ip
+All|Destination|None|None|None|ip_route_summary|None|None
+All|Destination|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_neighbor_status|object_id|neighbor
+All|Destination|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_received_routes|object_id|neighbor
+All|Destination|bgp_vrf|object_id|neighbor.0.bgp_vrf_neighbor|bgp_vrf_advertised_routes|object_id|neighbor
+All|Destination|bgp_vrf|object_id|None|vrf_route_summary|object_id|None
