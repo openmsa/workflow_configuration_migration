@@ -21,8 +21,8 @@ no_vrf_value|#Source|None|None|None|arp_summary|None|None
 no_vrf_value|Source|interface|orig_object_id|None|ip_arp_interface|object_id|None
 no_vrf_value|#too much times: Source|None|None|None|bgp_neighbor_status|object_id|ip_bgp_neighbor
 no_vrf_value|Source|None|None|None|ip_route_summary|None|None
-no_vrf_value|Source|address_family|object_id|neighbor.0.bgp_neighbor|neighbor_ipv4_icmp_status|object_id|neighbor
-no_vrf_value|Source|router_bgp|object_id|neighbors.0.bgp_neighbor|neighbor_ipv4_icmp_status|object_id|neighbor
+no_vrf_value|Source|address_family|object_id|neighbor.0.bgp_neighbor|neighbor_ipv4_icmp_status|object_id|ip
+no_vrf_value|Source|router_bgp|object_id|neighbors.0.bgp_neighbor|neighbor_ipv4_icmp_status|object_id|ip
 no_vrf_value|Source|address_family|object_id|neighbor.0.bgp_neighbor|bgp_received_routes|object_id|neighbor
 no_vrf_value|Source|router_bgp|object_id|neighbors.0.bgp_neighbor|bgp_received_routes|object_id|neighbor
 no_vrf_value|Source|address_family|object_id|neighbor.0.bgp_neighbor|bgp_advertised_routes|object_id|neighbor
