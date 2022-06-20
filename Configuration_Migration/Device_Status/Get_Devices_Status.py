@@ -109,7 +109,9 @@ customer=context['customer_id_instance_id']
 
 for  status_to_run, device_id_full in devices.items(): 
 
-  full_message = '############# ' + customer +  ' ############# \n'
+  full_message = '\n#####################################################################################################\n'
+  full_message = full_message + '############# WF Instance : ' + customer +  ' ############# \n'
+  full_message = full_message + '#####################################################################################################\n'
   full_message = full_message + '\n#####################################################################################################\n'
   if context.get('destination_device_type') and context['destination_device_type']:
     migrate = 'simulated'
