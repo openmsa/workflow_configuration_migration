@@ -44,6 +44,7 @@ def run_microservice_import():
   nb_ms_to_run = nb_ms_to_run + 1 
 
   if ms_to_run != previous_ms_to_run :
+    #context['status_res_'+previous_ms_to_run+'_values_serialized'] = json.dumps(previous_ms_data)
     previous_ms_to_run = ms_to_run
     MS_list_run[ms_to_run] = 1
     if previous_ms_data:
@@ -95,7 +96,7 @@ else:
   MSA_API.task_error(msg, context, True)
   data_list = ''    
   
-context['status_liste'] = data_list
+#context['status_liste'] = data_list
 context['status_liste_file_full'] = file 
 
 wf_fields = {}
@@ -142,26 +143,6 @@ for  status_to_run, device_id_full in devices.items():
   if all_ms_attached.get("microserviceUris"):
     all_ms_attached = all_ms_attached["microserviceUris"] 
   #context['MS_attached source device_id' + device_id + ' : '] = all_ms_attached
-  #all_ms_attached = {"id" : 44, ..."microserviceUris" : { "CommandDefinition/LINUX/CISCO_IOS_emu  },  "CommandDefinition/LINUX/CISCO_IOS_emulation/bgp_vrf.xml" : {  "name" : "bgp_vrf",   "groups" : [ "EMULATION", "CISCO", "IOS" ].....
-  MS_list = []
-  MS_list_run = {}
-  MS_list_not_run = {}
-
-
-  # instantiate device object
-  obmf  = Order(device_id=device_id)
-         
-  # Get deployment settings ID for the device.
-  deployment_settings_id = obmf.command_get_deployment_settings_id()
-  context['source_deployment_settings_id_'+device_id_full] = deployment_settings_id
-
-  #Get all microservices attached to this deployment setting.
-  confprofile  = ConfProfile(deployment_settings_id)
-  all_ms_attached = confprofile.read()
-  all_ms_attached = json.loads(all_ms_attached)
-  if all_ms_attached.get("microserviceUris"):
-    all_ms_attached = all_ms_attached["microserviceUris"] 
-  context['MS_attached source device_id' + device_id + ' : '] = all_ms_attached
   #all_ms_attached = {"id" : 44, ..."microserviceUris" : { "CommandDefinition/LINUX/CISCO_IOS_emu  },  "CommandDefinition/LINUX/CISCO_IOS_emulation/bgp_vrf.xml" : {  "name" : "bgp_vrf",   "groups" : [ "EMULATION", "CISCO", "IOS" ].....
   MS_list = []
   MS_list_run = {}
@@ -300,6 +281,7 @@ for  status_to_run, device_id_full in devices.items():
 
 
   if previous_ms_data:
+    #context['status_res_'+ms_to_run+'_values_serialized2'] = json.dumps(previous_ms_data)
     full_message = full_message +  printTable(previous_ms_data)
   if MS_list_run:
     MS_list_run             = ', '.join(MS_list_run.keys())  
