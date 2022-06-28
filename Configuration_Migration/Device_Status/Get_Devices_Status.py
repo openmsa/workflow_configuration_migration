@@ -39,44 +39,49 @@ FIELD_TO_GET_VRF_VALUES = 'vrf_name'
 #########################################################
 # Function: Run the MS import and store the result
 def run_microservice_import():
-  global ms_to_run, previous_ms_to_run, MS_list_run, previous_ms_data, full_message, params, timeout, parameter1_to_give_to_ms, object_id,MS_list_not_run, nb_ms_to_run, device_id_full, status_to_run
+  global ms_to_run, previous_ms_to_run, MS_list_run, previous_ms_data, full_message, params, timeout, parameter1_to_give_to_ms, object_id,MS_list_not_run, nb_ms_to_run, device_id_full, status_to_run, MS_attached_list
 
   nb_ms_to_run = nb_ms_to_run + 1 
 
   if ms_to_run != previous_ms_to_run :
     #context['status_res_'+previous_ms_to_run+'_values_serialized'] = json.dumps(previous_ms_data)
-    previous_ms_to_run = ms_to_run
-    MS_list_run[ms_to_run] = 1
-    if previous_ms_data:
+    if previous_ms_data and previous_ms_to_run in MS_attached_list:
       full_message = full_message +  printTable(previous_ms_data)
       previous_ms_data = []
+    elif previous_ms_to_run and previous_ms_to_run not in MS_attached_list:
+      full_message = full_message + 'The MS "'+previous_ms_to_run+'" is not linked to this device, add this MS in the deployment setting for this device'
     full_message = full_message + '\n\n############# For '+ status_to_run + ' device,  MS '+ ms_to_run +  ' ############# \n'
-  obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
-  response = json.loads(obmf.content)
-  #context['ms_status_import_response_'+ms_to_run] = response #   "message ="{\"arp_summary\":{\"274f9f441f0dd0bc3ab2af14ef7bc6d5\":{\"total\":\"7\",\"incomplete\":\"0\"}}}",
+    previous_ms_to_run = ms_to_run
+    MS_list_run[ms_to_run] = 1
+    
+  if ms_to_run in MS_attached_list: 
+    obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
+    response = json.loads(obmf.content)
+    #context['ms_status_import_response_'+ms_to_run] = response #   "message ="{\"arp_summary\":{\"274f9f441f0dd0bc3ab2af14ef7bc6d5\":{\"total\":\"7\",\"incomplete\":\"0\"}}}",
 
-  if (response.get("status") and response["status"] == "OK") or (response.get("wo_status") and response["wo_status"] == "OK"):
-     if response.get("status"):
-       message =  response["message"]
-     else:
-       message =  response["wo_newparams"]
-     message = json.loads(message)
-     if message.get(ms_to_run):
-       message = message[ms_to_run]
-       if isinstance(message, dict):
-         for key2,val2 in message.items():
-           previous_ms_data.append(val2)
+    if (response.get("status") and response["status"] == "OK") or (response.get("wo_status") and response["wo_status"] == "OK"):
+       if response.get("status"):
+         message =  response["message"]
        else:
-         previous_ms_data.append(message)
-  else:
-    if response.get("wo_newparams"):
-      wo_newparams =  response["wo_newparams"]
-      if 'An update is already running' in wo_newparams:
-        msg = 'SMS ERROR: on device '+device_id_full+' can not run MS '+ ms_to_run + ' : '+ str(wo_newparams)
-        create_event(device_id_full, "1", "MIGRATION", "STATUS",  subtenant_ref, subtenant_id, msg)
-        MSA_API.task_error(msg , context, True)
-    MS_list_not_run[ms_to_run]=1
+         message =  response["wo_newparams"]
+       message = json.loads(message)
+       if message.get(ms_to_run):
+         message = message[ms_to_run]
+         if isinstance(message, dict):
+           for key2,val2 in message.items():
+             previous_ms_data.append(val2)
+         else:
+           previous_ms_data.append(message)
+    else:
+      if response.get("wo_newparams"):
+        wo_newparams =  response["wo_newparams"]
+        if 'An update is already running' in wo_newparams:
+          msg = 'SMS ERROR: on device '+device_id_full+' can not run MS '+ ms_to_run + ' : '+ str(wo_newparams)
+          create_event(device_id_full, "1", "MIGRATION", "STATUS",  subtenant_ref, subtenant_id, msg)
+          MSA_API.task_error(msg , context, True)
+      MS_list_not_run[ms_to_run]=1
  
+  
 start_sec  = time.time()            
 nb_ms_to_run = 0   
 
@@ -144,14 +149,14 @@ for  status_to_run, device_id_full in devices.items():
     all_ms_attached = all_ms_attached["microserviceUris"] 
   #context['MS_attached source device_id' + device_id + ' : '] = all_ms_attached
   #all_ms_attached = {"id" : 44, ..."microserviceUris" : { "CommandDefinition/LINUX/CISCO_IOS_emu  },  "CommandDefinition/LINUX/CISCO_IOS_emulation/bgp_vrf.xml" : {  "name" : "bgp_vrf",   "groups" : [ "EMULATION", "CISCO", "IOS" ].....
-  MS_list = []
+  MS_attached_list = []
   MS_list_run = {}
   MS_list_not_run = {}
 
   if all_ms_attached:
     for full_ms, MS in all_ms_attached.items():
       if Path(full_ms).stem:
-        MS_list.append(Path(full_ms).stem)  # Path(full_ms).stem = MS filename without extension 
+        MS_attached_list.append(Path(full_ms).stem)  # Path(full_ms).stem = MS filename without extension 
    
   previous_ms_to_run = ''
   previous_ms_data = []
@@ -280,9 +285,12 @@ for  status_to_run, device_id_full in devices.items():
             warning = warning + "\n the Micros service "+ms_source+" is no attached to the device "+ device_id_full
 
 
-  if previous_ms_data:
+  if previous_ms_data and ms_to_run in MS_attached_list:
     #context['status_res_'+ms_to_run+'_values_serialized2'] = json.dumps(previous_ms_data)
     full_message = full_message +  printTable(previous_ms_data)
+  elif ms_to_run and ms_to_run not in MS_attached_list:
+    full_message = full_message + 'The MS "'+ms_to_run+'" is not linked to this device, add this MS in the deployment setting for this device'
+    
   if MS_list_run:
     MS_list_run             = ', '.join(MS_list_run.keys())  
   else:
@@ -297,7 +305,7 @@ for  status_to_run, device_id_full in devices.items():
   day = now.strftime("%m-%d-%Y-%Hh%M")
   
   #Create the global config file :
-  generate_file = DIRECTORY+ "/" + "ALL_SOURCE_STATUS_" + context['SERVICEINSTANCEID'] + "_"  + status_to_run.lower() +'_' + migrate + '_' + day + '.txt'
+  generate_file = DIRECTORY+ "/" + status_to_run.lower() + "_"+ migrate +"_device_status_#" + context['SERVICEINSTANCEID'] + '_' + day + '.txt'
   context['generate_'+status_to_run.lower() +'_' + migrate + '_status_file'] = generate_file
 
   f = open(generate_file, "w")
