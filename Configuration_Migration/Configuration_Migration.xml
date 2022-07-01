@@ -297,6 +297,10 @@
       <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/Generate_Configuration/</processPath>
       <displayName>Generate Configuration</displayName>
     </task>
+    <task name="RollBack_Config.py">
+      <processPath>/opt/fmc_repository/Process/workflow_configuration_migration/Configuration_Migration/RollBack_Config/</processPath>
+      <displayName>Generate Rollback Configuration</displayName>
+    </task>
   </process>
   <process name="Import_Simulation_Configuration">
     <displayName>Import</displayName>
