@@ -1,0 +1,8 @@
+# This file convertion_cisco_IOS_to_XR.txt is used to convert some MS values by running some pattern matching rull
+#
+# MS_name|MS_field|convertion_condition|convertion_pattern_source|convertion_pattern_destination|comment and example
+#
+policy_map|pmap_class.0.random.0.random_detect|len(value.split())>4|'dscp ' + ' '.join(value.split()[1:5])|'dscp '+value.split()[1] + ' ' +value.split()[2]+' packets '+value.split()[3]+' packets '|for policy map, var pmap_class.0.random.0.random_detect replace 'random-detect dscp 10 53 160 1' with 'random-detect dscp 10 53 packets 160 packets'
+policy_map|pmap_class.0.conform_action|'set-dscp-transmit' in value|'set-dscp-transmit '|'set-dscp '|for policy map, var pmap_class.0.conform_action replace 'set-dscp-transmit xxx' to 'set-dscp xxx'
+policy_map|pmap_class.0.exceed_action|'set-dscp-transmit' in value|'set-dscp-transmit '|'set-dscp '|for policy map, var pmap_class.0.exceed_action replace 'set-dscp-transmit xxx' to 'set-dscp xxx'
+
