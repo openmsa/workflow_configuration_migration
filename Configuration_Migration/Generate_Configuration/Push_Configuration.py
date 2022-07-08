@@ -23,6 +23,7 @@ if not context.get('push_to_device'):
 push_to_device = context['push_to_device']
 
 
+
 #check if the folder  DIRECTORY exist, else create it
 if not os.path.isdir(DIRECTORY):
  os.mkdir(DIRECTORY)
@@ -32,12 +33,15 @@ timeout = 3600
 subtenant_ref = context["UBIQUBEID"]
 subtenant_id = context["UBIQUBEID"][4:]
 #get device_id from context
-device_id_full = context['destination_device_id']
+if (push_to_device == 'true' or push_to_device == True):
+  device_id_full = context['destination_device_id']
+else:
+  device_id_full = context['destination_simul_device_id']
 device_id = device_id_full[3:]
 # instantiate device object
 obmf  = Order(device_id=device_id)
 
-if (context['real_device_source'] == 'false' or context['real_device_source'] == False) and (context['push_to_device']== 'true' or context['push_to_device']== True):
+if ((context['real_device_source'] == 'false' or context['real_device_source'] == False ) and  (context['real_source_and_real_destination'] == 'false' or context['real_source_and_real_destination'] == False )) and (context['push_to_device']== 'true' or context['push_to_device']== True):
   msg = 'ERROR: Before to push the configuration to real device '+str(device_id_full)+', you should Import first the configuration from real device '+str(context['source_device_id'])
   create_event(device_id_full, "1", "MIGRATION", "GEN_CONFIG",  subtenant_ref, subtenant_id, msg)
   context['push_to_device'] = 'false'        #reset value

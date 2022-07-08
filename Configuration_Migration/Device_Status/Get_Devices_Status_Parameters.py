@@ -15,7 +15,7 @@ dev_var.add('destination_simul_device_id')
 
 dev_var.add('source_device_id')
 dev_var.add('destination_device_id')
-dev_var.add('real_device_source')
+dev_var.add('real_source_and_real_destination')
 
 context = Variables.task_call(dev_var)
 

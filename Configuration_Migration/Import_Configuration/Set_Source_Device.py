@@ -6,9 +6,9 @@ dev_var = Variables()
 
 context = Variables.task_call(dev_var)
 
-if not context.get('real_import_config'):
-  context['real_import_config'] = "false"
-if context['real_import_config'] == "true" or  context['real_import_config'] == True:
+if not context.get('real_source_and_real_destination'):
+  context['real_source_and_real_destination'] = "false"
+if context['real_source_and_real_destination'] == "true" or  context['real_source_and_real_destination'] == True:
   context['real_device_source'] = "true"
   context['push_to_device']     = "true"
 

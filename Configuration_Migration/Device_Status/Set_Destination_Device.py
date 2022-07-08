@@ -7,10 +7,10 @@ dev_var = Variables()
 context = Variables.task_call(dev_var)
 
 
-if not context.get('real_device_source'):
-  context['real_device_source'] = "false"
+if not context.get('real_source_and_real_destination'):
+  context['real_source_and_real_destination'] = "false"
   
-if context['real_device_source'] == "true" or  context['real_device_source'] == True:
+if context['real_source_and_real_destination'] == "true" or  context['real_source_and_real_destination'] == True:
   #Set Real ource device
   context['destination_device_id_full'] = context['destination_device_id']
   message= 'real'  #Set destination simulated device
