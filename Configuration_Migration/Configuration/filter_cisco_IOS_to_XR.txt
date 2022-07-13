@@ -19,7 +19,7 @@ interface|object_id|router_static|routes6.0.interface
 interface|object_id|router_isis|interfaces.0.interface
 interface|object_id|xconnect|object_id
 interface|object_id|mpls|object_id
-
+interface|vrf_name|ip_pim|pim_vrf_name
 
 ## START match for policy_map
 interface|service_policy_out|policy_map|object_id
@@ -55,6 +55,7 @@ address_family|neighbors.0.bgp_route_map_out|route_policy|object_id
 ## END match for route_policy
 
 class_map|matches.0.match_access_group_value|ip_access_list|object_id
+ip_pim|pim_acl|ip_access_list|object_id
 
 #address_family|neighbors.0.bgp_route_map_in|ipv4_prefix_list|object_id
 #address_family|neighbors.0.bgp_route_map_out|ipv4_prefix_list|object_id
