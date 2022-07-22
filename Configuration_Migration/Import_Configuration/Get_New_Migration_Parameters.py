@@ -25,7 +25,8 @@ dev_var.add('interfaces.0.p2p')
 
 dev_var.add('data_filter')
 dev_var.add('enable_filter')
-dev_var.add('real_import_config')
+dev_var.add('real_source_and_real_destination')
+dev_var.add('real_device_source')
 
 
 context = Variables.task_call(dev_var)
