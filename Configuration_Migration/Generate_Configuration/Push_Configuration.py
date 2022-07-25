@@ -32,11 +32,9 @@ timeout = 3600
 
 subtenant_ref = context["UBIQUBEID"]
 subtenant_id = context["UBIQUBEID"][4:]
-#get device_id from context
-if (push_to_device == 'true' or push_to_device == True):
-  device_id_full = context['destination_device_id']
-else:
-  device_id_full = context['destination_simul_device_id']
+
+device_id_full = context['destination_device_id']
+
 device_id = device_id_full[3:]
 # instantiate device object
 obmf  = Order(device_id=device_id)
