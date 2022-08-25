@@ -115,7 +115,10 @@ else:
 if MS_To_Run:
   for MS in MS_To_Run:
     if MS in  MS_To_Run_destination:
-      config = json.loads(context.get( MS + '_values_serialized')) 
+      try:
+          config = json.loads(context.get( MS + '_values_serialized')) 
+      except:
+          pass
       if config:
         params = dict()
         params[MS] = config
