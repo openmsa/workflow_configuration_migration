@@ -51,6 +51,7 @@ if not context['batch_load'] :
         new_interfaces.append(interface)
     
       context['interfaces'] = new_interfaces    
+
 else:
     #interfacesMapFile = requests.get(context['batchloadfile'])
     #textString = interfacesMapFile.text
@@ -59,15 +60,16 @@ else:
     new_interfaces = []
     for item in interfacesMap:
         itemArray = item.split(';')
-        if len(itemArray) == 7: 
+        #Added RouterSourceName and RouterDestinationName for Compability with XR
+        if len(itemArray) == 9: 
             interface = {}
-            interface['source'] = itemArray[0]
-            interface['destination'] = itemArray[1]
-            interface['dot1q'] = itemArray[2]
-            interface['second_dot1q'] = itemArray[3]
-            interface['xconnect_group'] = itemArray[4]
-            interface['pseudowire_class'] = itemArray[5]
-            interface['p2p'] = itemArray[6]
+            interface['source'] = itemArray[1]
+            interface['destination'] = itemArray[3] + '.' + itemArray[4] + itemArray[5]
+            interface['dot1q'] = itemArray[4]
+            interface['second_dot1q'] = itemArray[5]
+            interface['xconnect_group'] = itemArray[6]
+            interface['pseudowire_class'] = itemArray[7]
+            interface['p2p'] = itemArray[8]
             new_interfaces.append(interface)
     context['interfaces'] = new_interfaces
 
