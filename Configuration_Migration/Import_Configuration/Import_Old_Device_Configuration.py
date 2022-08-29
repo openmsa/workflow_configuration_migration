@@ -35,6 +35,9 @@ create_event(device_id_full, "5", "MIGRATION", "SYNCHRONIZE", subtenant_ref, sub
 
 obmf.command_synchronize(timeout)
 responses = json.loads(obmf.content)
+
+# MS List
+
 #context[ 'ALL source MS_synch_values for '+device_id] = responses
 if isinstance(responses, dict) and responses.get("wo_status") and responses["wo_status"] == "FAIL":
   msg = 'Can not synchronise device '+ device_id_full + ' : '+responses['wo_newparams']
