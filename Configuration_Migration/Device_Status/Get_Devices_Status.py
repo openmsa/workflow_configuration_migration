@@ -42,19 +42,18 @@ def run_microservice_import():
   global ms_to_run, previous_ms_to_run, MS_list_run, previous_ms_data, full_message, params, timeout, parameter1_to_give_to_ms, object_id,MS_list_not_run, nb_ms_to_run, device_id_full, status_to_run, MS_attached_list
 
   nb_ms_to_run = nb_ms_to_run + 1 
-
+  previous_ms_data = []
+    
   if ms_to_run != previous_ms_to_run :
-    #context['status_res_'+previous_ms_to_run+'_values_serialized'] = json.dumps(previous_ms_data)
-    if previous_ms_data and previous_ms_to_run in MS_attached_list:
-      full_message = full_message +  printTable(previous_ms_data)
-      previous_ms_data = []
-    elif previous_ms_to_run and previous_ms_to_run not in MS_attached_list:
-      full_message = full_message + 'The MS "'+previous_ms_to_run+'" is not linked to this device, add this MS in the deployment setting for this device'
-    full_message = full_message + '\n\n############# For '+ status_to_run + ' device,  MS '+ ms_to_run +  ' ############# \n'
+
+    if previous_ms_to_run and previous_ms_to_run not in MS_attached_list.keys():
+      full_message = full_message + 'The MS "'+previous_ms_to_run+'" is not linked to this device, add this MS in the deployment setting for this device\n'
+    
+    full_message = full_message + '\n\n###############################################################################################\n####################### For '+ status_to_run + ' device,  MS '+ ms_to_run + ' #######################\n###############################################################################################\n'
     previous_ms_to_run = ms_to_run
     MS_list_run[ms_to_run] = 1
-    
-  if ms_to_run in MS_attached_list: 
+  
+  if ms_to_run in MS_attached_list.keys(): 
     obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
     response = json.loads(obmf.content)
     #context['ms_status_import_response_'+ms_to_run] = response #   "message ="{\"arp_summary\":{\"274f9f441f0dd0bc3ab2af14ef7bc6d5\":{\"total\":\"7\",\"incomplete\":\"0\"}}}",
@@ -81,6 +80,54 @@ def run_microservice_import():
           MSA_API.task_error(msg , context, True)
       MS_list_not_run[ms_to_run]=1
  
+  #calcul the command to run on the device:
+  command_to_run_on_device = calcul_command_to_run_on_device(params)  
+  full_message = full_message + '\n# Commands on device: ' +str(command_to_run_on_device)+" \n#################################################################################\n"
+
+  #if previous_ms_data and previous_ms_to_run in MS_attached_list.keys():
+  if previous_ms_data:
+    full_message = full_message +  printTable(previous_ms_data) +'\n'
+
+ 
+def calcul_command_to_run_on_device(params):
+  global MS_attached_list
+  orig_command =''
+  all_commands=[]  
+  # params = {'interface_status': {'GigabitEthernet0/0/2': {'object_id': 'GigabitEthernet0/0/2'}}}" 
+  # params = {'bgp_received_routes': {'10429': {'object_id': '10429', 'neighbor': '189.20.5.158'}}
+  all_commands=[]  
+  for ms, allvalues in params.items():
+    if MS_attached_list.get(ms):
+      filename = '/opt/fmc_repository/'+MS_attached_list[ms]
+      file_one = open(filename, "r")
+      import_command=''
+      for line in file_one:
+        if re.search('<operation>', line):
+          import_command = line
+      file_one.close()
+      # import_command= <operation><![CDATA[{if isset($params.neighbor)}/config/extract_part_of_simulated_file.py /config/cisco_ios/test.status "show ip bgp neighbors {$params.neighbor} advertised-routes" {/if}]]></operation>
+      orig_command = re.search('show (.+?)]]',import_command)
+      if not orig_command or not orig_command.group(0):
+        orig_command = re.search('ping (.+?)]]',import_command)
+      if  orig_command and orig_command.group(0):
+        orig_command = orig_command.group(0) #full command
+        orig_command = orig_command.replace("{/if}]]",'') 
+        orig_command = orig_command.replace("]]",'') 
+        orig_command = re.sub(r"\s+$", '', orig_command) 
+        orig_command = re.sub(r"\"$", '', orig_command) 
+        
+        # orig_command = "show ip bgp neighbors {$params.neighbor}" 
+        all_commands=[]  
+        for obj, values in allvalues.items():
+          line = orig_command
+          for key, value in values.items():
+            # key = neighbor and value = 189.20.5.158
+            line = line.replace('{$params.'+key+'}',value)
+          all_commands.append(line)   
+
+  command = orig_command
+  return '"'+'" \n#"'.join(all_commands)+ '"'
+  
   
 start_sec  = time.time()            
 nb_ms_to_run = 0   
@@ -145,18 +192,19 @@ for  status_to_run, device_id_full in devices.items():
   confprofile  = ConfProfile(deployment_settings_id)
   all_ms_attached = confprofile.read()
   all_ms_attached = json.loads(all_ms_attached)
+
   if all_ms_attached.get("microserviceUris"):
     all_ms_attached = all_ms_attached["microserviceUris"] 
   #context['MS_attached source device_id' + device_id + ' : '] = all_ms_attached
-  #all_ms_attached = {"id" : 44, ..."microserviceUris" : { "CommandDefinition/LINUX/CISCO_IOS_emu  },  "CommandDefinition/LINUX/CISCO_IOS_emulation/bgp_vrf.xml" : {  "name" : "bgp_vrf",   "groups" : [ "EMULATION", "CISCO", "IOS" ].....
-  MS_attached_list = []
+  #all_ms_attached = {"id" : 44, ..."microserviceUris" : {  "CommandDefinition/LINUX/CISCO_IOS_emulation/bgp_vrf.xml" : {  "name" : "bgp_vrf",   "groups" : [ "EMULATION", "CISCO", "IOS" ].....
+  MS_attached_list = {}
   MS_list_run = {}
   MS_list_not_run = {}
 
   if all_ms_attached:
     for full_ms, MS in all_ms_attached.items():
       if Path(full_ms).stem:
-        MS_attached_list.append(Path(full_ms).stem)  # Path(full_ms).stem = MS filename without extension 
+        MS_attached_list[Path(full_ms).stem] = full_ms  # Path(full_ms).stem = MS filename without extension 
    
   previous_ms_to_run = ''
   previous_ms_data = []
@@ -285,10 +333,10 @@ for  status_to_run, device_id_full in devices.items():
             warning = warning + "\n the Micros service "+ms_source+" is no attached to the device "+ device_id_full
 
 
-  if previous_ms_data and ms_to_run in MS_attached_list:
+  if previous_ms_data and ms_to_run in MS_attached_list.keys():
     #context['status_res_'+ms_to_run+'_values_serialized2'] = json.dumps(previous_ms_data)
     full_message = full_message +  printTable(previous_ms_data)
-  elif ms_to_run and ms_to_run not in MS_attached_list:
+  elif ms_to_run and ms_to_run not in MS_attached_list.keys():
     full_message = full_message + 'The MS "'+ms_to_run+'" is not linked to this device, add this MS in the deployment setting for this device'
     
   if MS_list_run:
