@@ -32,7 +32,7 @@ context['customer_id_instance_id'] =  context['customer_id'] + '_#' +context['SE
 
 #read import_WF_parameters_into_MS.txt file to get the list of MS to import:
 wf_path = os.path.dirname(__file__)
-file =  wf_path+'/../'+context['import_MS_list_file']   # Configuration/import_MS_list.txt
+file =  wf_path+'/../'+context['get_device_configuration_file']   # Configuration/get_device_configuration.txt
 if os.path.isfile(file):
   file1 = open(file, "r")
   # read file content
@@ -46,8 +46,6 @@ else:
   MSA_API.task_error(msg, context, True)
   data_list = ''    
   
-#context['import_MS_list_file_full'] = file 
-responses = []
 MS_wanted=[]
 if data_list:
   MS_to_import={}
@@ -71,7 +69,7 @@ context['source_deployment_settings_id_'+device_id_full] = deployment_settings_i
 confprofile  = ConfProfile(deployment_settings_id)
 all_ms_attached = confprofile.read()
 all_ms_attached = json.loads(all_ms_attached)
-context['MS_attached source device_id' + device_id + ' : '] = all_ms_attached
+#context['MS_attached source device_id' + device_id + ' : '] = all_ms_attached
 if all_ms_attached.get("microserviceUris"):
   all_ms_attached_uris = all_ms_attached["microserviceUris"] 
 #all_ms_attached = {"id" : 44, ..."microserviceUris" : { "CommandDefinition/LINUX/CISCO_IOS_emu  },  "CommandDefinition/LINUX/CISCO_IOS_emulation/bgp_vrf.xml" : {  "name" : "bgp_vrf",   "groups" : [ "EMULATION", "CISCO", "IOS" ].....
@@ -103,16 +101,16 @@ if missing_MS_in_deployment_setting:
   
 # The import is order by importrank of the MS. 
 # So we import all MS at the same times which have the same importrank. 
-    
+responses = []
 for importrank in sorted(MS_to_import):
   params = {}
   for MS in MS_to_import[importrank]:
     obj = {}
-    #obj['object_id']    = MS  
+    obj['need_something']    = MS  
     params[MS] = obj 
   obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
   response = json.loads(obmf.content)
-
+  #context['response_rank_'+importrank] = response
   if (response.get("status") and response["status"] == "OK") or (response.get("wo_status") and response["wo_status"] == "OK"):
     if response.get("status"):
       response =  response["message"]
@@ -139,7 +137,7 @@ if isinstance(responses, typing.List):
         context[ MS + '_values_serialized'] = json.dumps(response_message)
             
 
-msg = 'DONE: all MS attached to the managed entity: '+ device_id_full + ' imported ('+', '.join(MS_list) +')'
+msg = 'DONE: all MS attached to the managed entity: '+ device_id_full + ' imported ('+', '.join(MS_wanted) +')'
 create_event(device_id_full, "5", "MIGRATION", "SYNCHRONIZE", subtenant_ref, subtenant_id, msg)
 MSA_API.task_success(msg, context, True)
 

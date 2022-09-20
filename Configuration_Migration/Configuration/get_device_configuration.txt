@@ -1,4 +1,4 @@
-# This file import_MS_list.txt contains the list of MS to run the import (extract) for the source device
+# This file get_device_configuration.txt contains the list of MS to run for import the existing configuration (extract) from the source device
 #
 #MS|Importrank(integer, 0=first)
 
