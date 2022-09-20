@@ -1,0 +1,37 @@
+# This file get_device_configuration.txt contains the list of MS to run for import the existing configuration (extract) from the source device
+#
+#MS|Importrank(integer, 0=first)
+
+#IOS
+access_list|1
+address_family|10
+as_path_set|5
+bgp_vrf|11
+class_map|5
+community_set|1
+controller|0
+extcommunity_set|1
+interface|10
+interface_loopback|0
+ip_access_list|2
+ip_as_path|1
+ip_community_list|0
+ip_extcommunity_list|0
+ip_pim|57
+ip_prefix_list|2
+ip_route|11
+ip_vrf|8
+ipv4_prefix_list|5
+key_chain|0
+map_class|0
+mpls|10
+multicast_routing|9
+policy_map|6
+prefix_set|5
+route_map|20
+route_policy|21
+router_bgp|9
+router_isis|10
+router_static|12
+vlan|1
+xconnect|50
