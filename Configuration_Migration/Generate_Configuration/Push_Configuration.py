@@ -154,6 +154,46 @@ if MS_list:
       ms_not_attached_destination_device.append(MS)
     
 #Create the global config file :
+
+
+#Change some IPV4 acccess list name
+if 'ipv4 access-list 120' in full_message:
+    full_message = full_message.replace('ipv4 access-list 120','ipv4 access-list FILTRO_BGP_PACKETS_IPv4')
+if 'ipv4 access-list 121' in full_message:
+    full_message = full_message.replace('ipv4 access-list 121','ipv4 access-list FILTRO_PFX_MARTIANS_IPv4')
+if 'ipv4 access-list 122' in full_message:
+    full_message = full_message.replace('ipv4 access-list 122','ipv4 access-list FILTRO_CIDR_VIVO_IPv4')
+if 'ipv4 access-list 123' in full_message:
+    full_message = full_message.replace('ipv4 access-list 123','ipv4 access-list FILTRO_PFX_INFRA_IPv4')
+# match access-group ipv4 - class-map
+if 'match access-group ipv4 120' in full_message:
+    full_message = full_message.replace('match access-group ipv4 120','match access-group ipv4 FILTRO_BGP_PACKETS_IPv4')
+if 'match access-group ipv4 121' in full_message:
+    full_message = full_message.replace('match access-group ipv4 121','match access-group ipv4 FILTRO_PFX_MARTIANS_IPv4')
+if 'match access-group ipv4 122' in full_message:
+    full_message = full_message.replace('match access-group ipv4 122','match access-group ipv4 FILTRO_CIDR_VIVO_IPv4')
+if 'match access-group ipv4 123' in full_message:
+    full_message = full_message.replace('match access-group ipv4 123','match access-group ipv4 FILTRO_PFX_INFRA_IPv4')        
+#Change some IPV6 acccess list name    
+if 'ipv6 access-list 120' in full_message:
+    full_message = full_message.replace('ipv6 access-list 120','ipv6 access-list FILTRO_BGP_PACKETS_IPv6')
+if 'ipv6 access-list 121' in full_message:
+    full_message = full_message.replace('ipv6 access-list 121','ipv6 access-list FILTRO_PFX_MARTIANS_IPv6')
+if 'ipv6 access-list 122' in full_message:
+    full_message = full_message.replace('ipv6 access-list 122','ipv6 access-list FILTRO_CIDR_VIVO_IPv6')
+if 'ipv6 access-list 123' in full_message:
+   full_message = full_message.replace('ipv6 access-list 123','ipv6 access-list FILTRO_PFX_INFRA_IPv6')
+# match access-group ipv6 - class-map
+if 'match access-group ipv6 120' in full_message:
+    full_message = full_message.replace('match access-group ipv6 120','match access-group ipv6 FILTRO_BGP_PACKETS_IPv6')
+if 'match access-group ipv6 121' in full_message:
+    full_message = full_message.replace('match access-group ipv6 121','match access-group ipv6 FILTRO_PFX_MARTIANS_IPv6')
+if 'match access-group ipv6 122' in full_message:
+    full_message = full_message.replace('match access-group ipv6 122','match access-group ipv6 FILTRO_CIDR_VIVO_IPv6')
+if 'match access-group ipv6 123' in full_message:
+    full_message = full_message.replace('match access-group ipv6 123','match access-group ipv6 FILTRO_PFX_INFRA_IPv6')        
+
+
 f = open(context['generate_file'], "w")
 f.write(full_message)
 f.close()
