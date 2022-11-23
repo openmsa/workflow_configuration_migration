@@ -76,11 +76,13 @@ if all_ms_attached.get("microserviceUris"):
 else:
   all_ms_attached_uris={}   
 
-MS_list = []   
+MS_list     = []
+MS_FullPath = {}   
 if all_ms_attached_uris:
   for full_ms, MS in all_ms_attached_uris.items():
     if Path(full_ms).stem:
       MS_list.append(Path(full_ms).stem)    # Path(full_ms).stem = MS filename without extension
+      MS_FullPath[Path(full_ms).stem] = full_ms
    
 if MS_list:
   MS_list_string             = ';'.join(MS_list)  
@@ -103,19 +105,14 @@ if missing_MS_in_deployment_setting:
 # So we import all MS at the same times which have the same importrank. 
 responses = []
 for importrank in sorted(MS_to_import):
-  params = {}
+  mservice_uris = []
   for MS in MS_to_import[importrank]:
-    obj = {}
-    obj['need_something']    = MS  
-    params[MS] = obj 
-  obmf.command_execute('IMPORT', params, timeout) #execute the MS to get new status
+    mservice_uris.append(MS_FullPath[MS]) 
+  obmf.command_synchronizeOneOrMoreObjectsFromDevice(mservice_uris, timeout) #synchronize given MS to get new values (import+update DB) 
   response = json.loads(obmf.content)
   #context['response_rank_'+importrank] = response
-  if (response.get("status") and response["status"] == "OK") or (response.get("wo_status") and response["wo_status"] == "OK"):
-    if response.get("status"):
-      response =  response["message"]
-    else:
-      response =  response["wo_newparams"]
+  if (isinstance(response, typing.List) and response[0].get("status") and response[0]["status"] == "OK" and response[0].get("message")):
+    response =  response[0]["message"]
     responses.append(response)
   else:
     msg = 'Can not synchronise device '+ device_id_full + ' : '+ str(response)
