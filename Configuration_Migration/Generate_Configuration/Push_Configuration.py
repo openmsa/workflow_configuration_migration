@@ -40,6 +40,11 @@ def extractSection(inputList,startString,endString):
 
 
 def lookUpPOP(routerSource):
+    if routerSource == 'i-br-sp-spo-mb-rai-01':
+        routerSource = 'i-br-sp-spo-mrb-rsd-01'
+    else:
+        routerSource = 'DUMP'
+        
     if routerSource == 'i-br-sp-spo-mrb-rsd-01':
         DD = '11'
         POP = '16885:1159'
@@ -634,14 +639,14 @@ if 'ipv4 access-list 122' in full_message:
 if 'ipv4 access-list 123' in full_message:
     full_message = full_message.replace('ipv4 access-list 123','ipv4 access-list FILTRO_PFX_INFRA_IPv4')
 # match access-group ipv4 - class-map
-if 'match access-group ipv4 120' in full_message:
-    full_message = full_message.replace('match access-group ipv4 120','match access-group ipv4 FILTRO_BGP_PACKETS_IPv4')
-if 'match access-group ipv4 121' in full_message:
-    full_message = full_message.replace('match access-group ipv4 121','match access-group ipv4 FILTRO_PFX_MARTIANS_IPv4')
-if 'match access-group ipv4 122' in full_message:
-    full_message = full_message.replace('match access-group ipv4 122','match access-group ipv4 FILTRO_CIDR_VIVO_IPv4')
-if 'match access-group ipv4 123' in full_message:
-    full_message = full_message.replace('match access-group ipv4 123','match access-group ipv4 FILTRO_PFX_INFRA_IPv4')        
+if 'match  access-group ipv4 120' in full_message:
+    full_message = full_message.replace('match  access-group ipv4 120','match access-group ipv4 FILTRO_BGP_PACKETS_IPv4')
+if 'match  access-group ipv4 121' in full_message:
+    full_message = full_message.replace('match  access-group ipv4 121','match access-group ipv4 FILTRO_PFX_MARTIANS_IPv4')
+if 'match  access-group ipv4 122' in full_message:
+    full_message = full_message.replace('match  access-group ipv4 122','match access-group ipv4 FILTRO_CIDR_VIVO_IPv4')
+if 'match  access-group ipv4 123' in full_message:
+    full_message = full_message.replace('match  access-group ipv4 123','match access-group ipv4 FILTRO_PFX_INFRA_IPv4')        
 #Change some IPV6 acccess list name    
 if 'ipv6 access-list 120' in full_message:
     full_message = full_message.replace('ipv6 access-list 120','ipv6 access-list FILTRO_BGP_PACKETS_IPv6')
@@ -652,14 +657,14 @@ if 'ipv6 access-list 122' in full_message:
 if 'ipv6 access-list 123' in full_message:
    full_message = full_message.replace('ipv6 access-list 123','ipv6 access-list FILTRO_PFX_INFRA_IPv6')
 # match access-group ipv6 - class-map
-if 'match access-group ipv6 120' in full_message:
-    full_message = full_message.replace('match access-group ipv6 120','match access-group ipv6 FILTRO_BGP_PACKETS_IPv6')
-if 'match access-group ipv6 121' in full_message:
-    full_message = full_message.replace('match access-group ipv6 121','match access-group ipv6 FILTRO_PFX_MARTIANS_IPv6')
-if 'match access-group ipv6 122' in full_message:
-    full_message = full_message.replace('match access-group ipv6 122','match access-group ipv6 FILTRO_CIDR_VIVO_IPv6')
-if 'match access-group ipv6 123' in full_message:
-    full_message = full_message.replace('match access-group ipv6 123','match access-group ipv6 FILTRO_PFX_INFRA_IPv6')        
+if 'match  access-group ipv6 120' in full_message:
+    full_message = full_message.replace('match  access-group ipv6 120','match access-group ipv6 FILTRO_BGP_PACKETS_IPv6')
+if 'match  access-group ipv6 121' in full_message:
+    full_message = full_message.replace('match  access-group ipv6 121','match access-group ipv6 FILTRO_PFX_MARTIANS_IPv6')
+if 'match  access-group ipv6 122' in full_message:
+    full_message = full_message.replace('match  access-group ipv6 122','match access-group ipv6 FILTRO_CIDR_VIVO_IPv6')
+if 'match  access-group ipv6 123' in full_message:
+    full_message = full_message.replace('match  access-group ipv6 123','match access-group ipv6 FILTRO_PFX_INFRA_IPv6')        
 
 
 #Create the global config file :
