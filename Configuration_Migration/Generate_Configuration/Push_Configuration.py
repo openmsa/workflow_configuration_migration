@@ -475,6 +475,56 @@ def replaceCommunity(full_message,DD,POP):
     return new_message    
 
 
+def hairPin(interfaces,full_message):
+    full_message_list = full_message.split('\n')
+    interfacesDict = extractSection(full_message_list,'interface','!')
+    hairpin_message = '!############################ HAIRPIN ###########################\n'
+    for interface in interfaces:
+        if interface['hairpin'] == 'Y':
+            interfaceText = interfacesDict[interface['destination']]
+            interfaceTextList = interfaceText.split('\n')
+            p2p = 'IP-INTERNET-'
+            interfaceDot1q = 'DOT1Q'
+            interfaceSecondDot1q = 'SECONDDOT1Q'
+            for item in  interfaceTextList:
+                item = item.strip()
+                if 'description' in item:
+                    interfaceDescription = item
+                if 'encapsulation dot1' in item:
+                    itemList = item.split(' ')
+                    interfaceDot1q = itemList[2]
+                if  'second-dot1' in item:
+                    itemList = item.split(' ')
+                    interfaceSecondDot1q = itemList[4]
+                if 'vrf' in item:
+                    p2p = 'VPN-IP-'
+            interfaceDestionList = interface['destination'].split('.')
+            interfaceDestionPhysical = interfaceDestionList[0]
+            hairpin_message = hairpin_message + 'interface ' + interfaceDestionPhysical + '\n'
+            hairpin_message = hairpin_message + '  description Hairpin Interface L2 - ' + interfaceDestionPhysical + ' Interface L3 - IP INTERNET\n'
+            hairpin_message = hairpin_message + '  mtu 9114\n'
+            hairpin_message = hairpin_message + '  load-interval 30\n'
+            hairpin_message = hairpin_message + '  logging events link-status\n'
+            hairpin_message = hairpin_message + '!\n'
+            hairpin_message = hairpin_message + 'interface ' +  interface['destination'] + ' l2transport\n'
+            hairpin_message = hairpin_message + ' ' + interfaceDescription + '\n'
+            hairpin_message = hairpin_message + '  mtu 1514\n'
+            hairpin_message = hairpin_message + '  encapsulation dot1q ' + interfaceDot1q + ' second dot1q ' + interfaceSecondDot1q + '\n'
+            hairpin_message = hairpin_message + '!\n'        
+            hairpin_message = hairpin_message + 'mpls ldp\n'
+            hairpin_message = hairpin_message + '  neighbor ' + interface['hl4_ip'] + ':0 password clear T3l3f0n1C4!b6P\n'
+            hairpin_message = hairpin_message + '!\n'
+            hairpin_message = hairpin_message + 'l2vpn\n'
+            hairpin_message = hairpin_message + '  xconnect group SERVICOS-' + interface['hl4_vendor'] + '\n'
+            hairpin_message = hairpin_message + '    p2p ' + p2p +  interface['hl4_name'] + '\n'
+            hairpin_message = hairpin_message + '      interface ' + interface['destination'] + '\n'
+            hairpin_message = hairpin_message + '        neighbor ' + interface['hl4_ip'] + ' pw-id ' + interface['pwid'] + '\n'
+            hairpin_message = hairpin_message + '          pw-class PW-CLASS-VLAN-PASSTHROUGH\n'
+            hairpin_message = hairpin_message + '!\n'
+        
+        
+    return hairpin_message
+
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
@@ -629,6 +679,11 @@ DD,POP = lookUpPOP(hostnameSource)
 if DD != '0':
     full_message = replaceCommunity(full_message,DD,POP)
     #pass
+
+#Generate HairPin Conf
+hairpin_message = hairPin(context['interfaces'],full_message)
+
+full_message = full_message + "\n!\n" + hairpin_message
 #Change some IPV4 acccess list name
 if 'ipv4 access-list 120' in full_message:
     full_message = full_message.replace('ipv4 access-list 120','ipv4 access-list FILTRO_BGP_PACKETS_IPv4')

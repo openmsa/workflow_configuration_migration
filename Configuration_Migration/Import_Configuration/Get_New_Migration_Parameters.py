@@ -22,6 +22,13 @@ dev_var.add('interfaces.0.second_dot1q')
 dev_var.add('interfaces.0.xconnect_group')
 dev_var.add('interfaces.0.pseudowire_class')
 dev_var.add('interfaces.0.p2p')
+#HairPin
+dev_var.add('interfaces.0.hairpin')
+dev_var.add('interfaces.0.pwid')
+dev_var.add('interfaces.0.hl4_vendor')
+dev_var.add('interfaces.0.hl4_name')
+dev_var.add('interfaces.0.hl4_ip')
+
 
 dev_var.add('data_filter')
 dev_var.add('enable_filter')
@@ -59,7 +66,7 @@ else:
     new_interfaces = []
     for item in interfacesMap:
         itemArray = item.split(';')
-        if len(itemArray) == 7: 
+        if len(itemArray) == 12: 
             interface = {}
             interface['source'] = itemArray[0]
             interface['destination'] = itemArray[1]
@@ -68,6 +75,12 @@ else:
             interface['xconnect_group'] = itemArray[4]
             interface['pseudowire_class'] = itemArray[5]
             interface['p2p'] = itemArray[6]
+            interface['hairpin'] = itemArray[7]
+            interface['pwid'] = itemArray[8]
+            interface['hl4_vendor'] = itemArray[9]
+            interface['hl4_name'] = itemArray[10]
+            interface['hl4_ip'] = itemArray[11]
+
             new_interfaces.append(interface)
     context['interfaces'] = new_interfaces
 
