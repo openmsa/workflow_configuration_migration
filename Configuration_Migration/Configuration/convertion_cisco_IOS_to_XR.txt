@@ -1,4 +1,4 @@
-# This file convertion_cisco_IOS_to_XR.txt is used to convert some MS values by running some pattern matching rull
+# This file convertion_cisco_IOS_to_XR.txt is used to convert some MS values by running some pattern matching rule
 #
 # MS_name|MS_field|convertion_condition|convertion_pattern_source|convertion_pattern_destination|comment and example
 #

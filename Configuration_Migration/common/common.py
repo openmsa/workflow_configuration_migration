@@ -10,7 +10,7 @@ import copy
 import requests
 import ipaddress
 import re
-import pandas as Pandas
+#import pandas as Pandas
 
 dev_var = Variables()
 context = Variables.task_call(dev_var)
@@ -59,8 +59,8 @@ def  data_conversion_recursif_compute_conf(ms_newvalues, fields, convert_conditi
 #########################################################
 # Function: to convert 
 def printTable(myDict):
-  df = Pandas.DataFrame.from_records(myDict)
-  return df.to_string()
+  # df = Pandas.DataFrame.from_records(myDict)
+  return myDict.to_string()
 
 #########################################################
 # Function: Parse all MS values recursivly for subnet ipv4
